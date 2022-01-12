@@ -1,16 +1,75 @@
-#include <iostream>
+﻿#include "Raki_DX12B.h"
+#include "FPS.h"
+#include "Audio.h"
+#include "TexManager.h"
 
-using namespace std;
+#include "NY_Object3DMgr.h"
+#include "Sprite.h"
+#include "SceneManager.h"
+#include "Raki_imguiMgr.h"
 
-//144396de8832c864fcdd6a01dd69254ddad2a621
+using namespace DirectX;
+using namespace Microsoft::WRL;
 
-int main() {
+//-----------RakiEngine_Alpha.ver-----------//
 
-	cout << "hello world" << endl;
 
-	cout << "ny name is yusuke" << endl;
+// Windowsアプリでのエントリーポイント(main関数)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+    Raki_WinAPI *rakiWinApp;
+    rakiWinApp = new Raki_WinAPI;
+    rakiWinApp->CreateGameWindow();
 
-	cout << "I haven't studied DirectX12" << endl;
+    Raki_DX12B::Get()->Initialize(rakiWinApp);
 
-	return 0;
+    myImgui::InitializeImGui(Raki_DX12B::Get()->GetDevice(), Raki_WinAPI::GetHWND());
+
+    //オブジェクト管理
+    NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
+    SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
+    TexManager::InitTexManager();
+
+    //音
+    Audio::Init();
+
+    //シーン管理
+    //SceneManager *smgr;
+    //smgr = new SceneManager;
+
+#pragma endregion GameValue
+
+    FPS::Get()->Start();
+
+    while (true)  // ゲームループ
+    {
+        if (rakiWinApp->ProcessMessage()) { break; }
+
+        //更新
+        Input::StartGetInputState();
+
+        //smgr->Update();
+
+        //smgr->Draw();
+
+        FPS::Get()->run();
+    }
+
+    //smgr->Finalize();
+
+    //imgui終了
+    myImgui::FinalizeImGui();
+
+    // ウィンドウクラスを登録解除
+    rakiWinApp->DeleteGameWindow();
+
+
+    //delete smgr;
+    //smgr = nullptr;
+    delete rakiWinApp;
+    rakiWinApp = nullptr;
+
+    return 0;
 }
+
+
