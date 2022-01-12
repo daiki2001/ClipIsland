@@ -5,7 +5,6 @@
 
 #include "NY_Object3DMgr.h"
 #include "Sprite.h"
-#include "SceneManager.h"
 #include "Raki_imguiMgr.h"
 
 using namespace DirectX;
@@ -33,10 +32,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     //音
     Audio::Init();
 
-    //シーン管理
-    //SceneManager *smgr;
-    //smgr = new SceneManager;
-
 #pragma endregion GameValue
 
     FPS::Get()->Start();
@@ -48,14 +43,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         //更新
         Input::StartGetInputState();
 
-        //smgr->Update();
-
-        //smgr->Draw();
+        if (Input::isKey(DIK_ESCAPE))
+        {
+            break;
+        }
 
         FPS::Get()->run();
     }
-
-    //smgr->Finalize();
 
     //imgui終了
     myImgui::FinalizeImGui();
@@ -63,9 +57,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     // ウィンドウクラスを登録解除
     rakiWinApp->DeleteGameWindow();
 
-
-    //delete smgr;
-    //smgr = nullptr;
     delete rakiWinApp;
     rakiWinApp = nullptr;
 
