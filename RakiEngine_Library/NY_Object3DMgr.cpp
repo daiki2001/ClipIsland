@@ -78,7 +78,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //頂点シェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"../RakiEngine_Library/Shaders/OBJVertexShader.hlsl", //シェーダーファイル名
+        L"./RakiEngine_Library/Shaders/OBJVertexShader.hlsl", //シェーダーファイル名
         nullptr,//シェーダーマクロオブジェクト（今回は使わない）
         D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
         "main", "vs_5_0", //エントリーポイント名、シェーダーモデル指定
@@ -104,7 +104,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //標準ジオメトリシェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"../RakiEngine_Library/Shaders/OBJGeometryShader.hlsl", //シェーダーファイル名
+        L"./RakiEngine_Library/Shaders/OBJGeometryShader.hlsl", //シェーダーファイル名
         nullptr,//シェーダーマクロオブジェクト（今回は使わない）
         D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
         "main", "gs_5_0", //エントリーポイント名、シェーダーモデル指定
@@ -130,7 +130,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //ピクセルシェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"../RakiEngine_Library/Shaders/OBJPixelShader.hlsl",
+        L"./RakiEngine_Library/Shaders/OBJPixelShader.hlsl",
         nullptr,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         "main", "ps_5_0",
