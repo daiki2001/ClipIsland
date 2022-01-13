@@ -74,15 +74,12 @@ public:
 private:
 	// 最大生成頂点数
 	static const int MAX_VERTEX = 65536;
-	// デバイス
-	ID3D12Device *dev;
+
 
 public:
 	/// <summary>
 	/// パーティクルマネージャー生成
 	/// </summary>
-	/// <param name="camera">NY_Cameraのインスタンス</param>
-	/// <returns>生成したParticleManagerのインスタンス</returns>
 	static ParticleManager *Create(NY_Camera *camera);
 
 	/// <summary>
@@ -106,7 +103,55 @@ public:
 	void Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, float startScale, float endScale);
 
 private:
+	//ディスクリプタヒープ、テクスチャバッファはTexManager依存
+
+	/// メンバ変数
+
+	// デバイス
+	ID3D12Device *dev;
+	// コマンド
+	ID3D12GraphicsCommandList *cmd;
+	// ルートシグネチャ
+	ComPtr<ID3D12RootSignature> rootsig;
+	// グラフィックスパイプライン
+	ComPtr<ID3D12PipelineState> pipeline;
+	// 頂点バッファ
+	ComPtr <ID3D12Resource> vertbuff;
+	// シェーダーリソースビューハンドル
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV;
+	// 頂点バッファビュー
+	D3D12_VERTEX_BUFFER_VIEW vbview;
+	// 定数バッファ
+	ComPtr<ID3D12Resource> constBuff;
+	// パーティクルコンテナ
+	std::forward_list<Particle> grains;
+	// カメラ
+	NY_Camera *cam;
 
 
+private:
+
+	/// <summary>
+	/// パーティクル用グラフィックスパイプライン初期化
+	/// </summary>
+	void InitializeGraphicsPipeline();
+
+	/// <summary>
+	/// パーティクル用モデル生成
+	/// </summary>
+	void CreateModel();
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="dev">デバイス</param>
+	/// <param name="cmd">コマンド</param>
+	/// <param name="cam">カメラ</param>
+	ParticleManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd, NY_Camera *cam) {
+		this->dev = dev;
+		this->cmd = cmd;
+		this->cam = cam;
+	}
 };
 
