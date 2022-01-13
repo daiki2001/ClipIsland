@@ -29,7 +29,7 @@ public: // メンバ関数
 	void Draw();
 
 	// リセット
-	void Reset() { stage->Reset(); }
+	void Reset();
 
 private: // メンバ変数
 	LoadStage* stage;

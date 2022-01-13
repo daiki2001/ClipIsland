@@ -25,3 +25,13 @@ void Stage::Draw()
 {
 	stage->Draw();
 }
+
+void Stage::Reset()
+{
+	stage->Reset();
+
+	while (clipBlock.empty() == false)
+	{
+		clipBlock.pop();
+	}
+}
