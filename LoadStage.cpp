@@ -47,7 +47,7 @@ int LoadStage::Load(const char* filePath)
 					debugBoxObj.push_back(CreateObject3d(&debugBox));
 				}
 
-				if (string[i] == ',')
+				if (string[i] == ',' || string[i] == '\n')
 				{
 					switch (number)
 					{
