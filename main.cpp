@@ -7,6 +7,8 @@
 #include "Sprite.h"
 #include "Raki_imguiMgr.h"
 
+#include "LoadStage.h"
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -14,7 +16,7 @@ using namespace Microsoft::WRL;
 
 
 // Windowsアプリでのエントリーポイント(main関数)
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
     Raki_WinAPI *rakiWinApp;
     rakiWinApp = new Raki_WinAPI;
@@ -29,6 +31,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
     TexManager::InitTexManager();
 
+    //カメラ
+    NY_Camera cam;
+    cam._eye = { 0.0f, 0.0f, -100.0f };
+    cam._target = { 0.0f, 0.0f, 0.0f };
+    cam._up = { 0.0f, 1.0f, 0.0f };
+    cam.UpdateViewMat();
+    NY_Object3DManager::Get()->SetCamera(&cam);
+
     //音
     Audio::Init();
 
@@ -36,12 +46,32 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     FPS::Get()->Start();
 
+    UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.png");
+    NY_Model3D background;
+    background.CreatePlaneModelXY(110.0f, 60.0f, 1.0f, 1.0f, backgroundGraph, Raki_DX12B::Get()->GetDevice());
+    Object3d* backgroundObj = CreateObject3d(&background);
+
+    LoadStage stageData;
+    stageData.Load("test.boxmap");
+
     while (true)  // ゲームループ
     {
         if (rakiWinApp->ProcessMessage()) { break; }
 
         //更新
         Input::StartGetInputState();
+
+        NY_Object3DManager::Get()->UpdateAllObjects();
+
+        // 描画
+        Raki_DX12B::Get()->StartDraw();
+        NY_Object3DManager::Get()->SetCommonBeginDrawObject3D(Raki_DX12B::Get()->GetGCommandList());
+
+        DrawObject3d(backgroundObj);
+
+        stageData.Draw();
+
+        Raki_DX12B::Get()->EndDraw();
 
         if (Input::isKey(DIK_ESCAPE))
         {
