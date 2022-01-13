@@ -2,6 +2,8 @@
 #include "Raki_DX12B.h"
 #include "TexManager.h"
 
+ID3D12Device *NY_Object3DManager::dev = nullptr;
+
 bool NY_Object3DManager::CreateObject3DManager(ID3D12Device *dev, int window_w, int window_h)
 {
     //ウィンドウサイズ設定

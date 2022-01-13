@@ -163,6 +163,9 @@ public:
 	/// <param name="cmd">ID3D12GraphicsCommandListのポインタ</param>
 	void SetCommonBeginDrawObject3D(ID3D12GraphicsCommandList *cmd);
 
+	static ID3D12Device *GetDev() {
+		return dev;
+	}
 
 private:
 
@@ -170,7 +173,7 @@ private:
 	bool isUpdated = false;
 
 	//デバイスのポインタ
-	ID3D12Device *dev;
+	static ID3D12Device *dev;
 
 
 	/// <summary>

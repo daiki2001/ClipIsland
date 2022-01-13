@@ -3,8 +3,6 @@
 
 using namespace DirectX;
 
-
-
 //XMFLOAT3を演算子オーバーロードさせたRVector3型
 class RVector3 : public XMFLOAT3
 {

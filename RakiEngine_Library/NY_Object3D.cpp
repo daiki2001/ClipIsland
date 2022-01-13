@@ -867,6 +867,7 @@ void Object3d::UpdateObject3D(NY_Camera *matview)
 		if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 		{
 			ConstMapB0->mat = matWorld * matview->_matView * NY_Object3DManager::Get()->matProjection;
+			ConstMapB0->color = this->color;
 			constBuffB0->Unmap(0, nullptr);
 		}
 
@@ -941,6 +942,7 @@ void Object3d::UpdateBillBoard3D(Object3d *obj, NY_Camera cam)
 	if (SUCCEEDED(obj->constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
 		ConstMapB0->mat = obj->matWorld * cam._matView * NY_Object3DManager::Get()->matProjection;
+
 		obj->constBuffB0->Unmap(0, nullptr);
 	}
 
@@ -1006,6 +1008,7 @@ void Object3d::UpdateBillBoard3D(NY_Camera *cam)
 	if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
 		ConstMapB0->mat = matWorld * cam->_matView * NY_Object3DManager::Get()->matProjection;
+		ConstMapB0->color = this->color;
 		constBuffB0->Unmap(0, nullptr);
 	}
 
