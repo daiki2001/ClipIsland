@@ -34,9 +34,9 @@ struct Material
 	UINT     texNumber;    //テクスチャ番号(使用する場合必ず必要)
 	//コンストラクタ
 	Material() {
-		ambient = { 0.3f,0.3f,0.3f };
-		diffuse = { 0.0f,0.0f,0.0f };
-		specurar = { 0.0f,0.0f,0.0f };
+		ambient = { 1.0f,1.0f,1.0f };
+		diffuse = { 0.8f,0.8f,0.8f };
+		specurar = { 0.8f,0.8f,0.8f };
 		alpha = 1.0f;
 	}
 };
