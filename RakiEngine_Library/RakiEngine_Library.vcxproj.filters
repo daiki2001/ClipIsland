@@ -43,6 +43,15 @@
     <Filter Include="sound">
       <UniqueIdentifier>{93d131f0-0f5c-4903-931c-581a3a6394b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{dc2723fa-905a-45e4-9e0a-fb3bb9ab6c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Manager">
+      <UniqueIdentifier>{a99b161a-5fe3-48c1-b4c8-190175013148}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphic\Particle">
+      <UniqueIdentifier>{845fa9d4-ff3e-4d08-8a80-69eb4197783f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Raki_imguiMgr.cpp">
@@ -107,6 +116,18 @@
     </ClCompile>
     <ClCompile Include="RVector.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneChanger.cpp">
+      <Filter>Scene\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ISceneManager.cpp">
+      <Filter>Scene\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Raki_SceneManager.cpp">
+      <Filter>Scene\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>Graphic\Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +196,24 @@
     </ClInclude>
     <ClInclude Include="Audio.h">
       <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneBase.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneChanger.h">
+      <Filter>Scene\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Task.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ISceneManager.h">
+      <Filter>Scene\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Raki_SceneManager.h">
+      <Filter>Scene\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Graphic\Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
