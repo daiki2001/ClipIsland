@@ -33,7 +33,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     //カメラ
     NY_Camera cam;
-    cam._eye = { 0.0f, 0.0f, -100.0f };
+    cam._eye = { 0.0f, 0.0f, -200.0f };
     cam._target = { 0.0f, 0.0f, 0.0f };
     cam._up = { 0.0f, 1.0f, 0.0f };
     cam.UpdateViewMat();
