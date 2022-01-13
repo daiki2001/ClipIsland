@@ -10,7 +10,7 @@ LoadStage::LoadStage() :
 	graph(0)
 {
 	graph = TexManager::LoadTexture("./Resources/test.jpeg");
-	debugBox.CreateBoxModel(10.0f, 1.0f, 1.0f, graph, Raki_DX12B::Get()->GetDevice());
+	debugBox.CreateBoxModel(10.0f, 1.0f, 1.0f, graph);
 }
 
 int LoadStage::Load(const char* filePath)

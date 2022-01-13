@@ -28,7 +28,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     //オブジェクト管理
     NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
-    SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
+    SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(), rakiWinApp->window_width, rakiWinApp->window_height);
     TexManager::InitTexManager();
 
     //カメラ
@@ -48,7 +48,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.png");
     NY_Model3D background;
-    background.CreatePlaneModelXY(110.0f, 60.0f, 1.0f, 1.0f, backgroundGraph, Raki_DX12B::Get()->GetDevice());
+    background.CreatePlaneModelXY(110.0f, 60.0f, 1.0f, 1.0f, backgroundGraph);
     Object3d* backgroundObj = CreateObject3d(&background);
 
     LoadStage stageData;
