@@ -101,7 +101,7 @@ int LoadStage::Load(const char* filePath)
 					blockColors.push_back(XMFLOAT4());
 				}
 
-				if (string[i] == ',')
+				if (string[i] == ',' || string[i] == '\n')
 				{
 					switch (number)
 					{
@@ -143,6 +143,25 @@ int LoadStage::Load(const char* filePath)
 				}
 			}
 		}
+	}
+
+	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	{
+		if (blockType[i] >= blockColors.size())
+		{
+			continue;
+		}
+
+		if (blockType[i] <= BlockType::NONE)
+		{
+			continue;
+		}
+		else
+		{
+			number = blockType[i];
+		}
+
+		debugBoxObj[i]->color = blockColors[number];
 	}
 
 	return 0;
