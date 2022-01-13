@@ -171,3 +171,16 @@ void LoadStage::Draw()
 		}
 	}
 }
+
+void LoadStage::Reset()
+{
+	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	{
+		if (debugBoxObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		debugBoxObj[i]->position = blockPos[i];
+	}
+}

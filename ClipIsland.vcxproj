@@ -155,9 +155,14 @@
   <ItemGroup>
     <ClCompile Include="LoadStage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoadStage.h" />
+    <ClInclude Include="Stage.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

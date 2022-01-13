@@ -12,6 +12,7 @@ public:
 	//コンストラクタ
 	RVector3(float x, float y, float z) : XMFLOAT3(x, y, z) {};
 	RVector3() :XMFLOAT3(0, 0, 0) {};
+	RVector3(XMFLOAT3 v) : XMFLOAT3(v) {}
 
 	RVector3 operator+(const RVector3 &other)const { return RVector3(x + other.x, y + other.y, z + other.z); }
 	RVector3 operator-(const RVector3 &other)const { return RVector3(x - other.x, y - other.y, z - other.z); }
