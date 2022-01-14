@@ -26,6 +26,19 @@ void Stage::Draw()
 	stage->Draw();
 }
 
+void Stage::StepBack()
+{
+	if (clipBlock.empty())
+	{
+		return;
+	}
+
+	stage->debugBoxObj[clipBlock.top().blockNumber1]->position = clipBlock.top().pos1;
+	stage->debugBoxObj[clipBlock.top().blockNumber2]->position = clipBlock.top().pos2;
+
+	clipBlock.pop();
+}
+
 void Stage::Reset()
 {
 	stage->Reset();

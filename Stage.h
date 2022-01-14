@@ -9,11 +9,11 @@ public: // サブクラス
 	struct ClipBlock
 	{
 		/*1つ目*/
+		int blockNumber1;
 		RVector3 pos1;
-		int type1;
 		/*2つ目*/
+		int blockNumber2;
 		RVector3 pos2;
-		int type2;
 	};
 
 private: // エイリアス
@@ -28,6 +28,8 @@ public: // メンバ関数
 	// 描画
 	void Draw();
 
+	// 一手戻る
+	void StepBack();
 	// リセット
 	void Reset();
 

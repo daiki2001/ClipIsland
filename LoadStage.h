@@ -35,13 +35,13 @@ public: // メンバ関数
 	void Reset();
 
 public: // メンバ変数
-	vector<int> blockType;        //ブロックの種類
-	vector<XMFLOAT4> blockColors; //ブロックの色
-	NY_Model3D debugBox;          //ブロックのオブジェクト
+	vector<int> blockType;         //ブロックの種類
+	vector<XMFLOAT4> blockColors;  //ブロックの色
+	vector<Object3d*> debugBoxObj; //ブロックのオブジェクト
 private:
 	vector<XMFLOAT3> blockPos; //ブロックの場所
 
-	UINT graph;                    //ブロックのテクスチャ
-	vector<Object3d*> debugBoxObj; //ブロックのモデル
+	NY_Model3D debugBox; //ブロックのモデル
+	UINT graph;          //ブロックのテクスチャ
 
 };
