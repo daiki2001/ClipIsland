@@ -155,14 +155,22 @@
   <ItemGroup>
     <ClCompile Include="LoadStage.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BlockData.h" />
     <ClInclude Include="LoadStage.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Stage.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cpp.hint" />
+    <Image Include="Resources\background.png" />
+    <Image Include="Resources\objFiles\player\player.png" />
+    <Image Include="Resources\test.jpeg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\objFiles\player\player.mtl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
