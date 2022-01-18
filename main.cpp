@@ -10,6 +10,8 @@
 #include "Player.h"
 #include "Stage.h"
 
+#include "Collision.h"
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
@@ -43,6 +45,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     //音
     Audio::Init();
 
+
+
+    
+
 #pragma endregion GameValue
 
     FPS::Get()->Start();
@@ -64,9 +70,23 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         if (rakiWinApp->ProcessMessage()) { break; }
 
         //更新
+
         Input::StartGetInputState();
 
         player.Update();
+        stageData.Update();
+
+       // intersectAABB(playerCollision, BlockCollision);
+
+        bool AB = intersectAABB(player.playerCollision, stageData.stage.BlockCollision[0]);
+        if (AB == true)
+        {
+            player.object->color = { 0, 0, 1, 1 };
+        }
+        else
+        {
+            player.object->color = { 1, 1, 1, 1 };
+        }
 
         stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
 

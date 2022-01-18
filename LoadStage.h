@@ -3,7 +3,7 @@
 #include <vector>
 #include "NY_Object3DMgr.h"
 #include <d3d12.h>
-
+#include "Collision.h"
 #include "BlockData.h"
 
 class LoadStage
@@ -37,9 +37,11 @@ public: // メンバ変数
 	vector<XMFLOAT4> blockColors;       //ブロックの色
 	vector<int> blockNumber; //ブロックの塊
 	vector<Object3d*> debugBoxObj;      //ブロックのオブジェクト
-private:
-	vector<XMFLOAT3> blockPos; //ブロックの場所
 
+	vector<Collision> BlockCollision;
+
+	vector<XMFLOAT3> blockPos; //ブロックの場所
+private:
 	NY_Model3D debugBox; //ブロックのモデル
 	UINT graph;          //ブロックのテクスチャ
 

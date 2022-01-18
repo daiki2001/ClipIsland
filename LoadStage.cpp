@@ -9,10 +9,12 @@ const float LoadStage::blockSize = 20.0f;
 
 LoadStage::LoadStage() :
 	debugBox{},
-	graph(0)
+	graph(0),
+	BlockCollision{}/*({ -20 / 2,-20 / 2,-20 / 2 }, { 20 / 2,20 / 2,20 / 2 }, RVector3{ 0,0,0 })*/
 {
 	graph = TexManager::LoadTexture("./Resources/test.jpeg");
 	debugBox.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, graph);
+	BlockCollision.push_back(Collision({ -20 / 2,-20 / 2,-20 / 2 }, { 20 / 2,20 / 2,20 / 2 }, RVector3{ 0,0,0 }));//Collisionê∂ê¨
 }
 
 LoadStage::~LoadStage()

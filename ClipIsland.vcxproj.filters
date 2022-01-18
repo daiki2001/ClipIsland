@@ -19,32 +19,47 @@
     <Filter Include="リソース ファイル\モデル\プレイヤー">
       <UniqueIdentifier>{f20dd498-bf41-464e-9977-658fed3c8340}</UniqueIdentifier>
     </Filter>
+    <Filter Include="player">
+      <UniqueIdentifier>{213ba8cd-b827-412c-b2be-aa722522c6d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoadStage">
+      <UniqueIdentifier>{94fa7845-1877-46cd-9453-25ffa81d4782}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stage">
+      <UniqueIdentifier>{cd040f15-28b5-4246-835b-dc08daba465f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>player</Filter>
+    </ClCompile>
     <ClCompile Include="LoadStage.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>LoadStage</Filter>
     </ClCompile>
     <ClCompile Include="Stage.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="LoadStage.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Stage.h">
+    <ClInclude Include="BlockData.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>player</Filter>
     </ClInclude>
-    <ClInclude Include="BlockData.h">
+    <ClInclude Include="LoadStage.h">
+      <Filter>LoadStage</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage.h">
+      <Filter>Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

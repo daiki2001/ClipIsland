@@ -26,6 +26,9 @@ public: // メンバ関数
 	~Stage();
 
 	// 描画
+	void Update();
+
+	// 描画
 	void Draw();
 
 	// ステージ選択
@@ -43,9 +46,9 @@ private:
 	int Clip3d(bool flag, ClipBlock* clip);
 
 private: // メンバ変数
-	LoadStage stage;
 	Player* player;
 	stack<ClipBlock> clipBlock;
 	bool flag2d;
-
+public:
+	LoadStage stage;
 };
