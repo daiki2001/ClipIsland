@@ -203,11 +203,13 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 				{
 					clip->blockNumber1 = i;
 					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1.z = 0.0f;
 				}
 				else if ((player->position.x - tmp[i]->position.x) > clip->vec1.x)
 				{
 					clip->blockNumber1 = i;
 					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1.z = 0.0f;
 				}
 			}
 			else
@@ -216,11 +218,13 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 				{
 					clip->blockNumber2 = i;
 					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2.z = 0.0f;
 				}
 				else if ((player->position.x - tmp[i]->position.x) < clip->vec2.x)
 				{
 					clip->blockNumber2 = i;
 					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2.z = 0.0f;
 				}
 			}
 		}
