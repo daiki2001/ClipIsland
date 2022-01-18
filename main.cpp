@@ -76,16 +76,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         player.Update();
         stageData.Update();
 
-       // intersectAABB(playerCollision, BlockCollision);
-
-        bool AB = intersectAABB(player.playerCollision, stageData.stage.BlockCollision[0]);
-        if (AB == true)
+        for (size_t i = 0; i < stageData.stage.collision.size(); i++)
         {
-            player.object->color = { 0, 0, 1, 1 };
-        }
-        else
-        {
-            player.object->color = { 1, 1, 1, 1 };
+            bool AB = intersectAABB(player.playerCollision, stageData.stage.collision[i]);
+            if (AB == true)
+            {
+                player.object->color = { 0, 0, 1, 1 };
+            }
+            else
+            {
+                player.object->color = { 1, 1, 1, 1 };
+            }
         }
 
         stageData.Clip(Input::isKeyTrigger(DIK_SPACE));

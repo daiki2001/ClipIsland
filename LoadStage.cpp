@@ -10,11 +10,10 @@ const float LoadStage::blockSize = 20.0f;
 LoadStage::LoadStage() :
 	debugBox{},
 	graph(0),
-	BlockCollision{}/*({ -20 / 2,-20 / 2,-20 / 2 }, { 20 / 2,20 / 2,20 / 2 }, RVector3{ 0,0,0 })*/
+	collision{}
 {
 	graph = TexManager::LoadTexture("./Resources/test.jpeg");
 	debugBox.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, graph);
-	BlockCollision.push_back(Collision({ -20 / 2,-20 / 2,-20 / 2 }, { 20 / 2,20 / 2,20 / 2 }, RVector3{ 0,0,0 }));//Collision¶¬
 }
 
 LoadStage::~LoadStage()
@@ -158,6 +157,10 @@ int LoadStage::Load(const char* filePath)
 				blockPos.push_back(XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]));
 				blockType.push_back(blockData[3]);
 				blockNumber.push_back(blockData[4]);
+				collision.push_back(Collision(
+					{ -blockSize / 2.0f, -blockSize / 2.0f, -blockSize / 2.0f },
+					{ blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f },
+					RVector3(0.0f, 0.0f, 0.0f)));
 				debugBoxObj.push_back(CreateObject3d(&debugBox));
 				debugBoxObj[debugBoxObj.size() - 1]->position = blockPos[blockPos.size() - 1];
 			}
@@ -242,4 +245,5 @@ void LoadStage::StageClear()
 	blockNumber.clear();
 	blockColors.clear();
 	debugBoxObj.clear();
+	collision.clear();
 }

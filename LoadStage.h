@@ -38,7 +38,7 @@ public: // メンバ変数
 	vector<int> blockNumber; //ブロックの塊
 	vector<Object3d*> debugBoxObj;      //ブロックのオブジェクト
 
-	vector<Collision> BlockCollision;
+	vector<Collision> collision;
 
 	vector<XMFLOAT3> blockPos; //ブロックの場所
 private:

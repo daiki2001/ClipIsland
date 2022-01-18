@@ -24,7 +24,7 @@ void Stage::Update()
 {
 	for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
 	{
-		stage.BlockCollision[0].Update(stage.debugBoxObj[0]->position);
+		stage.collision[i].Update(stage.debugBoxObj[i]->position);
 	}
 }
 
