@@ -25,7 +25,7 @@ void Stage::Draw()
 	stage.Draw();
 }
 
-int Stage::Select(const char* filePath)
+int Stage::Select(const char* filePath, const bool& flag2d)
 {
 	if (filePath == nullptr)
 	{
@@ -38,6 +38,8 @@ int Stage::Select(const char* filePath)
 	{
 		clipBlock.pop();
 	}
+
+	this->flag2d = flag2d;
 
 	return stage.Load(filePath);
 }
@@ -155,11 +157,13 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 				{
 					clip->blockNumber1 = i;
 					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1.z = 0.0f;
 				}
 				else if ((player->position.y - tmp[i]->position.y) > clip->vec1.y)
 				{
 					clip->blockNumber1 = i;
 					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1.z = 0.0f;
 				}
 			}
 			else
@@ -168,11 +172,13 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 				{
 					clip->blockNumber2 = i;
 					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2.z = 0.0f;
 				}
 				else if ((player->position.y - tmp[i]->position.y) < clip->vec2.y)
 				{
 					clip->blockNumber2 = i;
 					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2.z = 0.0f;
 				}
 			}
 		}

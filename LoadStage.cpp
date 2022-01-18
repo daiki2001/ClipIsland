@@ -48,7 +48,7 @@ int LoadStage::Load(const char* filePath)
 	bool isMinus = false;
 	bool isBlock = false;
 	int number = 0;
-	int blockData[4] = { 0 };
+	int blockData[5] = { 0 };
 	float blockColor = 0;
 
 	while (fgets(string, 256, fileHandle) != nullptr)
@@ -155,6 +155,7 @@ int LoadStage::Load(const char* filePath)
 			{
 				blockPos.push_back(XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]));
 				blockType.push_back(blockData[3]);
+				blockNumber.push_back(blockData[4]);
 				debugBoxObj.push_back(CreateObject3d(&debugBox));
 				debugBoxObj[debugBoxObj.size() - 1]->position = blockPos[blockPos.size() - 1];
 			}
@@ -236,6 +237,7 @@ void LoadStage::StageClear()
 
 	blockPos.clear();
 	blockType.clear();
+	blockNumber.clear();
 	blockColors.clear();
 	debugBoxObj.clear();
 }

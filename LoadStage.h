@@ -33,9 +33,10 @@ public: // メンバ関数
 	void StageClear();
 
 public: // メンバ変数
-	vector<int> blockType;         //ブロックの種類
-	vector<XMFLOAT4> blockColors;  //ブロックの色
-	vector<Object3d*> debugBoxObj; //ブロックのオブジェクト
+	vector<int> blockType;              //ブロックの種類
+	vector<XMFLOAT4> blockColors;       //ブロックの色
+	vector<int> blockNumber; //ブロックの塊
+	vector<Object3d*> debugBoxObj;      //ブロックのオブジェクト
 private:
 	vector<XMFLOAT3> blockPos; //ブロックの場所
 

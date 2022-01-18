@@ -29,7 +29,7 @@ public: // メンバ関数
 	void Draw();
 
 	// ステージ選択
-	int Select(const char* filePath);
+	int Select(const char* filePath, const bool& flag2d);
 	// ブロックを挟む
 	int Clip(bool flag);
 	// 一手戻る
