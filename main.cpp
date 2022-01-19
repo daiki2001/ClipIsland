@@ -7,7 +7,10 @@
 #include "Sprite.h"
 #include "Raki_imguiMgr.h"
 
-#include "LoadStage.h"
+#include "Player.h"
+#include "Stage.h"
+
+#include "Collision.h"
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
@@ -42,35 +45,80 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     //音
     Audio::Init();
 
+
+
+    
+
 #pragma endregion GameValue
 
     FPS::Get()->Start();
 
+    /*背景*/
     UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.png");
-    NY_Model3D background;
-    background.CreatePlaneModelXY(110.0f, 60.0f, 1.0f, 1.0f, backgroundGraph);
-    Object3d* backgroundObj = CreateObject3d(&background);
+    Sprite background;
+    background.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true);
 
-    LoadStage stageData;
-    stageData.Load("test.boxmap");
+    /*プレイヤー*/
+    Player player;
+
+    /*ステージ*/
+    Stage stageData(&player);
+    stageData.Select("test3.boxmap", true);
 
     while (true)  // ゲームループ
     {
         if (rakiWinApp->ProcessMessage()) { break; }
 
         //更新
+
         Input::StartGetInputState();
+
+        player.Update();
+        stageData.Update();
+
+        for (size_t i = 0; i < stageData.stage.collision.size(); i++)
+        {
+            bool AB = intersectAABB(player.playerCollision, stageData.stage.collision[i]);
+            if (AB == true)
+            {
+                player.object->color = { 0, 0, 1, 1 };
+            }
+            else
+            {
+                player.object->color = { 1, 1, 1, 1 };
+            }
+        }
+
+        stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
+
+        if (Input::isKeyTrigger(DIK_R))
+        {
+            stageData.Reset();
+        }
+
+        if (Input::isKeyTrigger(DIK_B))
+        {
+            stageData.StepBack();
+        }
 
         NY_Object3DManager::Get()->UpdateAllObjects();
 
-        // 描画
+        // 描画開始
         Raki_DX12B::Get()->StartDraw();
+
+        // 背景描画
+        SpriteManager::Get()->SetCommonBeginDraw();
+        background.Draw();
+
+        // オブジェクト描画
         NY_Object3DManager::Get()->SetCommonBeginDrawObject3D(Raki_DX12B::Get()->GetGCommandList());
-
-        DrawObject3d(backgroundObj);
-
+        player.Draw();
         stageData.Draw();
 
+        // 前景描画
+        SpriteManager::Get()->SetCommonBeginDraw();
+
+        // 描画終了
         Raki_DX12B::Get()->EndDraw();
 
         if (Input::isKey(DIK_ESCAPE))
