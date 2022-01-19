@@ -2,7 +2,7 @@
 
 #define EoF (-1) // Error of function
 
-Stage::Stage(Player * player) :
+Stage::Stage(Player* player) :
 	stage{},
 	player(player),
 	flag2d(false)
@@ -17,7 +17,7 @@ void Stage::Update()
 {
 	for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
 	{
-		stage.collision[i].Update(stage.debugBoxObj[i]->position);
+		stage.blocks[i].collision.Update(stage.debugBoxObj[i]->position);
 	}
 }
 
@@ -71,18 +71,18 @@ int Stage::Clip(bool flag)
 
 	if (clip.vec1.x != 0)
 	{
-		clip.vec1.x += LoadStage::blockSize;
-		clip.vec2.x -= LoadStage::blockSize;
+		clip.vec1.x += blockSize;
+		clip.vec2.x -= blockSize;
 	}
 	if (clip.vec1.y != 0)
 	{
-		clip.vec1.y += LoadStage::blockSize;
-		clip.vec2.y -= LoadStage::blockSize;
+		clip.vec1.y += blockSize;
+		clip.vec2.y -= blockSize;
 	}
 	if (clip.vec1.z != 0)
 	{
-		clip.vec1.z += LoadStage::blockSize;
-		clip.vec2.z -= LoadStage::blockSize;
+		clip.vec1.z += blockSize;
+		clip.vec2.z -= blockSize;
 	}
 
 	bool isReturn = clip.blockNumber1 < 0 || clip.blockNumber2 < 0;
@@ -93,7 +93,7 @@ int Stage::Clip(bool flag)
 		return EoF;
 	}
 
-	const size_t blockType[2] = { (size_t)stage.blockType[clip.blockNumber1], (size_t)stage.blockType[clip.blockNumber2] };
+	const size_t blockType[2] = { (size_t)stage.blocks[clip.blockNumber1].type, (size_t)stage.blocks[clip.blockNumber2].type };
 
 	if (moveFlag[blockType[0]].second == true && moveFlag[blockType[1]].second == true)
 	{
@@ -155,7 +155,7 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blockType[i] == BlockType::START)
+			if (stage.blocks[i].type == BlockType::START)
 			{
 				continue;
 			}
@@ -201,7 +201,7 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blockType[i] == BlockType::START)
+			if (stage.blocks[i].type == BlockType::START)
 			{
 				continue;
 			}
@@ -262,7 +262,7 @@ int Stage::Clip3d(bool flag, ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blockType[i] == BlockType::START)
+			if (stage.blocks[i].type == BlockType::START)
 			{
 				continue;
 			}
@@ -304,7 +304,7 @@ int Stage::Clip3d(bool flag, ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blockType[i] == BlockType::START)
+			if (stage.blocks[i].type == BlockType::START)
 			{
 				continue;
 			}
