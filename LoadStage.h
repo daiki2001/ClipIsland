@@ -39,9 +39,9 @@ public: // メンバ変数
 	vector<Object3d*> debugBoxObj;      //ブロックのオブジェクト
 
 	vector<Collision> collision;
-
-	vector<XMFLOAT3> blockPos; //ブロックの場所
 private:
+	vector<XMFLOAT3> blockPos; //ブロックの場所
+
 	NY_Model3D debugBox; //ブロックのモデル
 	UINT graph;          //ブロックのテクスチャ
 
