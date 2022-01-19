@@ -161,6 +161,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         if (Input::isKeyTrigger(DIK_R))
         {
             stageData.Reset();
+            player.Reset();
         }
 
         if (Input::isKeyTrigger(DIK_B))

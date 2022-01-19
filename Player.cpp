@@ -85,3 +85,17 @@ void Player::PushBack()
 {
 
 }
+
+void Player::Reset()
+{
+	Player::position = RVector3(0.0f, 0.0f, 0.0f);
+	Player::forwardVec= RVector3(1.0f, 0.0f, 0.0f);
+	Player::playerRot = RVector3(-90, 0, 0);
+	Player::playerCollision = Collision({ -5, -5, -5 }, { 5,5,5 }, position);
+	Player::playerOldPos = RVector3(0.0f, 0.0f, 0.0f);
+	object->position = RVector3(0.0f, 0.0f, 0.0f);
+	object->scale = { 10.0f, 10.0f, 10.0f };
+	object->rotation = RVector3(-90, 0, 0);
+	object->color = { 1, 1, 1, 1 };
+	goalFlag = false;
+}

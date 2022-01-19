@@ -17,6 +17,9 @@ public:
 	// 押し戻し処理
 	void PushBack();
 
+	// リセット
+	void Reset();
+
 public:
 	RVector3 position;   //プレイヤーの座標
 	RVector3 playerOldPos;   //プレイヤーの前座標
