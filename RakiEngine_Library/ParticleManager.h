@@ -95,7 +95,7 @@ public:
 	/// <summary>
 	/// パーティクル描画
 	/// </summary>
-	void Draw();
+	void Draw(UINT drawTexNum);
 
 	/// <summary>
 	/// パーティクル追加
@@ -117,9 +117,6 @@ private:
 	ComPtr<ID3D12PipelineState> pipeline;
 	// 頂点バッファ
 	ComPtr <ID3D12Resource> vertbuff;
-	// シェーダーリソースビューハンドル
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbview;
 	// 定数バッファ
@@ -128,6 +125,7 @@ private:
 	std::forward_list<Particle> grains;
 	// カメラ
 	NY_Camera *cam;
+	HRESULT result = S_FALSE;
 
 
 private:
