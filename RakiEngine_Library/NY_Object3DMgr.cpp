@@ -386,7 +386,6 @@ void NY_Object3DManager::DeleteObject3d(Object3d *obj)
         //消すオブジェクトと同じオブジェクトを検出
         if (obj == objects[i]) {
             objects.erase(objects.begin() + i);
-            objects[i];
             break;
         }
     }
