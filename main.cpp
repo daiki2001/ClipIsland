@@ -68,12 +68,46 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     Sprite title;
     title.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, titleGraph, true);
 
+    /*ステージセレクト*/
+    UINT stageGraph[] =
+    {
+        TexManager::LoadTexture("./Resources/stage1.png"),
+        TexManager::LoadTexture("./Resources/stage2.png"),
+        TexManager::LoadTexture("./Resources/stage3.png"),
+        TexManager::LoadTexture("./Resources/stage4.png"),
+        TexManager::LoadTexture("./Resources/stage5.png"),
+        TexManager::LoadTexture("./Resources/stage6.png"),
+    };
+    Sprite stage[sizeof(stageGraph) / sizeof(stageGraph[0])];
+    for (size_t i = 0; i < sizeof(stageGraph) / sizeof(stageGraph[0]); i++)
+    {
+        stage[i].CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, stageGraph[i], false);
+        stage[i].spdata.position.x = (float)Raki_WinAPI::window_width / 2.0f;
+        stage[i].spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
+        stage[i].UpdateSprite();
+    }
+
+    /*チュートリアル*/
+    UINT tutorialGraph[] =
+    {
+        TexManager::LoadTexture("./Resources/Tutorial1.png"),
+        TexManager::LoadTexture("./Resources/Tutorial2.png"),
+    };
+    Sprite tutorial[sizeof(tutorialGraph) / sizeof(tutorialGraph[0])];
+    for (size_t i = 0; i < sizeof(tutorialGraph) / sizeof(tutorialGraph[0]); i++)
+    {
+        tutorial[i].CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, tutorialGraph[i], true);
+    }
+    int tutorialCount = 0;
+    bool isTutorial = true;
+
     /*プレイヤー*/
     Player player;
 
     /*ステージ*/
     Stage stageData(&player);
-    stageData.Select("test6.boxmap", true);
+    //stageData.Select("test6.boxmap", true);
+    int stageNumber = 0;
 
     /*シーン遷移*/
     Scene scene = Scene::TITLE;
@@ -93,7 +127,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         switch (scene)
         {
         case TITLE:
-            if (Input::isKey(DIK_SPACE))
+            if (Input::isKeyTrigger(DIK_SPACE))
             {
                 scene = Scene::SELECT;
             }
@@ -109,7 +143,65 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             Raki_DX12B::Get()->EndDraw();
             break;
         case SELECT:
-            scene = Scene::GAME_MAIN;
+            if (Input::isKeyTrigger(DIK_W))
+            {
+                stageNumber--;
+
+                if (stageNumber < 0)
+                {
+                    stageNumber = 0;
+                }
+            }
+            if (Input::isKeyTrigger(DIK_S))
+            {
+                stageNumber++;
+
+                if (stageNumber >= sizeof(stageGraph) / sizeof(stageGraph[0]))
+                {
+                    stageNumber = sizeof(stageGraph) / sizeof(stageGraph[0]) - 1;
+                }
+            }
+
+            if (Input::isKeyTrigger(DIK_SPACE))
+            {
+                scene = Scene::GAME_MAIN;
+
+                switch (stageNumber)
+                {
+                case 0:
+                    stageData.Select("map1.boxmap", true);
+                    player.position = { 0.0f, -40.0f, 0.0f };
+                    break;
+                case 1:
+                    stageData.Select("map2.boxmap", true);
+                    player.position = { 0.0f, -40.0f, 0.0f };
+                    break;
+                case 2:
+                    stageData.Select("map3.boxmap", true);
+                    player.position = { 20.0f, -40.0f, 0.0f };
+                    break;
+                case 3:
+                    stageData.Select("test6.boxmap", true);
+                    break;
+                case 4:
+                    stageData.Select("test7.boxmap", true);
+                    break;
+                default:
+                    stageData.Select("map1.boxmap", true);
+                    player.position = { 0.0f, -40.0f, 0.0f };
+                    break;
+                }
+            }
+
+            // 描画開始
+            Raki_DX12B::Get()->StartDraw();
+
+            // スプライト描画
+            SpriteManager::Get()->SetCommonBeginDraw();
+            stage[stageNumber].Draw();
+
+            // 描画終了
+            Raki_DX12B::Get()->EndDraw();
             break;
         case GAME_MAIN:
             if (Input::isKey(DIK_1))
@@ -136,8 +228,21 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 stageData.Select("test7.boxmap", true);
             }
 
-            player.Update();
-            stageData.Update();
+            if (isTutorial)
+            {
+                player.playerOldPos = player.position;
+
+                if (Input::isKeyTrigger(DIK_SPACE))
+                {
+                    tutorialCount++;
+                    isTutorial = tutorialCount < sizeof(tutorial) / sizeof(tutorial[0]);
+                }
+            }
+            else
+            {
+                player.Update();
+                stageData.Update();
+            }
 
             nFlag = false;
             actFlag = false;
@@ -193,16 +298,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
             // player.object->color = { 1, 1, 1, 1 };
 
-            stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
-
-            if (Input::isKeyTrigger(DIK_R))
+            if (isTutorial == false)
             {
-                stageData.Reset();
-            }
+                stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
 
-            if (Input::isKeyTrigger(DIK_B))
-            {
-                stageData.StepBack();
+                if (Input::isKeyTrigger(DIK_R))
+                {
+                    stageData.Reset();
+                }
+
+                if (Input::isKeyTrigger(DIK_B))
+                {
+                    stageData.StepBack();
+                }
             }
 
             NY_Object3DManager::Get()->UpdateAllObjects();
@@ -212,12 +320,22 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
             // 背景描画
             SpriteManager::Get()->SetCommonBeginDraw();
-            background.Draw();
+            if (isTutorial)
+            {
+                tutorial[tutorialCount].Draw();
+            }
+            else
+            {
+                background.Draw();
+            }
 
             // オブジェクト描画
             NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
-            player.Draw();
-            stageData.Draw();
+            if (isTutorial == false)
+            {
+                player.Draw();
+                stageData.Draw();
+            }
 
             // 前景描画
             SpriteManager::Get()->SetCommonBeginDraw();
