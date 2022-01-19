@@ -14,10 +14,15 @@ public:
 	// 描画
 	void Draw();
 
+	// 押し戻し処理
+	void PushBack();
+
 public:
 	RVector3 position;   //プレイヤーの座標
+	RVector3 playerOldPos;   //プレイヤーの前座標
 	RVector3 forwardVec; //進行方向
 	RVector3 playerRot;	 //プレイヤーの回転角
+	bool goalFlag;
 
 	Collision playerCollision;
 

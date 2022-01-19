@@ -14,6 +14,7 @@
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
+using namespace  BlockData;
 
 //-----------RakiEngine_Alpha.ver-----------//
 
@@ -45,10 +46,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     //音
     Audio::Init();
 
-
-
-    
-
 #pragma endregion GameValue
 
     FPS::Get()->Start();
@@ -65,6 +62,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     Stage stageData(&player);
     stageData.Select("test3.boxmap", true);
 
+    bool nFlag = false;
+    bool actFlag = false;
+    bool actnFlag = false;
+
     while (true)  // ゲームループ
     {
         if (rakiWinApp->ProcessMessage()) { break; }
@@ -73,21 +74,87 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
         Input::StartGetInputState();
 
-        player.Update();
-        stageData.Update();
-
-        for (size_t i = 0; i < stageData.stage.collision.size(); i++)
+        /*for (size_t i = 0; i < stageData.stage.collision.size(); i++)
         {
             bool AB = intersectAABB(player.playerCollision, stageData.stage.collision[i]);
             if (AB == true)
             {
                 player.object->color = { 0, 0, 1, 1 };
+                if (stageData.stage.blockType[i] == BlockType::DONT_MOVE_BLOCK)
+                {
+                    
+                   player.moveFlag = false;
+                }
+                else {
+                    player.moveFlag = true;
+                }
+                break;
             }
             else
             {
                 player.object->color = { 1, 1, 1, 1 };
             }
+        }*/
+
+        player.Update();
+        stageData.Update();
+
+        nFlag = false;
+        actFlag = false;
+        actnFlag = false;
+
+        player.object->color = { 1, 1, 1, 1 };
+
+        for (size_t i = 0; i < stageData.stage.collision.size(); i++)
+        {
+            actFlag = true;
+            if (player.position == stageData.stage.debugBoxObj[i]->position)
+            {
+                nFlag = true;
+                actFlag = false;
+                break;
+            }
         }
+///true
+        for (size_t i = 0; i < stageData.stage.collision.size(); i++)
+        {
+            actnFlag = true;
+            bool AB = intersectAABB(player.playerCollision, stageData.stage.collision[i]);
+        
+            if (stageData.stage.blockType[i] == BlockType::GOAL && AB == true)
+            {
+                player.goalFlag = true;
+                player.object->color = { 0, 0, 1, 1 };
+                
+            }
+        
+            if (AB == true)
+            {
+                nFlag = stageData.stage.blockType[i] == BlockType::DONT_MOVE_BLOCK || nFlag == false;
+                actnFlag = false;
+                break;
+            }
+        }
+///false
+
+
+        if (nFlag == true)
+        {
+            player.position = player.playerOldPos;
+            player.object->position = player.position;
+            //player.object->color = { 0, 0, 1, 1 };
+        }
+
+        if (actFlag == true && actnFlag == true)
+        {
+            player.position = player.playerOldPos;
+            player.object->position = player.position;
+          //  player.object->color = { 0, 0, 1, 1 };
+        }
+
+
+       // player.object->color = { 1, 1, 1, 1 };
+
 
         stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
 
