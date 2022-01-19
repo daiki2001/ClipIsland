@@ -31,6 +31,9 @@ public: // メンバ関数
 	// 描画
 	void Draw();
 
+	// プレイヤーのスタート位置を取得
+	RVector3 GetStartPlayerPos();
+
 	// ステージ選択
 	int Select(const char* filePath, const bool& flag2d);
 	// ブロックを挟む

@@ -386,7 +386,7 @@ void NY_Object3DManager::DeleteObject3d(Object3d *obj)
     }
 
     //オブジェクトの消去
-    delete obj;
+    //delete obj;
 }
 
 void NY_Object3DManager::UpdateAllObjects()

@@ -26,7 +26,7 @@ public:
 
 	Collision playerCollision;
 
-	const RVector3 offsetPos = RVector3(0, 0, -20);	 //描画ずれを補正するために加算する
+	const RVector3 offsetPos = RVector3(0, 0, -20); //描画ずれを補正するために加算する
 	Object3d *object; //プレイヤーのオブジェクト
 private:
 	NY_Model3D model; //プレイヤーのモデル
