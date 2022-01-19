@@ -4,7 +4,7 @@
 
 Player::Player() :
 	position(0.0f, 0.0f, 0.0f),
-	forwardVec(1.0f, 0.0f, 0.0f),
+	forwardVec(0.0f, 1.0f, 0.0f),
 	playerRot(-90, 0, 0),
 	model{},
 	object(nullptr),

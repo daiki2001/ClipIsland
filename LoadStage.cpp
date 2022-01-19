@@ -10,7 +10,8 @@ const float LoadStage::blockSize = 20.0f;
 LoadStage::LoadStage() :
 	debugBox{},
 	graph(0),
-	collision{}
+	collision{},
+	startPosNumber(-1)
 {
 	graph = TexManager::LoadTexture("./Resources/test.jpeg");
 	debugBox.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, graph);
@@ -164,6 +165,11 @@ int LoadStage::Load(const char* filePath)
 				debugBoxObj.push_back(CreateObject3d(&debugBox));
 				debugBoxObj[debugBoxObj.size() - 1]->position = blockPos[blockPos.size() - 1];
 			}
+
+			if (blockData[3] == BlockData::BlockType::START)
+			{
+				startPosNumber = (int)blockType.size() - 1;
+			}
 		}
 	}
 
@@ -237,7 +243,7 @@ void LoadStage::StageClear()
 		}
 
 		DeleteObject3d(debugBoxObj[i]);
-		//debugBoxObj[i] = nullptr;
+		debugBoxObj[i] = nullptr;
 	}
 
 	blockPos.clear();
@@ -247,10 +253,21 @@ void LoadStage::StageClear()
 	debugBoxObj.clear();
 	collision.clear();
 
-	blockPos.shrink_to_fit();
-	blockType.shrink_to_fit();
-	blockNumber.shrink_to_fit();
-	blockColors.shrink_to_fit();
-	debugBoxObj.shrink_to_fit();
-	collision.shrink_to_fit();
+	startPosNumber = -1;
+}
+
+XMFLOAT3 LoadStage::GetStartPlayerPos()
+{
+	size_t num;
+
+	if (startPosNumber < 0)
+	{
+		num = 0;
+	}
+	else
+	{
+		num = startPosNumber;
+	}
+
+	return debugBoxObj[num]->position;
 }

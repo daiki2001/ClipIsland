@@ -2,13 +2,6 @@
 
 #define EoF (-1) // Error of function
 
-#define SefeDelete(ptr)\
-if (ptr != nullptr)\
-{\
-	delete ptr;\
-	ptr = nullptr;\
-}
-
 Stage::Stage(Player * player) :
 	stage{},
 	player(player),
@@ -33,11 +26,6 @@ void Stage::Draw()
 	stage.Draw();
 }
 
-RVector3 Stage::GetStartPlayerPos()
-{
-	return RVector3();
-}
-
 int Stage::Select(const char* filePath, const bool& flag2d)
 {
 	if (filePath == nullptr)
@@ -54,7 +42,11 @@ int Stage::Select(const char* filePath, const bool& flag2d)
 
 	this->flag2d = flag2d;
 
-	return stage.Load(filePath);
+	int result = stage.Load(filePath);
+
+	player->position = stage.GetStartPlayerPos();
+
+	return result;
 }
 
 int Stage::Clip(bool flag)
@@ -124,6 +116,7 @@ int Stage::StepBack()
 
 	stage.debugBoxObj[clipBlock.top().blockNumber1]->position -= clipBlock.top().vec1;
 	stage.debugBoxObj[clipBlock.top().blockNumber2]->position -= clipBlock.top().vec2;
+	player->position = clipBlock.top().playerPos;
 
 	clipBlock.pop();
 
@@ -138,6 +131,8 @@ void Stage::Reset()
 	{
 		clipBlock.pop();
 	}
+
+	player->position = stage.GetStartPlayerPos();
 }
 
 int Stage::Clip2d(bool flag, ClipBlock* clip)
