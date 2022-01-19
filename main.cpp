@@ -60,7 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     /*ステージ*/
     Stage stageData(&player);
-    stageData.Select("test3.boxmap", true);
+    stageData.Select("test6.boxmap", true);
 
     bool nFlag = false;
     bool actFlag = false;
@@ -76,13 +76,23 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
         if (Input::isKey(DIK_1))
         {
-            stageData.Select("test3.boxmap", true);
+            stageData.Select("map1.boxmap", true);
+            player.position = { 0.0f, -40.0f, 0.0f };
         }
         if (Input::isKey(DIK_2))
         {
-            stageData.Select("test.boxmap", true);
+            stageData.Select("map2.boxmap", true);
+            player.position = { 0.0f, -40.0f, 0.0f };
         }
-
+        if (Input::isKey(DIK_3))
+        {
+            stageData.Select("map3.boxmap", true);
+            player.position = { 20.0f, -40.0f, 0.0f };
+        }
+        if (Input::isKey(DIK_4))
+        {
+            stageData.Select("test6.boxmap", true);
+        }
         /*for (size_t i = 0; i < stageData.stage.collision.size(); i++)
         {
             bool AB = intersectAABB(player.playerCollision, stageData.stage.collision[i]);
@@ -139,7 +149,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         
             if (AB == true)
             {
-                nFlag = stageData.stage.blockType[i] == BlockType::DONT_MOVE_BLOCK || nFlag == false;
+                nFlag = stageData.stage.blockType[i] == BlockType::DONT_MOVE_BLOCK || stageData.stage.blockType[i] == BlockType::START || nFlag == false;
                 actnFlag = false;
                 break;
             }
