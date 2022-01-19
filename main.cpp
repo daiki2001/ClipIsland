@@ -128,7 +128,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
         player.object->color = { 1, 1, 1, 1 };
 
-        for (size_t i = 0; i < stageData.stage.collision.size(); i++)
+        for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
         {
             actFlag = true;
             if (player.position == stageData.stage.debugBoxObj[i]->position)
@@ -139,12 +139,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             }
         }
 ///true
-        for (size_t i = 0; i < stageData.stage.collision.size(); i++)
+        for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
         {
             actnFlag = true;
-            bool AB = intersectAABB(player.playerCollision, stageData.stage.collision[i]);
+            bool AB = intersectAABB(player.playerCollision, stageData.stage.blocks[i].collision);
         
-            if (stageData.stage.blockType[i] == BlockType::GOAL && AB == true)
+            if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
             {
                 player.goalFlag = true;
                 player.object->color = { 0, 0, 1, 1 };
@@ -153,7 +153,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         
             if (AB == true)
             {
+<<<<<<< HEAD
                 nFlag = stageData.stage.blockType[i] == BlockType::DONT_MOVE_BLOCK || stageData.stage.blockType[i] == BlockType::START || nFlag == false;
+=======
+                nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK || nFlag == false;
+>>>>>>> 2cdde459b20d42ed3b3fdb3bdccf65711041219a
                 actnFlag = false;
                 break;
             }
@@ -201,7 +205,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         background.Draw();
 
         // オブジェクト描画
-        NY_Object3DManager::Get()->SetCommonBeginDrawObject3D(Raki_DX12B::Get()->GetGCommandList());
+        NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
         player.Draw();
         stageData.Draw();
 
