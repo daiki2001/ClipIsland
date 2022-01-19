@@ -5,16 +5,36 @@
 
 #define EoF (-1) // Error of function
 
+const float LoadStage::blockSize = 20.0f;
+
 LoadStage::LoadStage() :
 	debugBox{},
-	graph(0)
+	graph(0),
+	collision{},
+	startPosNumber(-1)
 {
 	graph = TexManager::LoadTexture("./Resources/test.jpeg");
-	debugBox.CreateBoxModel(10.0f, 1.0f, 1.0f, graph, Raki_DX12B::Get()->GetDevice());
+	debugBox.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, graph);
+}
+
+LoadStage::~LoadStage()
+{
+	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	{
+		if (debugBoxObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(debugBoxObj[i]);
+		debugBoxObj[i] = nullptr;
+	}
 }
 
 int LoadStage::Load(const char* filePath)
 {
+	using namespace BlockData;
+
 	if (filePath == nullptr) { return EoF; }
 
 	FILE* fileHandle;
@@ -28,13 +48,20 @@ int LoadStage::Load(const char* filePath)
 	}
 
 	bool isMinus = false;
+	bool isBlock = false;
 	int number = 0;
-	int blockData = 0;
+	int blockData[5] = { 0 };
 	float blockColor = 0;
 
 	while (fgets(string, 256, fileHandle) != nullptr)
 	{
+		isBlock = false;
 		number = 0;
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			blockData[i] = 0;
+		}
 
 		for (int i = 0; string[i] != '\0' || string[i] == '\n'; i++)
 		{
@@ -42,39 +69,19 @@ int LoadStage::Load(const char* filePath)
 			{
 				if (i == 0)
 				{
-					blockPos.push_back(XMFLOAT3());
-					blockType.push_back(BlockType());
-					debugBoxObj.push_back(CreateObject3d(&debugBox));
+					isBlock = true;
 				}
 
-				if (string[i] == ',')
+				if (string[i] == ',' || string[i] == '\n')
 				{
-					switch (number)
+					if (number >= 0 && number < 3)
 					{
-					case 0:
-						blockPos[blockPos.size() - 1].x = (float)blockData;
-						debugBoxObj[debugBoxObj.size() - 1]->position.x = blockPos[blockPos.size() - 1].x * 20.0f;
-						break;
-					case 1:
-						blockPos[blockPos.size() - 1].y = (float)blockData;
-						debugBoxObj[debugBoxObj.size() - 1]->position.y = blockPos[blockPos.size() - 1].y * 20.0f;
-						break;
-					case 2:
-						blockPos[blockPos.size() - 1].z = (float)blockData;
-						debugBoxObj[debugBoxObj.size() - 1]->position.z = blockPos[blockPos.size() - 1].z * 20.0f;
-						break;
-					default:
-						if (number >= BlockType::NONE && number <= BlockType::START)
-						{
-							blockType[blockType.size() - 1] = blockData;
-						}
-						break;
+						blockData[number] *= (int)blockSize;
 					}
 
 					// ŽŸ‚Ì”Žš‚Ö
 					number++;
 					isMinus = false;
-					blockData = 0;
 				}
 				else if (string[i] == '-')
 				{
@@ -82,15 +89,15 @@ int LoadStage::Load(const char* filePath)
 				}
 				else if (string[i] >= '0' && string[i] <= '9')
 				{
-					blockData *= 10;
+					blockData[number] *= 10;
 
 					if (isMinus == true)
 					{
-						blockData -= string[i] - '0';
+						blockData[number] -= string[i] - '0';
 					}
 					else
 					{
-						blockData += string[i] - '0';
+						blockData[number] += string[i] - '0';
 					}
 				}
 			}
@@ -101,7 +108,7 @@ int LoadStage::Load(const char* filePath)
 					blockColors.push_back(XMFLOAT4());
 				}
 
-				if (string[i] == ',')
+				if (string[i] == ',' || string[i] == '\n')
 				{
 					switch (number)
 					{
@@ -143,6 +150,46 @@ int LoadStage::Load(const char* filePath)
 				}
 			}
 		}
+
+		if (isBlock)
+		{
+			if (blockData[3] >= 0)
+			{
+				blockPos.push_back(XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]));
+				blockType.push_back(blockData[3]);
+				blockNumber.push_back(blockData[4]);
+				collision.push_back(Collision(
+					{ -blockSize / 2.0f, -blockSize / 2.0f, -blockSize / 2.0f },
+					{ blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f },
+					RVector3(0.0f, 0.0f, 0.0f)));
+				debugBoxObj.push_back(CreateObject3d(&debugBox));
+				debugBoxObj[debugBoxObj.size() - 1]->position = blockPos[blockPos.size() - 1];
+			}
+
+			if (blockData[3] == BlockData::BlockType::START)
+			{
+				startPosNumber = (int)blockType.size() - 1;
+			}
+		}
+	}
+
+	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	{
+		if (blockType[i] >= blockColors.size())
+		{
+			continue;
+		}
+
+		if (blockType[i] <= BlockType::NONE)
+		{
+			continue;
+		}
+		else
+		{
+			number = blockType[i];
+		}
+
+		debugBoxObj[i]->color = blockColors[number];
 	}
 
 	return 0;
@@ -150,6 +197,8 @@ int LoadStage::Load(const char* filePath)
 
 void LoadStage::Draw()
 {
+	using namespace BlockData;
+
 	for (size_t i = 0; i < blockPos.size(); i++)
 	{
 		switch (blockType[i])
@@ -161,9 +210,6 @@ void LoadStage::Draw()
 			DrawObject3d(debugBoxObj[i]);
 			break;
 		case BlockType::GOAL:
-			DrawObject3d(debugBoxObj[i]);
-			break;
-		case BlockType::START:
 			DrawObject3d(debugBoxObj[i]);
 			break;
 		default:
@@ -181,6 +227,47 @@ void LoadStage::Reset()
 			continue;
 		}
 
-		debugBoxObj[i]->position = blockPos[i];
+		debugBoxObj[i]->position.x = blockPos[i].x;
+		debugBoxObj[i]->position.y = blockPos[i].y;
+		debugBoxObj[i]->position.z = blockPos[i].z;
 	}
+}
+
+void LoadStage::StageClear()
+{
+	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	{
+		if (debugBoxObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(debugBoxObj[i]);
+		debugBoxObj[i] = nullptr;
+	}
+
+	blockPos.clear();
+	blockType.clear();
+	blockNumber.clear();
+	blockColors.clear();
+	debugBoxObj.clear();
+	collision.clear();
+
+	startPosNumber = -1;
+}
+
+XMFLOAT3 LoadStage::GetStartPlayerPos()
+{
+	size_t num;
+
+	if (startPosNumber < 0)
+	{
+		num = 0;
+	}
+	else
+	{
+		num = startPosNumber;
+	}
+
+	return debugBoxObj[num]->position;
 }

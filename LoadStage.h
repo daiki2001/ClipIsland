@@ -3,15 +3,8 @@
 #include <vector>
 #include "NY_Object3DMgr.h"
 #include <d3d12.h>
-
-enum BlockType
-{
-	NONE = -1,
-	BLOCK,
-	DONT_MOVE_BLOCK,
-	GOAL,
-	START
-};
+#include "Collision.h"
+#include "BlockData.h"
 
 class LoadStage
 {
@@ -20,11 +13,14 @@ private: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	template<class T> using vector = std::vector<T>;
 
+public: // 定数
+	static const float blockSize;
+
 public: // メンバ関数
 	// コンストラクタ
 	LoadStage();
 	// デストラクタ
-	~LoadStage() {}
+	~LoadStage();
 
 	// 読み込み
 	int Load(const char* filePath);
@@ -33,15 +29,23 @@ public: // メンバ関数
 
 	// ブロックの場所のリセット
 	void Reset();
+	// ステージデータの削除
+	void StageClear();
+	// プレイヤーの初期位置の取得
+	XMFLOAT3 GetStartPlayerPos();
 
 public: // メンバ変数
-	vector<int> blockType;        //ブロックの種類
-	vector<XMFLOAT4> blockColors; //ブロックの色
-	NY_Model3D debugBox;          //ブロックのオブジェクト
+	vector<int> blockType;         //ブロックの種類
+	vector<XMFLOAT4> blockColors;  //ブロックの色
+	vector<int> blockNumber;       //ブロックの塊
+	vector<Collision> collision;   //ブロックの当たり判定
+	vector<Object3d*> debugBoxObj; //ブロックのオブジェクト
 private:
+	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
+
 	vector<XMFLOAT3> blockPos; //ブロックの場所
 
-	UINT graph;                    //ブロックのテクスチャ
-	vector<Object3d*> debugBoxObj; //ブロックのモデル
+	NY_Model3D debugBox; //ブロックのモデル
+	UINT graph;          //ブロックのテクスチャ
 
 };
