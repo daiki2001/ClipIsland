@@ -153,11 +153,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         
             if (AB == true)
             {
-<<<<<<< HEAD
-                nFlag = stageData.stage.blockType[i] == BlockType::DONT_MOVE_BLOCK || stageData.stage.blockType[i] == BlockType::START || nFlag == false;
-=======
+//<<<<<<< HEAD
+//                nFlag = stageData.stage.blockType[i] == BlockType::DONT_MOVE_BLOCK || stageData.stage.blockType[i] == BlockType::START || nFlag == false;
+//=======
                 nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK || nFlag == false;
->>>>>>> 2cdde459b20d42ed3b3fdb3bdccf65711041219a
+//>>>>>>> 2cdde459b20d42ed3b3fdb3bdccf65711041219a
                 actnFlag = false;
                 break;
             }
