@@ -1,720 +1,7 @@
 #include "NY_Object3D.h"
 #include "TexManager.h"
 
-//----- NY_Model3D -----//
-
-//void NY_Model3D::LoadObjModel(const char *modelName, ID3D12Device *dev, NY_Object3DManager *mgr)
-//{
-//	//FileStream
-//	ifstream file;
-//	/*   ƒ‚ƒfƒ‹–¼‚Ì‚İ‚Åw’è‰Â”\‚É‚·‚é‚½‚ß‚Ìˆ—iƒ}ƒeƒŠƒAƒ‹“Ç‚İ‚İ‚ğŠy‚É‚·‚é‚½‚ßj   */
-//	string fileName = modelName;
-//	string modelpath = "Resources/" + fileName;
-//
-//	//objƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
-//	file.open(modelpath + ".obj");
-//	//ƒI[ƒvƒ“¸”s‚ğƒ`ƒFƒbƒN
-//	if (file.fail())
-//	{
-//		assert(0);
-//	}
-//
-//	//”’lŠi”[
-//	vector<XMFLOAT3> positions;
-//	vector<XMFLOAT3> normals;
-//	vector<XMFLOAT2> texcoords;
-//
-//	//1s‚¸‚Â“Ç‚İ‚İ
-//	string line;
-//	while (getline(file, line)) {
-//
-//		//1s•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä“Ç‚İ‚â‚·‚­‚·‚é
-//		istringstream line_stream(line);
-//
-//		//”¼ŠpƒXƒy[ƒX‚Ås‚Ìæ“ª•¶š—ñæ“¾
-//		string key;
-//		getline(line_stream, key, ' ');
-//
-//		//æ“ª‚ª v => ’¸“_À•W
-//		if (key == "v") {
-//			//xyzÀ•W“Ç‚İ‚İ
-//			XMFLOAT3 loadedPos{};
-//			line_stream >> loadedPos.x;
-//			line_stream >> loadedPos.y;
-//			line_stream >> loadedPos.z;
-//			//À•Wƒf[ƒ^’Ç‰Á
-//			positions.emplace_back(loadedPos);
-//		}
-//
-//		//æ“ª‚ª f => ƒ|ƒŠƒSƒ“ƒCƒ“ƒfƒbƒNƒX
-//		if (key == "f") {
-//			//”¼ŠpƒXƒy[ƒX‹æØ‚è‚Ås‚Ì‘±‚«‚ğ“Ç‚İ‚Ş
-//			string index_string;
-//			while (getline(line_stream, index_string, ' ')) {
-//				//’¸“_ƒCƒ“ƒfƒbƒNƒX1ŒÂ•ª‚Ì•¶š—ñ‚ğƒXƒgƒŠ[ƒ€‚É•ÏŠ·‚µ‚Ä“Ç‚İ‚â‚·‚­‚·‚é
-//				istringstream index_stream(index_string);
-//				unsigned short indexPosition, indexNormal, indexTexcoord;
-//				index_stream >> indexPosition;
-//				index_stream.seekg(1, ios_base::cur);//ƒXƒ‰ƒbƒVƒ…”ò‚Î‚·
-//				index_stream >> indexTexcoord;
-//				index_stream.seekg(1, ios_base::cur);//ƒXƒ‰ƒbƒVƒ…”ò‚Î‚·
-//				index_stream >> indexNormal;
-//				//’¸“_ƒf[ƒ^’Ç‰Á
-//				Vertex vertex{};
-//				vertex.pos = positions[indexPosition - 1];
-//				vertex.normal = normals[indexNormal - 1];
-//				vertex.uv = texcoords[indexTexcoord - 1];
-//				vertices.emplace_back(vertex);
-//				//’¸“_ƒCƒ“ƒfƒbƒNƒX‚É’Ç‰Á
-//				indices.emplace_back((unsigned short)indices.size());
-//			}
-//		}
-//
-//		//æ“ª‚ª vt => ƒeƒNƒXƒ`ƒƒ
-//		if (key == "vt") {
-//			//U,V¬•ª“Ç‚İ‚İ
-//			XMFLOAT2 texcoord{};
-//			line_stream >> texcoord.x;
-//			line_stream >> texcoord.y;
-//			//V•ûŒü”½“]
-//			texcoord.y = 1.0f - texcoord.y;
-//			//ƒeƒNƒXƒ`ƒƒÀ•Wƒf[ƒ^‚É’Ç‰Á
-//			texcoords.emplace_back(texcoord);
-//		}
-//
-//		//æ“ª‚ª vn => –@üƒxƒNƒgƒ‹
-//		if (key == "vn") {
-//			//x,y,z¬•ª“Ç‚İ‚İ
-//			XMFLOAT3 normal{};
-//			line_stream >> normal.x;
-//			line_stream >> normal.y;
-//			line_stream >> normal.z;
-//			//–@üƒxƒNƒgƒ‹‚Éƒf[ƒ^’Ç‰Á
-//			normals.emplace_back(normal);
-//		}
-//
-//		//æ“ª‚ª mtllib => ƒ}ƒeƒŠƒAƒ‹
-//		if (key == "mtllib") {
-//			string filename;
-//			line_stream >> filename;
-//			LoadMatarial(filename, dev, mgr);
-//		}
-//
-//	}
-//	//----------ˆÈ~‚Í“Ç‚İ‚ñ‚¾Œã‚Ìˆ—----------//
-//
-//	HRESULT result;
-//
-//	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
-//	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-//
-//	//’¸“_ƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&vertBuff)
-//	);
-//	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-//	vbView.SizeInBytes = sizeVB;
-//	vbView.StrideInBytes = sizeof(Vertex);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&indexBuff)
-//	);
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	ibview.BufferLocation = indexBuff->GetGPUVirtualAddress();
-//	ibview.SizeInBytes = sizeIB;
-//	ibview.Format = DXGI_FORMAT_R16_UINT;
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	Vertex *vertMap = nullptr;
-//	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
-//	copy(vertices.begin(), vertices.end(), vertMap);
-//	vertBuff->Unmap(0, nullptr);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	unsigned short *indexMap = nullptr;
-//	result = indexBuff->Map(0, nullptr, (void **)&indexMap);
-//	copy(indices.begin(), indices.end(), indexMap);
-//	indexBuff->Unmap(0, nullptr);
-//
-//}
-//
-//void NY_Model3D::LoadMatarial(string path, ID3D12Device *dev, NY_Object3DManager *mgr)
-//{
-//	ifstream file;
-//	//ƒ}ƒeƒŠƒAƒ‹ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
-//	file.open("Resources/" + path);
-//	//ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“¸”s‚ğƒ`ƒFƒbƒN
-//	if (file.fail()) {
-//		assert(0);
-//	}
-//
-//	//1s‚¸‚Â“Ç‚İ‚Ş
-//	string line;
-//	while (getline(file, line))
-//	{
-//		//ƒXƒgƒŠ[ƒ€•ÏŠ·
-//		istringstream line_stream(line);
-//		//”¼ŠpƒXƒy[ƒX‹æØ‚è‚Åæ“ª•¶š—ñæ“¾
-//		string key;
-//		getline(line_stream, key, ' ');
-//		//æ“ªƒ^ƒu•¶š‚Í–³‹
-//		if (key[0] == '\t') {
-//			key.erase(key.begin());
-//		}
-//
-//		//newmtl == ƒ}ƒeƒŠƒAƒ‹–¼
-//		if (key == "newmtl") {
-//			line_stream >> material.mtlName;
-//		}
-//
-//		//Ka == ƒAƒ“ƒrƒGƒ“ƒg
-//		if (key == "Ka") {
-//			line_stream >> material.ambient.x;
-//			line_stream >> material.ambient.y;
-//			line_stream >> material.ambient.z;
-//		}
-//
-//		//Kd == ƒfƒBƒtƒ…[ƒY
-//		if (key == "Kd") {
-//			line_stream >> material.diffuse.x;
-//			line_stream >> material.diffuse.y;
-//			line_stream >> material.diffuse.z;
-//		}
-//
-//		//Ks == ƒXƒyƒLƒ…ƒ‰[
-//		if (key == "Ks") {
-//			line_stream >> material.specurar.x;
-//			line_stream >> material.specurar.y;
-//			line_stream >> material.specurar.z;
-//		}
-//
-//		//map_Kd == ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
-//		if (key == "map_Kd") {
-//			line_stream >> material.texFileName;
-//			//ƒeƒNƒXƒ`ƒƒ‚ªŠi”[‚³‚ê‚Ä‚¢‚È‚¢ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@‚ğ’T‚·
-//			NY_Object3DManager::Get()->LoadObject3DTexture(material.texNumber, material.texFileName, dev);
-//		}
-//	}
-//
-//}
-//
-////void NY_Model3D::CreatePlaneModelXY(float x_size, float y_size, string useTexFileName, ID3D12Device *dev, NY_Object3DManager *mgr)
-////{
-////	//’¸“_ƒf[ƒ^ì¬
-////	Vertex plane[4] = {
-////		{{-x_size,-y_size,0},{},{0.0f,0.0f}},
-////		{{ x_size,-y_size,0},{},{1.0f,0.0f}},
-////		{{-x_size, y_size,0},{},{0.0f,1.0f}},
-////		{{ x_size, y_size,0},{},{1.0f,1.0f}},
-////	};
-////	//’¸“_ƒf[ƒ^Ši”[
-////	for (int i = 0; i < 4; i++)
-////	{
-////		vertices.push_back(plane[i]);
-////	}
-////	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^ì¬
-////	unsigned short index[] = {
-////		0,1,2,
-////		2,1,3,
-////	};
-////	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^Ši”[
-////	for (int i = 0; i < _countof(index); i++)
-////	{
-////		indices.push_back(index[i]);
-////	}
-////
-////	HRESULT result;
-////
-////	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
-////	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-////
-////	//’¸“_ƒoƒbƒtƒ@¶¬
-////	result = dev->CreateCommittedResource(
-////		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-////		D3D12_HEAP_FLAG_NONE,
-////		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-////		D3D12_RESOURCE_STATE_GENERIC_READ,
-////		nullptr,
-////		IID_PPV_ARGS(&vertBuff)
-////	);
-////	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-////	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-////	vbView.SizeInBytes = sizeVB;
-////	vbView.StrideInBytes = sizeof(Vertex);
-////
-////	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
-////	result = dev->CreateCommittedResource(
-////		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-////		D3D12_HEAP_FLAG_NONE,
-////		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
-////		D3D12_RESOURCE_STATE_GENERIC_READ,
-////		nullptr,
-////		IID_PPV_ARGS(&indexBuff)
-////	);
-////	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’è
-////	ibview.BufferLocation = indexBuff->GetGPUVirtualAddress();
-////	ibview.SizeInBytes = sizeIB;
-////	ibview.Format = DXGI_FORMAT_R16_UINT;
-////
-////	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-////	Vertex *vertMap = nullptr;
-////	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
-////	copy(vertices.begin(), vertices.end(), vertMap);
-////	vertBuff->Unmap(0, nullptr);
-////
-////	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-////	unsigned short *indexMap = nullptr;
-////	result = indexBuff->Map(0, nullptr, (void **)&indexMap);
-////	copy(indices.begin(), indices.end(), indexMap);
-////	indexBuff->Unmap(0, nullptr);
-////
-////	//ƒeƒNƒXƒ`ƒƒƒ[ƒh
-////	//ƒeƒNƒXƒ`ƒƒ‚ªŠi”[‚³‚ê‚Ä‚¢‚È‚¢ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@‚ğ’T‚·
-////	for (int texpath = 1; texpath < _countof(mgr->texbuff); texpath++)
-////	{
-////		if (mgr->texbuff[texpath] == nullptr)//‹ó‚ÌƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@‚ğ”­Œ©
-////		{
-////			//Obj3DMgr‚ÌƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İŠÖ”‚ğÀs
-////			mgr->LoadObject3DTexture((UINT)texpath, useTexFileName, dev);
-////			//texNumber‚Éƒ}ƒeƒŠƒAƒ‹‚Åƒ[ƒh‚µ‚½ƒeƒNƒXƒ`ƒƒ‚ÌSRV”Ô†‚ğŠi”[
-////			material.texNumber = texpath;
-////			//ƒ[ƒh‚µ‚½‚çƒ‹[ƒv‚ğ”²‚¯‚é
-////			break;
-////		}
-////	}
-////
-////}
-//
-//void NY_Model3D::CreatePlaneModelXY(float x_size, float y_size, float uv_x, float uv_y, UINT useTexNum, ID3D12Device *dev)
-//{
-//	//’¸“_ƒf[ƒ^ì¬
-//	Vertex plane[4] = {
-//		{{-x_size,-y_size,0},{},{0.0f,0.0f}},
-//		{{ x_size,-y_size,0},{},{uv_x,0.0f}},
-//		{{-x_size, y_size,0},{},{0.0f,uv_y}},
-//		{{ x_size, y_size,0},{},{uv_x,uv_y}},
-//	};
-//	//’¸“_ƒf[ƒ^Ši”[
-//	for (int i = 0; i < 4; i++)
-//	{
-//		vertices.push_back(plane[i]);
-//	}
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^ì¬
-//	unsigned short index[] = {
-//		0,2,1,
-//		1,2,3,
-//	};
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^Ši”[
-//	for (int i = 0; i < _countof(index); i++)
-//	{
-//		indices.push_back(index[i]);
-//	}
-//
-//	HRESULT result;
-//
-//	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
-//	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-//
-//	//’¸“_ƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&vertBuff)
-//	);
-//	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-//	vbView.SizeInBytes = sizeVB;
-//	vbView.StrideInBytes = sizeof(Vertex);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&indexBuff)
-//	);
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	ibview.BufferLocation = indexBuff->GetGPUVirtualAddress();
-//	ibview.SizeInBytes = sizeIB;
-//	ibview.Format = DXGI_FORMAT_R16_UINT;
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	Vertex *vertMap = nullptr;
-//	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
-//	copy(vertices.begin(), vertices.end(), vertMap);
-//	vertBuff->Unmap(0, nullptr);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	unsigned short *indexMap = nullptr;
-//	result = indexBuff->Map(0, nullptr, (void **)&indexMap);
-//	copy(indices.begin(), indices.end(), indexMap);
-//	indexBuff->Unmap(0, nullptr);
-//
-//	//ƒ}ƒeƒŠƒAƒ‹‚Ì”Ô†İ’è
-//	material.texNumber = useTexNum;
-//
-//}
-//
-//void NY_Model3D::CreatePlaneModelXZ(float x_size, float z_size, float uv_x, float uv_y, UINT useTexNum, ID3D12Device *dev)
-//{
-//	//’¸“_ƒf[ƒ^ì¬
-//	Vertex plane[4] = {
-//		{{-x_size,0,-z_size},{},{0.0f,0.0f}},
-//		{{ x_size,0,-z_size},{},{uv_x,0.0f}},
-//		{{-x_size,0, z_size},{},{0.0f,uv_y}},
-//		{{ x_size,0, z_size},{},{uv_x,uv_y}},
-//	};
-//	//’¸“_ƒf[ƒ^Ši”[
-//	for (int i = 0; i < 4; i++)
-//	{
-//		vertices.push_back(plane[i]);
-//	}
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^ì¬
-//	unsigned short index[] = {
-//		0,2,1,
-//		1,2,3,
-//	};
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^Ši”[
-//	for (int i = 0; i < _countof(index); i++)
-//	{
-//		indices.push_back(index[i]);
-//	}
-//
-//	HRESULT result;
-//
-//	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
-//	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-//
-//	//’¸“_ƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&vertBuff)
-//	);
-//	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-//	vbView.SizeInBytes = sizeVB;
-//	vbView.StrideInBytes = sizeof(Vertex);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&indexBuff)
-//	);
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	ibview.BufferLocation = indexBuff->GetGPUVirtualAddress();
-//	ibview.SizeInBytes = sizeIB;
-//	ibview.Format = DXGI_FORMAT_R16_UINT;
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	Vertex *vertMap = nullptr;
-//	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
-//	copy(vertices.begin(), vertices.end(), vertMap);
-//	vertBuff->Unmap(0, nullptr);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	unsigned short *indexMap = nullptr;
-//	result = indexBuff->Map(0, nullptr, (void **)&indexMap);
-//	copy(indices.begin(), indices.end(), indexMap);
-//	indexBuff->Unmap(0, nullptr);
-//
-//	//ƒ}ƒeƒŠƒAƒ‹‚Ì”Ô†İ’è
-//	material.texNumber = useTexNum;
-//}
-//
-//void NY_Model3D::CreatePlaneModelYZ(float y_size, float z_size, float uv_x, float uv_y, UINT useTexNum, ID3D12Device *dev)
-//{
-//	//’¸“_ƒf[ƒ^ì¬
-//	Vertex plane[4] = {
-//		{{ 0,-y_size,-z_size},{},{0.0f,0.0f}},
-//		{{ 0, y_size,-z_size},{},{uv_x,0.0f}},
-//		{{ 0,-y_size, z_size},{},{0.0f,uv_y}},
-//		{{ 0, y_size, z_size},{},{uv_x,uv_y}},
-//	};
-//	//’¸“_ƒf[ƒ^Ši”[
-//	for (int i = 0; i < 4; i++)
-//	{
-//		vertices.push_back(plane[i]);
-//	}
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^ì¬
-//	unsigned short index[] = {
-//		0,2,1,
-//		1,2,3,
-//	};
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^Ši”[
-//	for (int i = 0; i < _countof(index); i++)
-//	{
-//		indices.push_back(index[i]);
-//	}
-//
-//	HRESULT result;
-//
-//	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
-//	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-//
-//	//’¸“_ƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&vertBuff)
-//	);
-//	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-//	vbView.SizeInBytes = sizeVB;
-//	vbView.StrideInBytes = sizeof(Vertex);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&indexBuff)
-//	);
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	ibview.BufferLocation = indexBuff->GetGPUVirtualAddress();
-//	ibview.SizeInBytes = sizeIB;
-//	ibview.Format = DXGI_FORMAT_R16_UINT;
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	Vertex *vertMap = nullptr;
-//	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
-//	copy(vertices.begin(), vertices.end(), vertMap);
-//	vertBuff->Unmap(0, nullptr);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	unsigned short *indexMap = nullptr;
-//	result = indexBuff->Map(0, nullptr, (void **)&indexMap);
-//	copy(indices.begin(), indices.end(), indexMap);
-//	indexBuff->Unmap(0, nullptr);
-//
-//	//ƒ}ƒeƒŠƒAƒ‹‚Ì”Ô†İ’è
-//	material.texNumber = useTexNum;
-//}
-//
-//void NY_Model3D::CreateBoxModel(float size, float uv_x, float uv_y, UINT useTexNum, ID3D12Device *dev)
-//{
-//	//’¸“_ƒf[ƒ^ì¬
-//	Vertex box[] = {
-//		//Œã
-//		{{-size,-size,-size},{}, {0.0f,1.0f}},//¶‰º
-//		{{-size, size,-size},{}, {0.0f,0.0f}},//¶ã
-//		{{ size,-size,-size},{}, {1.0f,1.0f}},//‰E‰º
-//		{{ size, size,-size},{}, {1.0f,0.0f}},//‰Eã
-//		//‘O
-//		{{-size,-size, size},{},{0.0f,1.0f}},//¶‰º
-//		{{-size, size, size},{},{0.0f,0.0f}},//¶ã
-//		{{ size,-size, size},{},{1.0f,1.0f}},//‰E‰º
-//		{{ size, size, size},{},{1.0f,0.0f}},//‰Eã
-//		//¶
-//		{{-size,-size,-size},{},{0.0f,1.0f}},//¶‰º
-//		{{-size,-size, size},{},{0.0f,0.0f}},//¶ã
-//		{{-size, size,-size},{},{1.0f,1.0f}},//‰E‰º
-//		{{-size, size, size},{},{1.0f,0.0f}},//‰Eã
-//		//‰E
-//		{{ size,-size,-size},{},{0.0f,1.0f}},//¶‰º
-//		{{ size,-size, size},{},{0.0f,0.0f}},//¶ã
-//		{{ size, size,-size},{},{1.0f,1.0f}},//‰E‰º
-//		{{ size, size, size},{},{1.0f,0.0f}},//‰Eã
-//		//ã
-//		{{-size, size,-size},{},{1.0f,1.0f}},//‰E‰º
-//		{{-size, size, size},{},{1.0f,0.0f}},//‰Eã
-//		{{ size, size,-size},{},{0.0f,1.0f}},//¶‰º
-//		{{ size, size, size},{},{0.0f,0.0f}},//¶ã
-//		//‰º
-//		{{ size,-size,-size},{},{0.0f,1.0f}},//¶‰º
-//		{{ size,-size, size},{},{0.0f,0.0f}},//¶ã
-//		{{-size,-size,-size},{},{1.0f,1.0f}},//‰E‰º
-//		{{-size,-size, size},{},{1.0f,0.0f}},//‰Eã
-//
-//	};
-//	//’¸“_ƒf[ƒ^Ši”[
-//	for (int i = 0; i < _countof(box); i++)
-//	{
-//		vertices.push_back(box[i]);
-//	}
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^ì¬
-//	unsigned short index[] = {
-//		//‘O
-//		0,1,2,
-//		2,1,3,
-//		//Œã
-//		7,5,6,
-//		6,5,4,
-//		//¶
-//		8,9,10,
-//		10,9,11,
-//		//‰E
-//		14,15,12,
-//		12,15,13,
-//		//ã
-//		16,17,18,
-//		18,17,19,
-//		//‰º
-//		20,21,22,
-//		22,21,23,
-//	};
-//	//ƒCƒ“ƒfƒbƒNƒXƒf[ƒ^Ši”[
-//	for (int i = 0; i < _countof(index); i++)
-//	{
-//		indices.push_back(index[i]);
-//	}
-//
-//	HRESULT result;
-//
-//	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * vertices.size());
-//	UINT sizeIB = static_cast<UINT>(sizeof(unsigned short) * indices.size());
-//
-//	//’¸“_ƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&vertBuff)
-//	);
-//	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-//	vbView.SizeInBytes = sizeVB;
-//	vbView.StrideInBytes = sizeof(Vertex);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeIB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&indexBuff)
-//	);
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	ibview.BufferLocation = indexBuff->GetGPUVirtualAddress();
-//	ibview.SizeInBytes = sizeIB;
-//	ibview.Format = DXGI_FORMAT_R16_UINT;
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	Vertex *vertMap = nullptr;
-//	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
-//	copy(vertices.begin(), vertices.end(), vertMap);
-//	vertBuff->Unmap(0, nullptr);
-//
-//	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	unsigned short *indexMap = nullptr;
-//	result = indexBuff->Map(0, nullptr, (void **)&indexMap);
-//	copy(indices.begin(), indices.end(), indexMap);
-//	indexBuff->Unmap(0, nullptr);
-//
-//	//ƒ}ƒeƒŠƒAƒ‹‚Ì”Ô†İ’è
-//	material.texNumber = useTexNum;
-//}
-//
-//
-//
-//void NY_Model3D::CreateTriangleGeometoryTest(UINT usetexnum,ID3D12Device *dev)
-//{
-//	//’¸“_ƒf[ƒ^ì¬
-//	ParticleVertex plane[] = {
-//		{{0.0f,0.0f,0.0f}},
-//	};
-//	//’¸“_ƒf[ƒ^Ši”[
-//	for (int i = 0; i < 4; i++)
-//	{
-//		pvert.push_back(plane[i]);
-//	}
-//
-//	HRESULT result;
-//
-//	UINT sizeVB = static_cast<UINT>(sizeof(Vertex) * pvert.size());
-//
-//	//’¸“_ƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&vertBuff)
-//	);
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	vbView.BufferLocation = vertBuff->GetGPUVirtualAddress();
-//	vbView.SizeInBytes = sizeVB;
-//	vbView.StrideInBytes = sizeof(Vertex);
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	ParticleVertex *vertMap = nullptr;
-//	result = vertBuff->Map(0, nullptr, (void **)&vertMap);
-//	copy(pvert.begin(), pvert.end(), vertMap);
-//	vertBuff->Unmap(0, nullptr);
-//
-//	//ƒeƒNƒXƒ`ƒƒƒ[ƒh
-//	material.texNumber = usetexnum;
-//
-//
-//}
-//
-//SingleVertex NY_Model3D::GetSingleVertexData(ID3D12Device *dev)
-//{
-//	SingleVertex rv;
-//
-//	rv.v = { {0,0,0},{},{0,0} };
-//
-//	HRESULT result;
-//
-//	UINT sizeVB = static_cast<UINT>(sizeof(Vertex));
-//
-//	//’¸“_ƒoƒbƒtƒ@¶¬
-//	result = dev->CreateCommittedResource(
-//		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//		D3D12_HEAP_FLAG_NONE,
-//		&CD3DX12_RESOURCE_DESC::Buffer(sizeVB),
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&rv.vb)
-//	);
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒrƒ…[İ’è
-//	rv.vbview.BufferLocation = rv.vb->GetGPUVirtualAddress();
-//	rv.vbview.SizeInBytes = sizeVB;
-//	rv.vbview.StrideInBytes = sizeof(Vertex);
-//
-//	//’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
-//	Vertex *vertMap = nullptr;
-//	result = rv.vb -> Map(0, nullptr, (void **)&vertMap);
-//	vertMap = &rv.v;
-//	rv.vb -> Unmap(0, nullptr);
-//
-//	return rv;
-//}
+#include "Raki_DX12B.h"
 
 //----- NY_Object3D -----//
 
@@ -724,7 +11,7 @@ void Object3d::InitObject3D(Object3d *obj, ID3D12Device *dev)
 	const auto HEAP_PROP = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	const auto RESDESC = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff);
 
-	//’è”ƒoƒbƒtƒ@b0¶¬
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b0ç”Ÿæˆ
 	result = dev->CreateCommittedResource(
 		&HEAP_PROP,
 		D3D12_HEAP_FLAG_NONE,
@@ -734,7 +21,7 @@ void Object3d::InitObject3D(Object3d *obj, ID3D12Device *dev)
 		IID_PPV_ARGS(&obj->constBuffB0)
 	);
 
-	//’è”ƒoƒbƒtƒ@b1¶¬
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b1ç”Ÿæˆ
 	result = dev->CreateCommittedResource(
 		&HEAP_PROP,
 		D3D12_HEAP_FLAG_NONE,
@@ -748,12 +35,15 @@ void Object3d::InitObject3D(Object3d *obj, ID3D12Device *dev)
 
 void Object3d::InitObject3D(ID3D12Device *dev)
 {
+	//è¦ªã«ãƒŒãƒ«ã‚’ä»£å…¥
+	parent = nullptr;
+
 	HRESULT result;
 	const auto HEAP_PROP = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	const auto RESDESC = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff);
-
-	//’è”ƒoƒbƒtƒ@b0¶¬
-	result = dev->CreateCommittedResource(
+	
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b0ç”Ÿæˆ
+	result =  dev->CreateCommittedResource(
 		&HEAP_PROP,
 		D3D12_HEAP_FLAG_NONE,
 		&RESDESC,
@@ -762,7 +52,7 @@ void Object3d::InitObject3D(ID3D12Device *dev)
 		IID_PPV_ARGS(&constBuffB0)
 	);
 
-	//’è”ƒoƒbƒtƒ@b1¶¬
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b1ç”Ÿæˆ
 	result = dev->CreateCommittedResource(
 		&HEAP_PROP,
 		D3D12_HEAP_FLAG_NONE,
@@ -789,7 +79,7 @@ void Object3d::UpdateObject3D(Object3d *obj, XMMATRIX &matview)
 {
 	XMMATRIX matScale, matRot, matTrans;
 
-	// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvZ
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›è»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
 
 	matScale = XMMatrixScaling(obj->scale.x, obj->scale.y, obj->scale.z);
 
@@ -801,7 +91,7 @@ void Object3d::UpdateObject3D(Object3d *obj, XMMATRIX &matview)
 	matTrans = XMMatrixTranslation(obj->position.x, obj->position.y, obj->position.z);
 
 	obj->matWorld = XMMatrixIdentity();
-	obj->matWorld *= matScale;//ƒ[ƒ‹ƒhs—ñ‚ÉƒXƒP[ƒŠƒ“ƒO‚ğ”½‰f
+	obj->matWorld *= matScale;//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã‚’åæ˜ 
 	obj->matWorld *= matRot;
 	obj->matWorld *= matTrans;
 
@@ -810,7 +100,7 @@ void Object3d::UpdateObject3D(Object3d *obj, XMMATRIX &matview)
 		obj->matWorld *= obj->parent->matWorld;
 	}
 
-	//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB0 *ConstMapB0 = nullptr;
 	if (SUCCEEDED(obj->constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
@@ -818,7 +108,7 @@ void Object3d::UpdateObject3D(Object3d *obj, XMMATRIX &matview)
 		obj->constBuffB0->Unmap(0, nullptr);
 	}
 
-	//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB1 *ConstMapB1 = nullptr;
 	if (SUCCEEDED(obj->constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 	{
@@ -833,15 +123,15 @@ void Object3d::UpdateObject3D(Object3d *obj, XMMATRIX &matview)
 
 void Object3d::UpdateObject3D(NY_Camera *matview)
 {
-	//ƒ_[ƒeƒBƒtƒ‰ƒO‚Ì‹““®‚ÍŒŸ“¢’†
+	//ãƒ€ãƒ¼ãƒ†ã‚£ãƒ•ãƒ©ã‚°ã®æŒ™å‹•ã¯æ¤œè¨ä¸­
 	isDirty = true;
 
-	//ƒ_[ƒeƒBƒtƒ‰ƒO‚ª—LŒø‚ÈXVi’ÊíƒIƒuƒWƒFƒNƒgj
+	//ãƒ€ãƒ¼ãƒ†ã‚£ãƒ•ãƒ©ã‚°ãŒæœ‰åŠ¹ãªæ™‚æ›´æ–°ï¼ˆé€šå¸¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼‰
 	if (isDirty && isBillBoard != true) {
 
 		XMMATRIX matScale, matRot, matTrans;
 
-		// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvZ
+		// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›è»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
 
 		matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 
@@ -853,7 +143,7 @@ void Object3d::UpdateObject3D(NY_Camera *matview)
 		matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 		matWorld = XMMatrixIdentity();
-		matWorld *= matScale;//ƒ[ƒ‹ƒhs—ñ‚ÉƒXƒP[ƒŠƒ“ƒO‚ğ”½‰f
+		matWorld *= matScale;//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã‚’åæ˜ 
 		matWorld *= matRot;
 		matWorld *= matTrans;
 
@@ -862,7 +152,7 @@ void Object3d::UpdateObject3D(NY_Camera *matview)
 			matWorld *= parent->matWorld;
 		}
 
-		//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
+		//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
 		ConstBufferDataB0 *ConstMapB0 = nullptr;
 		if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 		{
@@ -871,7 +161,7 @@ void Object3d::UpdateObject3D(NY_Camera *matview)
 			constBuffB0->Unmap(0, nullptr);
 		}
 
-		//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
+		//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
 		ConstBufferDataB1 *ConstMapB1 = nullptr;
 		if (SUCCEEDED(constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 		{
@@ -882,10 +172,10 @@ void Object3d::UpdateObject3D(NY_Camera *matview)
 			constBuffB1->Unmap(0, nullptr);
 		}
 
-		//ƒ_[ƒeƒBƒtƒ‰ƒOƒŠƒZƒbƒg
+		//ãƒ€ãƒ¼ãƒ†ã‚£ãƒ•ãƒ©ã‚°ãƒªã‚»ãƒƒãƒˆ
 		isDirty = false;
 	}
-	//ƒrƒ‹ƒ{[ƒh‚Ì‚Æ‚«
+	//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®ã¨ã
 	else if (isDirty && isBillBoard) {
 		UpdateBillBoard3D(matview);
 
@@ -896,24 +186,24 @@ void Object3d::UpdateObject3D(NY_Camera *matview)
 void Object3d::UpdateBillBoard3D(Object3d *obj, NY_Camera cam)
 {
 	/*
-	ƒrƒ‹ƒ{[ƒh‚ÌŒ´—‚ÍAƒrƒ…[‚Å‰ñ‚·•ûŒü‚Ì”½‘Î‚ğ—\‚ß‚©‚¯‚è‚á‚¦‚¦‚â‚ñI‚¾‚ª
-	NY_CameraƒNƒ‰ƒX‚ÌŒ‡“_‚Æ‚µ‚ÄACamera–{‘Ì‚Ìƒ[ƒ‹ƒhÀ•W‚ÍˆêØ‘Ö‚í‚ç‚È‚¢‚Ì‚Å
-	NY_Camera‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Åƒrƒ‹ƒ{[ƒh‚ÌXV‚Ío—ˆ‚È‚¢B
-	‚æ‚Á‚ÄACamera‚Ìu’Ç]‚·‚éƒ^[ƒQƒbƒgv‚ğ—p‚¢‚Ä‹t‰ñ“]‚ğ‹‚ß‚é•K—v‚ª‚ ‚é?
+	ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®åŸç†ã¯ã€ãƒ“ãƒ¥ãƒ¼ã§å›ã™æ–¹å‘ã®åå¯¾ã‚’äºˆã‚ã‹ã‘ã‚Šã‚ƒãˆãˆã‚„ã‚“ï¼ã ãŒ
+	NY_Cameraã‚¯ãƒ©ã‚¹ã®æ¬ ç‚¹ã¨ã—ã¦ã€Cameraæœ¬ä½“ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã¯ä¸€åˆ‡æ›¿ã‚ã‚‰ãªã„ã®ã§
+	NY_Cameraã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã§ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®æ›´æ–°ã¯å‡ºæ¥ãªã„ã€‚
+	ã‚ˆã£ã¦ã€Cameraã®ã€Œè¿½å¾“ã™ã‚‹ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€ã‚’ç”¨ã„ã¦é€†å›è»¢ã‚’æ±‚ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹?
 	*/
 
 
-	////ƒrƒ‹ƒ{[ƒh—p•ÏŠ·s—ñ‚ğéŒ¾
+	////ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ç”¨å¤‰æ›è¡Œåˆ—ã‚’å®£è¨€
 	XMMATRIX billBoardMat;
 	billBoardMat = XMMatrixIdentity();
 
 	billBoardMat = XMMatrixLookAtLH({ 0.0f,0.0f,0.0f }, -XMVector3Normalize(XMLoadFloat3(&cam._eye) - XMLoadFloat3(&cam._target)), XMLoadFloat3(&cam._up));
 	billBoardMat = XMMatrixInverse(nullptr, billBoardMat);
 
-	//ƒ[ƒ‹ƒh•ÏŠ·—p
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ç”¨
 	XMMATRIX matScale, matRot, matTrans;
 
-	// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvZ
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›è»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
 
 	matScale = XMMatrixScaling(obj->scale.x, obj->scale.y, obj->scale.z);
 
@@ -937,7 +227,7 @@ void Object3d::UpdateBillBoard3D(Object3d *obj, NY_Camera cam)
 		obj->matWorld *= obj->parent->matWorld;
 	}
 
-	//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB0 *ConstMapB0 = nullptr;
 	if (SUCCEEDED(obj->constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
@@ -946,7 +236,7 @@ void Object3d::UpdateBillBoard3D(Object3d *obj, NY_Camera cam)
 		obj->constBuffB0->Unmap(0, nullptr);
 	}
 
-	//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB1 *ConstMapB1 = nullptr;
 	if (SUCCEEDED(obj->constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 	{
@@ -962,24 +252,24 @@ void Object3d::UpdateBillBoard3D(Object3d *obj, NY_Camera cam)
 void Object3d::UpdateBillBoard3D(NY_Camera *cam)
 {
 	/*
-	ƒrƒ‹ƒ{[ƒh‚ÌŒ´—‚ÍAƒrƒ…[‚Å‰ñ‚·•ûŒü‚Ì”½‘Î‚ğ—\‚ß‚©‚¯‚è‚á‚¦‚¦‚â‚ñI‚¾‚ª
-	NY_CameraƒNƒ‰ƒX‚ÌŒ‡“_‚Æ‚µ‚ÄACamera–{‘Ì‚Ìƒ[ƒ‹ƒhÀ•W‚ÍˆêØ‘Ö‚í‚ç‚È‚¢‚Ì‚Å
-	NY_Camera‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Åƒrƒ‹ƒ{[ƒh‚ÌXV‚Ío—ˆ‚È‚¢B
-	‚æ‚Á‚ÄACamera‚Ìu’Ç]‚·‚éƒ^[ƒQƒbƒgv‚ğ—p‚¢‚Ä‹t‰ñ“]‚ğ‹‚ß‚é•K—v‚ª‚ ‚é?
+	ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®åŸç†ã¯ã€ãƒ“ãƒ¥ãƒ¼ã§å›ã™æ–¹å‘ã®åå¯¾ã‚’äºˆã‚ã‹ã‘ã‚Šã‚ƒãˆãˆã‚„ã‚“ï¼ã ãŒ
+	NY_Cameraã‚¯ãƒ©ã‚¹ã®æ¬ ç‚¹ã¨ã—ã¦ã€Cameraæœ¬ä½“ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã¯ä¸€åˆ‡æ›¿ã‚ã‚‰ãªã„ã®ã§
+	NY_Cameraã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã§ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®æ›´æ–°ã¯å‡ºæ¥ãªã„ã€‚
+	ã‚ˆã£ã¦ã€Cameraã®ã€Œè¿½å¾“ã™ã‚‹ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€ã‚’ç”¨ã„ã¦é€†å›è»¢ã‚’æ±‚ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹?
 	*/
 
 
-////ƒrƒ‹ƒ{[ƒh—p•ÏŠ·s—ñ‚ğéŒ¾
+////ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ç”¨å¤‰æ›è¡Œåˆ—ã‚’å®£è¨€
 	XMMATRIX billBoardMat;
 	billBoardMat = XMMatrixIdentity();
 
 	billBoardMat = XMMatrixLookAtLH({ 0.0f,0.0f,0.0f }, -XMVector3Normalize(XMLoadFloat3(&cam->_eye) - XMLoadFloat3(&cam->_target)), XMLoadFloat3(&cam->_up));
 	billBoardMat = XMMatrixInverse(nullptr, billBoardMat);
 
-	//ƒ[ƒ‹ƒh•ÏŠ·—p
+	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ç”¨
 	XMMATRIX matScale, matRot, matTrans;
 
-	// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvZ
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›è»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
 
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 
@@ -1003,7 +293,7 @@ void Object3d::UpdateBillBoard3D(NY_Camera *cam)
 		matWorld *= parent->matWorld;
 	}
 
-	//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB0 *ConstMapB0 = nullptr;
 	if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
@@ -1012,7 +302,7 @@ void Object3d::UpdateBillBoard3D(NY_Camera *cam)
 		constBuffB0->Unmap(0, nullptr);
 	}
 
-	//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
 	ConstBufferDataB1 *ConstMapB1 = nullptr;
 	if (SUCCEEDED(constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 	{
@@ -1026,41 +316,41 @@ void Object3d::UpdateBillBoard3D(NY_Camera *cam)
 
 void Object3d::DrawModel3D(Object3d *obj, ID3D12GraphicsCommandList *cmd, ID3D12Device *dev)
 {
-	//’¸“_ƒoƒbƒtƒ@İ’è
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->IASetVertexBuffers(0, 1, &obj->model->vbView);
-	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@İ’è
+	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->IASetIndexBuffer(&obj->model->ibview);
-	//’è”ƒoƒbƒtƒ@İ’è
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->SetGraphicsRootConstantBufferView(0, obj->constBuffB0->GetGPUVirtualAddress());
-	//’è”ƒoƒbƒtƒ@İ’è
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->SetGraphicsRootConstantBufferView(1, obj->constBuffB1->GetGPUVirtualAddress());
 
-	//ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[‚ğƒZƒbƒg
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmd->SetGraphicsRootDescriptorTable(2,
 	CD3DX12_GPU_DESCRIPTOR_HANDLE(NY_Object3DManager::Get()->descheap->GetGPUDescriptorHandleForHeapStart(),
 	obj->model->material.texNumber, dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
-	//•`‰æ
+	//æç”»
 	cmd->DrawIndexedInstanced(obj->model->indices.size(), 1, 0, 0, 0);
 }
 
 void Object3d::DrawModel3D(ID3D12GraphicsCommandList *cmd, ID3D12Device *dev)
 {
-	//’¸“_ƒoƒbƒtƒ@İ’è
+	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->IASetVertexBuffers(0, 1, &model->vbView);
-	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@İ’è
+	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->IASetIndexBuffer(&model->ibview);
-	//’è”ƒoƒbƒtƒ@İ’è
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	//’è”ƒoƒbƒtƒ@İ’è
+	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	cmd->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
-	//ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[‚ğƒZƒbƒg
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
 	cmd->SetGraphicsRootDescriptorTable(2,
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
 			model->material.texNumber, dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
-	//•`‰æ
+	//æç”»
 	cmd->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
 
