@@ -5,15 +5,13 @@
 
 #define EoF (-1) // Error of function
 
-const float LoadStage::blockSize = 20.0f;
-
 LoadStage::LoadStage() :
 	debugBox{},
 	graph(0),
 	startPosNumber(-1)
 {
 	graph = TexManager::LoadTexture("./Resources/test.jpeg");
-	debugBox.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, graph);
+	debugBox.CreateBoxModel(BlockData::blockSize / 2.0f, 1.0f, 1.0f, graph);
 }
 
 LoadStage::~LoadStage()

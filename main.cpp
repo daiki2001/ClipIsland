@@ -187,7 +187,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         background.Draw();
 
         // オブジェクト描画
-        NY_Object3DManager::Get()->SetCommonBeginDrawObject3D(Raki_DX12B::Get()->GetGCommandList());
+        NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
         player.Draw();
         stageData.Draw();
 

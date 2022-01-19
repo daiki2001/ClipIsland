@@ -14,7 +14,6 @@ private: // エイリアス
 	template<class T> using vector = std::vector<T>;
 
 public: // 定数
-	static const float blockSize;
 
 public: // メンバ関数
 	// コンストラクタ
@@ -36,8 +35,8 @@ public: // メンバ関数
 
 public: // メンバ変数
 	vector<BlockData::Data> blocks; //ブロックのデータ
-	vector<XMFLOAT4> blockColors;   //ブロックの色
-	vector<Object3d*> debugBoxObj;  //ブロックのオブジェクト
+	vector<XMFLOAT4> blockColors;  //ブロックの色
+	vector<Object3d*> debugBoxObj; //ブロックのオブジェクト
 private:
 	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
 

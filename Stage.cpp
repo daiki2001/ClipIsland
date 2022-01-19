@@ -2,7 +2,7 @@
 
 #define EoF (-1) // Error of function
 
-Stage::Stage(Player * player) :
+Stage::Stage(Player* player) :
 	stage{},
 	player(player),
 	flag2d(false)
@@ -71,18 +71,18 @@ int Stage::Clip(bool flag)
 
 	if (clip.vec1.x != 0)
 	{
-		clip.vec1.x += LoadStage::blockSize;
-		clip.vec2.x -= LoadStage::blockSize;
+		clip.vec1.x += blockSize;
+		clip.vec2.x -= blockSize;
 	}
 	if (clip.vec1.y != 0)
 	{
-		clip.vec1.y += LoadStage::blockSize;
-		clip.vec2.y -= LoadStage::blockSize;
+		clip.vec1.y += blockSize;
+		clip.vec2.y -= blockSize;
 	}
 	if (clip.vec1.z != 0)
 	{
-		clip.vec1.z += LoadStage::blockSize;
-		clip.vec2.z -= LoadStage::blockSize;
+		clip.vec1.z += blockSize;
+		clip.vec2.z -= blockSize;
 	}
 
 	bool isReturn = clip.blockNumber1 < 0 || clip.blockNumber2 < 0;

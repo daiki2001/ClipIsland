@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Raki_Input.h"
-#include "LoadStage.h"
+#include "BlockData.h"
 
 Player::Player() :
 	position(0.0f, 0.0f, 0.0f),
@@ -32,31 +32,33 @@ Player::~Player()
 
 void Player::Update()
 {
+	using namespace BlockData;
+
 	playerOldPos = position;
 	//if (moveFlag == true)
 	//{
 		if (Input::isKeyTrigger(DIK_W))
 		{
 			forwardVec = { 0.0f, 1.0f, 0.0f };
-			position += forwardVec * LoadStage::blockSize * 1.0f;
+			position += forwardVec * blockSize * 1.0f;
 			playerRot = RVector3(-90, 0, 0);
 		}
 		if (Input::isKeyTrigger(DIK_A))
 		{
 			forwardVec = { -1.0f, 0.0f, 0.0f };
-			position += forwardVec * LoadStage::blockSize * 1.0f;
+			position += forwardVec * blockSize * 1.0f;
 			playerRot = RVector3(-180, 90, 270);
 		}
 		if (Input::isKeyTrigger(DIK_S))
 		{
 			forwardVec = { 0.0f, -1.0f, 0.0f };
-			position += forwardVec * LoadStage::blockSize * 1.0f;
+			position += forwardVec * blockSize * 1.0f;
 			playerRot = RVector3(-270, 90, 270);
 		}
 		if (Input::isKeyTrigger(DIK_D))
 		{
 			forwardVec = { 1.0f, 0.0f, 0.0f };
-			position += forwardVec * LoadStage::blockSize * 1.0f;
+			position += forwardVec * blockSize * 1.0f;
 			playerRot = RVector3(-180, -90, 90);
 		}
 	//}

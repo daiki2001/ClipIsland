@@ -398,17 +398,17 @@ void NY_Object3DManager::UpdateAllObjects()
 }
 
 
-void NY_Object3DManager::SetCommonBeginDrawObject3D(ID3D12GraphicsCommandList *cmd)
+void NY_Object3DManager::SetCommonBeginDrawObject3D()
 {
     //パイプラインステートをセット
-    cmd->SetPipelineState(object3dPipelineSet.pipelinestate.Get());
+    Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(object3dPipelineSet.pipelinestate.Get());
     //ルートシグネチャをセット
-    cmd->SetGraphicsRootSignature(object3dPipelineSet.rootsignature.Get());
+    Raki_DX12B::Get()->GetGCommandList()->SetGraphicsRootSignature(object3dPipelineSet.rootsignature.Get());
     //プリミティブ形状設定
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //デスクリプタヒープ設定
-    ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
-    cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+    ID3D12DescriptorHeap* ppHeaps[] = { TexManager::texDsvHeap.Get() };
+    Raki_DX12B::Get()->GetGCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
 Object3d *CreateObject3d(NY_Model3D *modelData, RVector3 pos)
@@ -427,7 +427,7 @@ Object3d *CreateObject3d(NY_Model3D *modelData, RVector3 pos)
 void DrawObject3d(Object3d *obj)
 {
     //描画準備
-    NY_Object3DManager::Get()->SetCommonBeginDrawObject3D(Raki_DX12B::Get()->GetGCommandList());
+    NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
     //オブジェクト描画
     obj->DrawModel3D(Raki_DX12B::Get()->GetGCommandList(), Raki_DX12B::Get()->GetDevice());
 }
