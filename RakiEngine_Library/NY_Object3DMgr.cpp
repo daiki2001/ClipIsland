@@ -378,15 +378,22 @@ Object3d *NY_Object3DManager::CreateObject3d(NY_Model3D *modelData)
 
 void NY_Object3DManager::DeleteObject3d(Object3d *obj)
 {
-    for (int i = 0; i < objects.size() - 1; i++) {
+
+    for (int i = 0; i < objects.size(); i++) {
         //消すオブジェクトと同じオブジェクトを検出
         if (obj == objects[i]) {
             objects.erase(objects.begin() + i);
+            break;
         }
     }
 
+    //メモリ解放
+    objects.shrink_to_fit();
+
     //オブジェクトの消去
-    //delete obj;
+    delete obj;
+    obj = nullptr;
+
 }
 
 void NY_Object3DManager::UpdateAllObjects()
