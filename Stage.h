@@ -33,9 +33,6 @@ public: // メンバ関数
 	// 描画
 	void Draw();
 
-	// プレイヤーのスタート位置を取得
-	RVector3 GetStartPlayerPos();
-
 	// ステージ選択
 	int Select(const char* filePath, const bool& flag2d);
 	// ブロックを挟む
@@ -50,10 +47,12 @@ private:
 	// ブロックを挟む(3d版)
 	int Clip3d(bool flag, ClipBlock* clip);
 
-private: // メンバ変数
-	Player* player;
-	stack<ClipBlock> clipBlock;
-	bool flag2d;
-public:
-	LoadStage stage;
+public: // メンバ変数
+	LoadStage stage; //読み込んだステージのデータ
+private:
+	Player* player;           //プレイヤーのデータ
+
+	stack<ClipBlock> clipBlock; //挟んだ時の情報
+	bool flag2d; //ステージが二次元かどうかのフラグ
+
 };

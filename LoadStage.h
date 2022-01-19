@@ -31,15 +31,18 @@ public: // メンバ関数
 	void Reset();
 	// ステージデータの削除
 	void StageClear();
+	// プレイヤーの初期位置の取得
+	XMFLOAT3 GetStartPlayerPos();
 
 public: // メンバ変数
-	vector<int> blockType;              //ブロックの種類
-	vector<XMFLOAT4> blockColors;       //ブロックの色
-	vector<int> blockNumber; //ブロックの塊
-	vector<Object3d*> debugBoxObj;      //ブロックのオブジェクト
-
-	vector<Collision> collision;
+	vector<int> blockType;         //ブロックの種類
+	vector<XMFLOAT4> blockColors;  //ブロックの色
+	vector<int> blockNumber;       //ブロックの塊
+	vector<Collision> collision;   //ブロックの当たり判定
+	vector<Object3d*> debugBoxObj; //ブロックのオブジェクト
 private:
+	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
+
 	vector<XMFLOAT3> blockPos; //ブロックの場所
 
 	NY_Model3D debugBox; //ブロックのモデル
