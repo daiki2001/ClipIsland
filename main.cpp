@@ -283,8 +283,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
                 {
                     player.goalFlag = true;
-                    player.object->color = { 0, 0, 1, 1 };
-
+                    //player.object->color = { 0, 0, 1, 1 };
                 }
 
                 if (AB == true)
@@ -327,6 +326,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 }
             }
 
+            if (player.goalFlag)
+            {
+                scene = Scene::GAME_CLEAR;
+
+                player.goalFlag = false;
+            }
+
             NY_Object3DManager::Get()->UpdateAllObjects();
 
             // 描画開始
@@ -358,10 +364,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             Raki_DX12B::Get()->EndDraw();
             break;
         case GAME_OVER:
-            scene = Scene::TITLE;
+            scene = Scene::SELECT;
             break;
         case GAME_CLEAR:
-            scene = Scene::TITLE;
+            scene = Scene::SELECT;
             break;
         default:
             break;
