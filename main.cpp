@@ -60,7 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     /*ステージ*/
     Stage stageData(&player);
-    stageData.Select("test3.boxmap", true);
+    stageData.Select("test6.boxmap", true);
 
     bool nFlag = false;
     bool actFlag = false;

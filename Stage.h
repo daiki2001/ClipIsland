@@ -10,11 +10,13 @@ public: // サブクラス
 	struct ClipBlock
 	{
 		/*1つ目*/
-		size_t blockNumber1 = (size_t)-1;
+		int blockNumber1 = -1;
 		RVector3 vec1 = {};
 		/*2つ目*/
-		size_t blockNumber2 = (size_t)-1;
+		int blockNumber2 = -1;
 		RVector3 vec2 = {};
+		/*プレイヤーの座標*/
+		XMFLOAT3 playerPos = {};
 	};
 
 private: // エイリアス
