@@ -86,6 +86,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         stage[i].spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
         stage[i].UpdateSprite();
     }
+    UINT arrowLGraph = TexManager::LoadTexture("./Resources/Arrow_L.png");
+    Sprite arrowL;
+    arrowL.CreateSprite({ 128.0f, 128.0f }, { 0.0f, 0.5f }, arrowLGraph, false);
+    arrowL.spdata.position.x = 200.0f;
+    arrowL.spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
+    arrowL.UpdateSprite();
+    UINT arrowRGraph = TexManager::LoadTexture("./Resources/Arrow_R.png");
+    Sprite arrowR;
+    arrowR.CreateSprite({ 128.0f, 128.0f }, { 1.0f, 0.5f }, arrowRGraph, false);
+    arrowR.spdata.position.x = Raki_WinAPI::window_width - 200.0f;
+    arrowR.spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
+    arrowR.UpdateSprite();
 
     /*チュートリアル*/
     UINT tutorialGraph[] =
@@ -143,7 +155,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             Raki_DX12B::Get()->EndDraw();
             break;
         case SELECT:
-            if (Input::isKeyTrigger(DIK_W))
+            if (Input::isKeyTrigger(DIK_A))
             {
                 stageNumber--;
 
@@ -152,7 +164,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     stageNumber = 0;
                 }
             }
-            if (Input::isKeyTrigger(DIK_S))
+            if (Input::isKeyTrigger(DIK_D))
             {
                 stageNumber++;
 
@@ -181,7 +193,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     player.position = { 20.0f, -40.0f, 0.0f };
                     break;
                 case 3:
-                    stageData.Select("test6.boxmap", true);
+                    stageData.Select("test5.boxmap", true);
                     break;
                 case 4:
                     stageData.Select("test7.boxmap", true);
@@ -199,6 +211,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             // スプライト描画
             SpriteManager::Get()->SetCommonBeginDraw();
             stage[stageNumber].Draw();
+            arrowL.Draw();
+            arrowR.Draw();
 
             // 描画終了
             Raki_DX12B::Get()->EndDraw();

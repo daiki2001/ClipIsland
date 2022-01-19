@@ -1,4 +1,5 @@
 #include "Stage.h"
+#include <vector>
 
 #define EoF (-1) // Error of function
 
@@ -145,6 +146,8 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 	using namespace BlockData;
 
 	auto& tmp = stage.debugBoxObj;
+	std::vector<float> dontMoveBlocksPos;
+	float space = 0.0f;
 
 	if (player->forwardVec.x != 0.0f)
 	{
@@ -157,6 +160,12 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 
 			if (stage.blocks[i].type == BlockType::START)
 			{
+				continue;
+			}
+
+			if (moveFlag[stage.blocks[i].type].second == false)
+			{
+				dontMoveBlocksPos.push_back(stage.blocks[i].pos.y);
 				continue;
 			}
 
@@ -191,6 +200,26 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 				}
 			}
 		}
+
+		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
+		{
+			space = player->position.y - dontMoveBlocksPos[i];
+
+			if (space < 0)
+			{
+				if (space > clip->vec1.y)
+				{
+					clip->vec1.y -= space;
+				}
+			}
+			else
+			{
+				if (space < clip->vec2.y)
+				{
+					clip->vec2.y -= space;
+				}
+			}
+		}
 	}
 	else if (player->forwardVec.y != 0.0f)
 	{
@@ -203,6 +232,12 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 
 			if (stage.blocks[i].type == BlockType::START)
 			{
+				continue;
+			}
+
+			if (moveFlag[stage.blocks[i].type].second == false)
+			{
+				dontMoveBlocksPos.push_back(stage.blocks[i].pos.x);
 				continue;
 			}
 
@@ -234,6 +269,26 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 					clip->blockNumber2 = i;
 					clip->vec2 = player->position - tmp[i]->position;
 					clip->vec2.z = 0.0f;
+				}
+			}
+		}
+
+		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
+		{
+			space = player->position.x - dontMoveBlocksPos[i];
+
+			if (space < 0)
+			{
+				if (space > clip->vec1.x)
+				{
+					clip->vec1.x -= space;
+				}
+			}
+			else
+			{
+				if (space < clip->vec2.x)
+				{
+					clip->vec2.x -= space;
 				}
 			}
 		}
