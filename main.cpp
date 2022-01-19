@@ -60,7 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     /*ステージ*/
     Stage stageData(&player);
-    stageData.Select("test6.boxmap", true);
+    stageData.Select("map1.boxmap", true);
 
     bool nFlag = false;
     bool actFlag = false;
@@ -87,15 +87,22 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         if (Input::isKey(DIK_3))
         {
             stageData.Select("map3.boxmap", true);
-            player.position = { 20.0f, -40.0f, 0.0f };
+            player.position = { -20.0f, -40.0f, 0.0f };
         }
         if (Input::isKey(DIK_4))
         {
-            stageData.Select("test6.boxmap", true);
+            stageData.Select("map4.boxmap", true);
+            player.position = { 20.0f, -40.0f, 0.0f };
         }
         if (Input::isKey(DIK_5))
         {
-            stageData.Select("test7.boxmap", true);
+            stageData.Select("map5.boxmap", true);
+            player.position = { 0.0f, 0.0f, 0.0f };
+        }
+        if (Input::isKey(DIK_6))
+        {
+            stageData.Select("map6.boxmap", true);
+            player.position = { 0.0f,-40.0f,0.0f };
         }
         /*for (size_t i = 0; i < stageData.stage.collision.size(); i++)
         {

@@ -402,7 +402,7 @@ void NY_Object3DManager::DeleteObject3d(Object3d *obj)
 void NY_Object3DManager::UpdateAllObjects()
 {
     //すべてのオブジェクトを更新する
-    for (int i = 0; i < objects.size(); i++) {
+    for (int i = 0; i < objects.size(); i++) { 
         objects[i]->UpdateObject3D(cam);
     }
 }
