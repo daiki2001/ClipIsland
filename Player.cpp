@@ -8,7 +8,9 @@ Player::Player() :
 	playerRot(-90, 0, 0),
 	model{},
 	object(nullptr),
-	playerCollision({ -5, -5, -5 }, { 5,5,5 }, position)
+	playerCollision({ -5, -5, -5 }, { 5,5,5 }, position),
+	playerOldPos(0.0f, 0.0f, 0.0f)
+	
 
 
 {
@@ -19,6 +21,7 @@ Player::Player() :
 	object->scale = { 10.0f, 10.0f, 10.0f };
 	object->rotation = RVector3(-90, 0, 0);
 	object->color = { 1, 1, 1, 1 };
+	goalFlag = false;
 }
 
 Player::~Player()
@@ -32,30 +35,37 @@ Player::~Player()
 
 void Player::Update()
 {
-	if (Input::isKeyTrigger(DIK_W))
-	{
-		forwardVec = { 0.0f, 1.0f, 0.0f };
-		position += forwardVec * LoadStage::blockSize * 0.9f;
-		playerRot = RVector3(-90, 0, 0);
-	}
-	if (Input::isKeyTrigger(DIK_A))
-	{
-		forwardVec = { -1.0f, 0.0f, 0.0f };
-		position += forwardVec * LoadStage::blockSize * 0.9f;
-		playerRot = RVector3(-180, 90, 270);
-	}
-	if (Input::isKeyTrigger(DIK_S))
-	{
-		forwardVec = { 0.0f, -1.0f, 0.0f };
-		position += forwardVec * LoadStage::blockSize * 0.9f;
-		playerRot = RVector3(-270, 90, 270);
-	}
-	if (Input::isKeyTrigger(DIK_D))
-	{
-		forwardVec = { 1.0f, 0.0f, 0.0f };
-		position += forwardVec * LoadStage::blockSize * 0.9f;
-		playerRot = RVector3(-180, -90, 90);
-	}
+	playerOldPos = position;
+	//if (moveFlag == true)
+	//{
+		if (Input::isKeyTrigger(DIK_W))
+		{
+			forwardVec = { 0.0f, 1.0f, 0.0f };
+			position += forwardVec * LoadStage::blockSize * 1.0f;
+			playerRot = RVector3(-90, 0, 0);
+		}
+		if (Input::isKeyTrigger(DIK_A))
+		{
+			forwardVec = { -1.0f, 0.0f, 0.0f };
+			position += forwardVec * LoadStage::blockSize * 1.0f;
+			playerRot = RVector3(-180, 90, 270);
+		}
+		if (Input::isKeyTrigger(DIK_S))
+		{
+			forwardVec = { 0.0f, -1.0f, 0.0f };
+			position += forwardVec * LoadStage::blockSize * 1.0f;
+			playerRot = RVector3(-270, 90, 270);
+		}
+		if (Input::isKeyTrigger(DIK_D))
+		{
+			forwardVec = { 1.0f, 0.0f, 0.0f };
+			position += forwardVec * LoadStage::blockSize * 1.0f;
+			playerRot = RVector3(-180, -90, 90);
+		}
+	//}
+
+
+
 
 	playerCollision.Update(position);
 
@@ -69,4 +79,9 @@ void Player::Draw()
 {
 
 	DrawObject3d(object);
+}
+
+void Player::PushBack()
+{
+
 }
