@@ -60,7 +60,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     /*ステージ*/
     Stage stageData(&player);
-    stageData.Select("test3.boxmap", true);
+    stageData.Select("test6.boxmap", true);
 
     bool nFlag = false;
     bool actFlag = false;
@@ -73,6 +73,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         //更新
 
         Input::StartGetInputState();
+
+        if (Input::isKey(DIK_1))
+        {
+            stageData.Select("test3.boxmap", true);
+        }
+        if (Input::isKey(DIK_2))
+        {
+            stageData.Select("test.boxmap", true);
+        }
 
         /*for (size_t i = 0; i < stageData.stage.collision.size(); i++)
         {

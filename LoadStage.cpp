@@ -237,7 +237,7 @@ void LoadStage::StageClear()
 		}
 
 		DeleteObject3d(debugBoxObj[i]);
-		debugBoxObj[i] = nullptr;
+		//debugBoxObj[i] = nullptr;
 	}
 
 	blockPos.clear();
@@ -246,4 +246,11 @@ void LoadStage::StageClear()
 	blockColors.clear();
 	debugBoxObj.clear();
 	collision.clear();
+
+	blockPos.shrink_to_fit();
+	blockType.shrink_to_fit();
+	blockNumber.shrink_to_fit();
+	blockColors.shrink_to_fit();
+	debugBoxObj.shrink_to_fit();
+	collision.shrink_to_fit();
 }

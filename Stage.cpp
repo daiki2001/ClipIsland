@@ -33,6 +33,11 @@ void Stage::Draw()
 	stage.Draw();
 }
 
+RVector3 Stage::GetStartPlayerPos()
+{
+	return RVector3();
+}
+
 int Stage::Select(const char* filePath, const bool& flag2d)
 {
 	if (filePath == nullptr)
@@ -100,6 +105,7 @@ int Stage::Clip(bool flag)
 
 	if (moveFlag[blockType[0]].second == true && moveFlag[blockType[1]].second == true)
 	{
+		clip.playerPos = player->position;
 		clipBlock.push(clip);
 
 		stage.debugBoxObj[clipBlock.top().blockNumber1]->position += clipBlock.top().vec1;
@@ -147,7 +153,7 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 
 	if (player->forwardVec.x != 0.0f)
 	{
-		for (size_t i = 0; i < tmp.size(); i++)
+		for (int i = 0; i < tmp.size(); i++)
 		{
 			if (tmp[i]->position.x != player->position.x || tmp[i]->position.y == player->position.y)
 			{
@@ -193,7 +199,7 @@ int Stage::Clip2d(bool flag, ClipBlock* clip)
 	}
 	else if (player->forwardVec.y != 0.0f)
 	{
-		for (size_t i = 0; i < tmp.size(); i++)
+		for (int i = 0; i < tmp.size(); i++)
 		{
 			if (tmp[i]->position.x == player->position.x || tmp[i]->position.y != player->position.y)
 			{
@@ -254,7 +260,7 @@ int Stage::Clip3d(bool flag, ClipBlock* clip)
 
 	if (player->forwardVec.x != 0.0f)
 	{
-		for (size_t i = 0; i < tmp.size(); i++)
+		for (int i = 0; i < (int)tmp.size(); i++)
 		{
 			if (tmp[i]->position.x != player->position.x || tmp[i]->position.y != player->position.y || tmp[i]->position.z == player->position.z)
 			{
@@ -296,7 +302,7 @@ int Stage::Clip3d(bool flag, ClipBlock* clip)
 	}
 	else if (player->forwardVec.z != 0.0f)
 	{
-		for (size_t i = 0; i < tmp.size(); i++)
+		for (int i = 0; i < (int)tmp.size(); i++)
 		{
 			if (tmp[i]->position.x == player->position.x || tmp[i]->position.y != player->position.y || tmp[i]->position.z != player->position.z)
 			{

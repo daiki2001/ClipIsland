@@ -8,11 +8,8 @@ Player::Player() :
 	playerRot(-90, 0, 0),
 	model{},
 	object(nullptr),
-	playerCollision({ -5, -5, -5 }, { 5,5,5 }, position),
+	playerCollision(RVector3(-5, -5, -5) + position, RVector3(5, 5, 5) + position, position),
 	playerOldPos(0.0f, 0.0f, 0.0f)
-	
-
-
 {
 	model.LoadObjModel("player");
 	object = CreateObject3d(&model);
