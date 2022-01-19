@@ -80,7 +80,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //頂点シェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"../RakiEngine_Library/Shaders/OBJVertexShader.hlsl", //シェーダーファイル名
+        L"Resources/Shaders/OBJVertexShader.hlsl", //シェーダーファイル名
         nullptr,//シェーダーマクロオブジェクト（今回は使わない）
         D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
         "main", "vs_5_0", //エントリーポイント名、シェーダーモデル指定
@@ -106,7 +106,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //標準ジオメトリシェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"../RakiEngine_Library/Shaders/OBJGeometryShader.hlsl", //シェーダーファイル名
+        L"Resources/Shaders/OBJGeometryShader.hlsl", //シェーダーファイル名
         nullptr,//シェーダーマクロオブジェクト（今回は使わない）
         D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
         "main", "gs_5_0", //エントリーポイント名、シェーダーモデル指定
@@ -132,7 +132,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //ピクセルシェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"../RakiEngine_Library/Shaders/OBJPixelShader.hlsl",
+        L"Resources/Shaders/OBJPixelShader.hlsl",
         nullptr,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         "main", "ps_5_0",
@@ -359,6 +359,10 @@ void NY_Object3DManager::SetCamera(NY_Camera *cam)
 
 Object3d *NY_Object3DManager::CreateObject3d(NY_Model3D *modelData)
 {
+    if (modelData == nullptr) {
+        assert(modelData == nullptr);
+    }
+
     //Object3dのデータを新たに作成
     Object3d *newobj = new Object3d;
 
@@ -378,15 +382,19 @@ Object3d *NY_Object3DManager::CreateObject3d(NY_Model3D *modelData)
 
 void NY_Object3DManager::DeleteObject3d(Object3d *obj)
 {
-    for (int i = 0; i < objects.size() - 1; i++) {
+    for (int i = 0; i < objects.size(); i++) {
         //消すオブジェクトと同じオブジェクトを検出
         if (obj == objects[i]) {
             objects.erase(objects.begin() + i);
+            objects[i];
+            break;
         }
     }
 
-    //オブジェクトの消去
+    objects.shrink_to_fit();
+
     delete obj;
+    obj = nullptr;
 }
 
 void NY_Object3DManager::UpdateAllObjects()
@@ -398,17 +406,17 @@ void NY_Object3DManager::UpdateAllObjects()
 }
 
 
-void NY_Object3DManager::SetCommonBeginDrawObject3D(ID3D12GraphicsCommandList *cmd)
+void NY_Object3DManager::SetCommonBeginDrawObject3D()
 {
     //パイプラインステートをセット
-    cmd->SetPipelineState(object3dPipelineSet.pipelinestate.Get());
+    Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(object3dPipelineSet.pipelinestate.Get());
     //ルートシグネチャをセット
-    cmd->SetGraphicsRootSignature(object3dPipelineSet.rootsignature.Get());
+    Raki_DX12B::Get()->GetGCommandList()->SetGraphicsRootSignature(object3dPipelineSet.rootsignature.Get());
     //プリミティブ形状設定
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //デスクリプタヒープ設定
     ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
-    cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+    Raki_DX12B::Get()->GetGCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
 Object3d *CreateObject3d(NY_Model3D *modelData, RVector3 pos)
@@ -427,7 +435,7 @@ Object3d *CreateObject3d(NY_Model3D *modelData, RVector3 pos)
 void DrawObject3d(Object3d *obj)
 {
     //描画準備
-    NY_Object3DManager::Get()->SetCommonBeginDrawObject3D(Raki_DX12B::Get()->GetGCommandList());
+    NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
     //オブジェクト描画
     obj->DrawModel3D(Raki_DX12B::Get()->GetGCommandList(), Raki_DX12B::Get()->GetDevice());
 }
