@@ -43,19 +43,19 @@ void Player::Update()
 			position += forwardVec * blockSize * 1.0f;
 			playerRot = RVector3(-90, 0, 0);
 		}
-		if (Input::isKeyTrigger(DIK_A))
+		else if (Input::isKeyTrigger(DIK_A))
 		{
 			forwardVec = { -1.0f, 0.0f, 0.0f };
 			position += forwardVec * blockSize * 1.0f;
 			playerRot = RVector3(-180, 90, 270);
 		}
-		if (Input::isKeyTrigger(DIK_S))
+		else if (Input::isKeyTrigger(DIK_S))
 		{
 			forwardVec = { 0.0f, -1.0f, 0.0f };
 			position += forwardVec * blockSize * 1.0f;
 			playerRot = RVector3(-270, 90, 270);
 		}
-		if (Input::isKeyTrigger(DIK_D))
+		else if (Input::isKeyTrigger(DIK_D))
 		{
 			forwardVec = { 1.0f, 0.0f, 0.0f };
 			position += forwardVec * blockSize * 1.0f;
