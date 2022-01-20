@@ -130,7 +130,6 @@ void ParticleManager::Draw(UINT drawTexNum)
 		return;
 	}
 
-
 	// パイプラインステートの設定
 	cmd->SetPipelineState(pipeline.Get());
 	// ルートシグネチャの設定

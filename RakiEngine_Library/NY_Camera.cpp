@@ -277,7 +277,7 @@ void NY_Camera::UpdateViewMat() {
 	axisX = XMVector3Normalize(axisX);
 	//yé≤åvéZ
 	XMVECTOR axisY = XMVector3Cross(axisZ, axisX);
-	axisY = XMVector3Normalize(axisY);
+
 	//âÒì]çsóÒåvéZ
 	XMMATRIX camrot;
 	camrot.r[0] = axisX;
