@@ -398,13 +398,8 @@ void NY_Object3DManager::DeleteObject3d(Object3d *obj)
 
 void NY_Object3DManager::UpdateAllObjects()
 {
-<<<<<<< HEAD
-    //縺吶∋縺ｦ縺ｮ繧ｪ繝悶ず繧ｧ繧ｯ繝医ｒ譖ｴ譁ｰ縺吶ｋ
-    for (int i = 0; i < objects.size(); i++) { 
-=======
     //すべてのオブジェクトを更新する
     for (int i = 0; i < objects.size(); i++) {
->>>>>>> 5cfe8a994777a4825b609e18ae53a95498effd91
         objects[i]->UpdateObject3D(cam);
     }
 }
