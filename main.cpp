@@ -229,28 +229,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 stageData.Select("map1.boxmap", true);
                 player.position = { 0.0f, -40.0f, 0.0f };
             }
-            if (Input::isKey(DIK_2))
-            {
-                stageData.Select("map2.boxmap", true);
-                player.position = { 0.0f, -40.0f, 0.0f };
-            }
-            if (Input::isKey(DIK_3))
-            {
-                stageData.Select("map3.boxmap", true);
-                player.position = { 20.0f, -40.0f, 0.0f };
-            }
-            if (Input::isKey(DIK_4))
-            {
-                stageData.Select("test6.boxmap", true);
-            }
-            if (Input::isKey(DIK_5))
-            {
-                stageData.Select("test7.boxmap", true);
-            }
 
             if (isTutorial)
             {
                 player.playerOldPos = player.position;
+                player.playerCollision.Update(player.position);
+                stageData.Update();
 
                 if (Input::isKeyTrigger(DIK_SPACE))
                 {

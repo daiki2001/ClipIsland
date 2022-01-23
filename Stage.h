@@ -10,9 +10,11 @@ public: // サブクラス
 	struct ClipBlock
 	{
 		/*1つ目*/
+		int ReferencePoint1 = -1;
 		int blockNumber1 = -1;
 		RVector3 vec1 = {};
 		/*2つ目*/
+		int ReferencePoint2 = -1;
 		int blockNumber2 = -1;
 		RVector3 vec2 = {};
 		/*プレイヤーの座標*/
@@ -43,9 +45,9 @@ public: // メンバ関数
 	void Reset();
 private:
 	// ブロックを挟む(2d版)
-	int Clip2d(bool flag, ClipBlock* clip);
+	int Clip2d(ClipBlock* clip);
 	// ブロックを挟む(3d版)
-	int Clip3d(bool flag, ClipBlock* clip);
+	int Clip3d(ClipBlock* clip);
 
 public: // メンバ変数
 	LoadStage stage; //読み込んだステージのデータ
