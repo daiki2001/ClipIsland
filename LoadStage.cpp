@@ -55,7 +55,7 @@ int LoadStage::Load(const char* filePath)
 		isBlock = false;
 		number = 0;
 
-		for (size_t i = 0; i < 4; i++)
+		for (size_t i = 0; i < sizeof(blockData) / sizeof(blockData[0]); i++)
 		{
 			blockData[i] = 0;
 		}
@@ -247,6 +247,10 @@ void LoadStage::StageClear()
 	blocks.clear();
 	blockColors.clear();
 	debugBoxObj.clear();
+
+	blocks.shrink_to_fit();
+	blockColors.shrink_to_fit();
+	debugBoxObj.shrink_to_fit();
 
 	startPosNumber = -1;
 }
