@@ -28,8 +28,6 @@ public:
 	RVector3 &operator-=(const XMFLOAT3 &other) { this->x -= other.x; this->y -= other.y; this->z -= other.z; return *this; }
 	RVector3 &operator*=(const XMFLOAT3 &other) { this->x *= other.x; this->y *= other.y; this->z *= other.z; return *this; }
 	RVector3 &operator/=(const XMFLOAT3 &other) { this->x /= other.x; this->y /= other.y; this->z /= other.z; return *this; }
-
-
 	
 
 	bool operator==(const RVector3 &other) { return this->x == other.x && this->y == other.y && this->z == other.z; }
@@ -47,6 +45,9 @@ public:
 	void zero() { x = 0, y = 0, z = 0; }
 
 	RVector3 operator-() const { return RVector3(-x, -y, -z); }
+
+	//XMFLOAT3 operator=(const RVector3 &other) { return XMFLOAT3(other.x, other.y, other.z); }
+	//RVector3 operator=(const XMFLOAT3 &other) { return RVector3(other.x, other.y, other.z); }
 };
 
 inline float dot(const RVector3 &a, const RVector3 &b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
@@ -78,19 +79,34 @@ namespace RV3Colider {
 		Rv3AABB()	= default;
 		~Rv3AABB()	= default;
 
-		//値指定コンストラクタ
+		/// <summary>
+		/// AABBデータのコンストラクタ
+		/// </summary>
+		/// <param name="min">中心点からの距離A</param>
+		/// <param name="max">中心点からの距離B</param>
+		/// <param name="pos">判定の中心点</param>
 		Rv3AABB(RVector3 min, RVector3 max, RVector3 pos) {
-			this->min = min;
-			this->max = max;
+			this->min = pos + min;
+			this->max = pos + max;
 			this->oldPos = pos;
 		}
 
+		/// <summary>
+		/// AABBデータ設定
+		/// </summary>
+		/// <param name="pos">判定の中心点</param>
+		/// <param name="min">中心点からの距離A</param>
+		/// <param name="max">中心点からの距離B</param>
 		inline void Set(RVector3 pos, RVector3 min, RVector3 max) {
-			this->min = min;
-			this->max = max;
+			this->min = pos + min;
+			this->max = pos + max;
 			this->oldPos = pos;
 		}
 
+		/// <summary>
+		/// AABBのデータ更新
+		/// </summary>
+		/// <param name="actpos">その時点でのAABBの中心座標（RVector3）</param>
 		inline void Update(RVector3 actpos) {
 			RVector3 diff = actpos - oldPos;
 			min += diff;
