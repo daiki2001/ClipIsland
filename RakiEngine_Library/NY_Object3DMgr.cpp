@@ -351,11 +351,6 @@ void NY_Object3DManager::LoadObject3DTexture(UINT &texNumber, string filename, I
 }
 
 
-void NY_Object3DManager::SetCamera(NY_Camera *cam)
-{
-    this->cam = cam;
-}
-
 
 Object3d *NY_Object3DManager::CreateObject3d(NY_Model3D *modelData)
 {
@@ -400,7 +395,7 @@ void NY_Object3DManager::UpdateAllObjects()
 {
     //すべてのオブジェクトを更新する
     for (int i = 0; i < objects.size(); i++) {
-        objects[i]->UpdateObject3D(cam);
+        objects[i]->UpdateObject3D();
     }
 }
 
