@@ -9,7 +9,7 @@ Stage::Stage(Player* player) :
 	flag2d(false)
 {
 }
-
+int DoorChange[50];
 Stage::~Stage()
 {
 }
@@ -125,40 +125,64 @@ int Stage::Clip(bool flag)
 
 int Stage::StepBack()
 {
-	if (clipBlock.empty())
 	{
-		return EoF;
-	}
-
-	for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
-	{
-		if (stage.blocks[i].number == clipBlock.top().blockNumber1)
+		if (clipBlock.empty())
 		{
-			stage.debugBoxObj[i]->position -= clipBlock.top().vec1;
+			return EoF;
 		}
-		if (stage.blocks[i].number == clipBlock.top().blockNumber2)
+
+		for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
 		{
-			stage.debugBoxObj[i]->position -= clipBlock.top().vec2;
+			if (stage.blocks[i].number == clipBlock.top().blockNumber1)
+			{
+				stage.debugBoxObj[i]->position -= clipBlock.top().vec1;
+			}
+			if (stage.blocks[i].number == clipBlock.top().blockNumber2)
+			{
+				stage.debugBoxObj[i]->position -= clipBlock.top().vec2;
+			}
+
+			stage.blocks[i].type = stage.blocks[i].InitType;
 		}
+
+		player->position = clipBlock.top().playerPos;
+
+		clipBlock.pop();
+
+		return 0;
 	}
-
-	player->position = clipBlock.top().playerPos;
-
-	clipBlock.pop();
-
-	return 0;
 }
 
 void Stage::Reset()
 {
-	stage.Reset();
-
-	while (clipBlock.empty() == false)
 	{
-		clipBlock.pop();
-	}
+		stage.Reset();
 
-	player->position = stage.GetStartPlayerPos();
+		while (clipBlock.empty() == false)
+		{
+			clipBlock.pop();
+		}
+
+		for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
+		{
+			stage.blocks[i].type = stage.blocks[i].InitType;
+		}
+
+		player->position = stage.GetStartPlayerPos();
+	}
+}
+
+void Stage::Change()
+{
+	stage.GetBlocksTypeAll(BlockData::BlockType::DOOR, DoorChange, 50);
+	for (int i = 0; i < 50; i++)
+	{
+		if (DoorChange[i] < 0)
+		{
+			continue;
+		}
+		stage.blocks[DoorChange[i]].type = BlockData::BlockType::NONE;
+	}
 }
 
 void Stage::GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2)

@@ -45,6 +45,8 @@ public: // メンバ関数
 	int StepBack();
 	// リセット
 	void Reset();
+	// チェンジ
+	void Change();
 
 	// 挟めるブロック達の基準のブロックの座標を取得
 	void GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2);

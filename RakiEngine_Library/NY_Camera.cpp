@@ -51,7 +51,7 @@ void NY_Camera::SetProjecion()
 	);
 }
 
-void NY_Camera::SetViewStatusEyeTargetUp(XMFLOAT3& eye, XMFLOAT3& target, XMFLOAT3& up)
+void NY_Camera::SetViewStatusEyeTargetUp(XMFLOAT3 &eye, XMFLOAT3 &target, XMFLOAT3 &up)
 {
 	//パラメータ設定
 	_eye = eye;
@@ -62,7 +62,7 @@ void NY_Camera::SetViewStatusEyeTargetUp(XMFLOAT3& eye, XMFLOAT3& target, XMFLOA
 	UpdateViewMat();
 }
 
-void NY_Camera::SetViewStatusEye(XMFLOAT3& eye)
+void NY_Camera::SetViewStatusEye(XMFLOAT3 &eye)
 {
 	//パラメータ設定
 	_eye = eye;
@@ -71,14 +71,14 @@ void NY_Camera::SetViewStatusEye(XMFLOAT3& eye)
 	UpdateViewMat();
 }
 
-void NY_Camera::SetViewStatusTarget(XMFLOAT3& target)
+void NY_Camera::SetViewStatusTarget(XMFLOAT3 &target)
 {
 	_target = target;
 
 	UpdateViewMat();
 }
 
-void NY_Camera::SetViewStatusUp(XMFLOAT3& up)
+void NY_Camera::SetViewStatusUp(XMFLOAT3 &up)
 {
 	_up = up;
 

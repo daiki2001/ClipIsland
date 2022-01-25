@@ -7,6 +7,7 @@ class NY_Camera final
 {
 private:
 
+
 private:
 	//ビュー変換情報
 	XMFLOAT3 _eye;//視点
@@ -42,7 +43,7 @@ private:
 
 public:
 	/// インスタンス取得
-	static NY_Camera* Get() {
+	static NY_Camera *Get() {
 		static NY_Camera ins;
 		return &ins;
 	}
@@ -61,25 +62,25 @@ public:
 	/// <param name="eye">視点座標</param>
 	/// <param name="target">注視点座標</param>
 	/// <param name="up">上方向ベクトル</param>
-	void SetViewStatusEyeTargetUp(XMFLOAT3& eye, XMFLOAT3& target, XMFLOAT3& up);
+	void SetViewStatusEyeTargetUp(XMFLOAT3 &eye, XMFLOAT3 &target, XMFLOAT3 &up);
 
 	/// <summary>
 	/// ビュー行列設定
 	/// </summary>
 	/// <param name="eye">視点座標</param>
-	void SetViewStatusEye(XMFLOAT3& eye);
+	void SetViewStatusEye(XMFLOAT3 &eye);
 
 	/// <summary>
 	/// ビュー行列設定
 	/// </summary>
 	/// <param name="target">注視点座標</param>
-	void SetViewStatusTarget(XMFLOAT3& target);
+	void SetViewStatusTarget(XMFLOAT3 &target);
 
 	/// <summary>
 	/// ビュー行列設定
 	/// </summary>
 	/// <param name="up">上方向ベクトル設定</param>
-	void SetViewStatusUp(XMFLOAT3& up);
+	void SetViewStatusUp(XMFLOAT3 &up);
 
 
 	/// 各種ゲッタ
@@ -117,3 +118,4 @@ public:
 
 //ゲッタを省略
 #define camera (NY_Camera::Get())
+
