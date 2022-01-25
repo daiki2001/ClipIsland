@@ -8,13 +8,12 @@
 
 const int ParticleManager::MAX_VERTEX;
 
-ParticleManager *ParticleManager::Create(NY_Camera *camera) {
+ParticleManager *ParticleManager::Create() {
 
 	//パーティクルマネージャー生成
 	ParticleManager *pm = new ParticleManager(
 		Raki_DX12B::Get()->GetDevice(),
-		Raki_DX12B::Get()->GetGCommandList(),
-		camera
+		Raki_DX12B::Get()->GetGCommandList()
 	);
 
 	//生成したものを初期化
@@ -110,9 +109,9 @@ void ParticleManager::Update() {
 	result = constBuff->Map(0, nullptr, (void **)&constMap);
 	if (result == S_OK) {
 		//ビュープロジェクション行列
-		constMap->mat = cam->_matViewProj;
+		constMap->mat = camera->GetMatrixViewProjection();
 		//全方向ビルボード
-		constMap->matBillBoard = cam->_matBillBoard;
+		constMap->matBillBoard = camera->GetMatrixBillBoardAll();
 		constBuff->Unmap(0, nullptr);
 	}
 
