@@ -27,7 +27,9 @@ enum BlockType
 	BLOCK,
 	DONT_MOVE_BLOCK,
 	GOAL,
-	START
+	START,
+	WARP_BLOCK,
+	WARP_BLOCK_SET
 };
 
 const std::vector <std::pair<BlockType, bool>> moveFlag =
@@ -35,6 +37,8 @@ const std::vector <std::pair<BlockType, bool>> moveFlag =
 	{BlockType::BLOCK, true},
 	{BlockType::DONT_MOVE_BLOCK, false},
 	{BlockType::GOAL, true},
-	{BlockType::START, false}
+	{BlockType::START, false},
+	{BlockType::WARP_BLOCK, true},
+	{BlockType::WARP_BLOCK_SET, false}
 };
 }
