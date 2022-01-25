@@ -225,7 +225,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         case GAME_MAIN:
             if (Input::isKey(DIK_1))
             {
-                stageData.Select("map1.boxmap", true);
+                stageData.Select("test.boxmap", true);
                 player.position = { 0.0f, -40.0f, 0.0f };
             }
 
