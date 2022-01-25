@@ -81,11 +81,6 @@ private:
 	//----------object3dコンテナ----------//
 	vector<Object3d*> objects;
 
-
-	//----------NY_Cameraクラスのポインタ----------//
-	NY_Camera *cam;
-
-
 	//----------その他----------//
 
 	//デフォルトテクスチャの色
@@ -136,12 +131,6 @@ public:
 	void LoadObject3DTexture(UINT &texNumber, string filename, ID3D12Device *dev);
 
 	/// <summary>
-	/// カメラのセット
-	/// </summary>
-	/// <param name="cam">NY_Camera変数</param>
-	void SetCamera(NY_Camera *cam);
-
-	/// <summary>
 	/// object3dの作成、コンテナに格納
 	/// </summary>
 	Object3d *CreateObject3d(NY_Model3D *modelData);
@@ -161,7 +150,7 @@ public:
 	/// 3Dオブジェクトの描画を実行するための前準備を行う
 	/// </summary>
 	/// <param name="cmd">ID3D12GraphicsCommandListのポインタ</param>
-	void SetCommonBeginDrawObject3D(ID3D12GraphicsCommandList *cmd);
+	void SetCommonBeginDrawObject3D();
 
 	static ID3D12Device *GetDev() {
 		return dev;
@@ -204,16 +193,6 @@ inline void InitializeObject3DManager(ID3D12Device *dev, int window_w, int windo
 
 	//NY_Object3DManagerを生成、初期化
 	NY_Object3DManager::Get()->CreateObject3DManager(dev, window_w, window_h);
-}
-
-/// <summary>
-/// カメラの設定
-/// </summary>
-/// <param name="cam">カメラのポインタ</param>
-inline void SetCamera(NY_Camera *cam) {
-
-	//カメラをセット
-	NY_Object3DManager::Get()->SetCamera(cam);
 }
 
 /// <summary>

@@ -27,11 +27,6 @@ void Stage::Draw()
 	stage.Draw();
 }
 
-RVector3 Stage::GetStartPlayerPos()
-{
-	return RVector3();
-}
-
 int Stage::Select(const char* filePath, const bool& flag2d)
 {
 	if (filePath == nullptr)

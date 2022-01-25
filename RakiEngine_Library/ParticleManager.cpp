@@ -7,7 +7,7 @@
 
 const int ParticleManager::MAX_VERTEX;
 
-ParticleManager *ParticleManager::Create(NY_Camera *camera) {
+ParticleManager *ParticleManager::Create() {
 
 	//パーティクルマネージャー生成
 	ParticleManager *pm = new ParticleManager(

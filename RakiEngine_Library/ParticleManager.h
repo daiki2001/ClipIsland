@@ -80,7 +80,7 @@ public:
 	/// <summary>
 	/// パーティクルマネージャー生成
 	/// </summary>
-	static ParticleManager *Create(NY_Camera *camera);
+	static ParticleManager *Create();
 
 	/// <summary>
 	/// パーティクルマネージャー初期化

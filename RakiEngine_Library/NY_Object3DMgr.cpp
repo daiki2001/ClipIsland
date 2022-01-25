@@ -350,13 +350,6 @@ void NY_Object3DManager::LoadObject3DTexture(UINT &texNumber, string filename, I
 
 }
 
-
-void NY_Object3DManager::SetCamera(NY_Camera *cam)
-{
-    this->cam = cam;
-}
-
-
 Object3d *NY_Object3DManager::CreateObject3d(NY_Model3D *modelData)
 {
     //Object3dのデータを新たに作成
@@ -378,7 +371,7 @@ Object3d *NY_Object3DManager::CreateObject3d(NY_Model3D *modelData)
 
 void NY_Object3DManager::DeleteObject3d(Object3d *obj)
 {
-    for (int i = 0; i < objects.size() - 1; i++) {
+    for (int i = 0; i < objects.size(); i++) {
         //消すオブジェクトと同じオブジェクトを検出
         if (obj == objects[i]) {
             objects.erase(objects.begin() + i);
@@ -386,29 +379,29 @@ void NY_Object3DManager::DeleteObject3d(Object3d *obj)
     }
 
     //オブジェクトの消去
-    //delete obj;
+    delete obj;
 }
 
 void NY_Object3DManager::UpdateAllObjects()
 {
     //すべてのオブジェクトを更新する
     for (int i = 0; i < objects.size(); i++) {
-        objects[i]->UpdateObject3D(cam);
+        objects[i]->UpdateObject3D();
     }
 }
 
 
-void NY_Object3DManager::SetCommonBeginDrawObject3D(ID3D12GraphicsCommandList *cmd)
+void NY_Object3DManager::SetCommonBeginDrawObject3D()
 {
     //パイプラインステートをセット
-    cmd->SetPipelineState(object3dPipelineSet.pipelinestate.Get());
+    Raki_DX12B::Get()->GetGCommandList()->SetPipelineState(object3dPipelineSet.pipelinestate.Get());
     //ルートシグネチャをセット
-    cmd->SetGraphicsRootSignature(object3dPipelineSet.rootsignature.Get());
+    Raki_DX12B::Get()->GetGCommandList()->SetGraphicsRootSignature(object3dPipelineSet.rootsignature.Get());
     //プリミティブ形状設定
-    cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    Raki_DX12B::Get()->GetGCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     //デスクリプタヒープ設定
     ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
-    cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+    Raki_DX12B::Get()->GetGCommandList()->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 }
 
 Object3d *CreateObject3d(NY_Model3D *modelData, RVector3 pos)
@@ -427,7 +420,7 @@ Object3d *CreateObject3d(NY_Model3D *modelData, RVector3 pos)
 void DrawObject3d(Object3d *obj)
 {
     //描画準備
-    NY_Object3DManager::Get()->SetCommonBeginDrawObject3D(Raki_DX12B::Get()->GetGCommandList());
+    NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
     //オブジェクト描画
     obj->DrawModel3D(Raki_DX12B::Get()->GetGCommandList(), Raki_DX12B::Get()->GetDevice());
 }

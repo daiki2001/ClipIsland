@@ -55,7 +55,7 @@ public:
 	UINT resourceNumber;
 
 	//モデルデータ
-	NY_Model3D *model;
+	NY_Model3D* model;
 
 	//定数バッファ
 	ComPtr<ID3D12Resource> constBuffB0;
@@ -68,7 +68,7 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleCBV;
 
 	//アフィン変換情報
-	RVector3 scale    = { 1,1,1 };
+	RVector3 scale = { 1,1,1 };
 	RVector3 rotation = { 0,0,0 };
 	RVector3 position = { 0,0,0 };
 
@@ -76,7 +76,7 @@ public:
 	XMMATRIX matWorld;
 
 	//親子(親要素へのポインタ)
-	Object3d *parent = nullptr;
+	Object3d* parent = nullptr;
 
 	//色情報
 	XMFLOAT4 color = { 1,1,1,1 };
@@ -95,32 +95,27 @@ public:
 	};
 
 	//オブジェクトの初期化
-	static void InitObject3D(Object3d *obj, ID3D12Device *dev);
-	void InitObject3D(ID3D12Device *dev);
+	//static void InitObject3D(Object3d *obj, ID3D12Device *dev);
+	void InitObject3D(ID3D12Device* dev);
 
 	//ロード済モデルデータの設定
-	static void SetLoadedModelData(Object3d *obj, NY_Model3D *loadedModel);
-	void SetLoadedModelData(NY_Model3D *loadedModel);
+	//static void SetLoadedModelData(Object3d *obj, NY_Model3D *loadedModel);
+	void SetLoadedModelData(NY_Model3D* loadedModel);
 
 	//オブジェクト更新
-	static void UpdateObject3D(Object3d *obj, XMMATRIX &matview);
-	void UpdateObject3D(NY_Camera *matview);
+	//static void UpdateObject3D(Object3d *obj, XMMATRIX &matview);
+	void UpdateObject3D();
 
 	//ビルボード更新（カメラオブジェクトをそのまま取り込んで、ビルボード用の更新処理を行う）
-	static void UpdateBillBoard3D(Object3d *obj, NY_Camera cam);
-	void UpdateBillBoard3D(NY_Camera *cam);
+	//static void UpdateBillBoard3D(Object3d *obj, NY_Camera cam);
+	void UpdateBillBoard3D();
 
 	//モデルデータを使用したオブジェクト描画
-	static void DrawModel3D(Object3d *obj, ID3D12GraphicsCommandList *cmd,ID3D12Device *dev);
-	void DrawModel3D(ID3D12GraphicsCommandList *cmd, ID3D12Device *dev);
+	static void DrawModel3D(Object3d* obj, ID3D12GraphicsCommandList* cmd, ID3D12Device* dev);
+	void DrawModel3D(ID3D12GraphicsCommandList* cmd, ID3D12Device* dev);
 
 
 private:
 	/// プライベートメンバ変数
 
 };
-
-
-
-
-
