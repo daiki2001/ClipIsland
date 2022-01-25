@@ -210,6 +210,12 @@ void LoadStage::Draw()
 		case BlockType::GOAL:
 			DrawObject3d(debugBoxObj[i]);
 			break;
+		case BlockType::WARP_BLOCK:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::WARP_BLOCK_SET:
+			DrawObject3d(debugBoxObj[i]);
+			break;
 		default:
 			break;
 		}

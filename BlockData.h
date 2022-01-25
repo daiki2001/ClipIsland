@@ -41,4 +41,15 @@ const std::vector <std::pair<BlockType, bool>> moveFlag =
 	{BlockType::WARP_BLOCK, true},
 	{BlockType::WARP_BLOCK_SET, false}
 };
+
+// ‹²‚ÞŽž‚Éˆø‚Á‚©‚©‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+const std::vector <std::pair<BlockType, bool>> caughtFlag =
+{
+	{BlockType::BLOCK, true},
+	{BlockType::DONT_MOVE_BLOCK, true},
+	{BlockType::GOAL, true},
+	{BlockType::START, false},
+	{BlockType::WARP_BLOCK, true},
+	{BlockType::WARP_BLOCK_SET, false}
+};
 }

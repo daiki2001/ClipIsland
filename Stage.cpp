@@ -228,9 +228,10 @@ int Stage::Clip2d(ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blocks[i].type == BlockType::START)
+			if (stage.blocks[i].type < 0 ||
+				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ブロックの種類がスタート位置の場合は無視する
+				// ブロックの処理が無い場合は無視する
 				continue;
 			}
 
@@ -309,9 +310,10 @@ int Stage::Clip2d(ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blocks[i].type == BlockType::START)
+			if (stage.blocks[i].type < 0 ||
+				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ブロックの種類がスタート位置の場合は無視する
+				// ブロックの処理が無い場合は無視する
 				continue;
 			}
 
@@ -566,9 +568,10 @@ int Stage::Clip3d(ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blocks[i].type == BlockType::START)
+			if (stage.blocks[i].type < 0 ||
+				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ブロックの種類がスタート位置の場合は無視する
+				// ブロックの処理が無い場合は無視する
 				continue;
 			}
 
@@ -643,9 +646,10 @@ int Stage::Clip3d(ClipBlock* clip)
 				continue;
 			}
 
-			if (stage.blocks[i].type == BlockType::START)
+			if (stage.blocks[i].type < 0 ||
+				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ブロックの種類がスタート位置の場合は無視する
+				// ブロックの処理が無い場合は無視する
 				continue;
 			}
 
