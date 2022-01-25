@@ -58,11 +58,11 @@ public:
 		//回転
 		float rot;
 		//初期値
-		RVector3 s_color = {};
+		XMFLOAT3 s_color = {};
 		float s_scale = 1.0f;
 		float s_rotation = 0.0f;
 		// 最終値
-		RVector3 e_color = {};
+		XMFLOAT3 e_color = {};
 		float e_scale = 0.0f;
 		float e_rotation = 0.0f;
 		// 現在フレーム
@@ -80,7 +80,7 @@ public:
 	/// <summary>
 	/// パーティクルマネージャー生成
 	/// </summary>
-	static ParticleManager *Create();
+	static ParticleManager *Create(NY_Camera *camera);
 
 	/// <summary>
 	/// パーティクルマネージャー初期化
@@ -95,7 +95,7 @@ public:
 	/// <summary>
 	/// パーティクル描画
 	/// </summary>
-	void Draw(UINT drawTexNum);
+	void Draw();
 
 	/// <summary>
 	/// パーティクル追加
@@ -117,14 +117,17 @@ private:
 	ComPtr<ID3D12PipelineState> pipeline;
 	// 頂点バッファ
 	ComPtr <ID3D12Resource> vertbuff;
+	// シェーダーリソースビューハンドル
+	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
+	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbview;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 	// パーティクルコンテナ
 	std::forward_list<Particle> grains;
-
-	HRESULT result = S_FALSE;
+	// カメラ
+	NY_Camera *cam;
 
 
 private:
@@ -145,9 +148,10 @@ private:
 	/// <param name="dev">デバイス</param>
 	/// <param name="cmd">コマンド</param>
 	/// <param name="cam">カメラ</param>
-	ParticleManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd) {
+	ParticleManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd, NY_Camera *cam) {
 		this->dev = dev;
 		this->cmd = cmd;
+		this->cam = cam;
 	}
 };
 

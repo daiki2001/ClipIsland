@@ -31,7 +31,7 @@ void SpriteManager::CreateSpritePipeline()
 
     //頂点シェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"Resources/Shaders/SpriteVS.hlsl", //シェーダーファイル名
+        L"./RakiEngine_Library/Shaders/SpriteVS.hlsl", //シェーダーファイル名
         nullptr,//シェーダーマクロオブジェクト（今回は使わない）
         D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
         "main", "vs_5_0", //エントリーポイント名、シェーダーモデル指定
@@ -58,7 +58,7 @@ void SpriteManager::CreateSpritePipeline()
 
     //ピクセルシェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"Resources/Shaders/SpritePS.hlsl",
+        L"./RakiEngine_Library/Shaders/SpritePS.hlsl",
         nullptr,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         "main", "ps_5_0",

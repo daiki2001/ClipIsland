@@ -14,8 +14,6 @@ public:
 	RVector3 min;		//最小値
 	RVector3 oldPos;	//前の座標値
 
-
-
 public:
 	Collision();
 	~Collision();

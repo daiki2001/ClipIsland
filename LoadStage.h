@@ -14,6 +14,7 @@ private: // エイリアス
 	template<class T> using vector = std::vector<T>;
 
 public: // 定数
+	static const float blockSize;
 
 public: // メンバ関数
 	// コンストラクタ
@@ -30,17 +31,16 @@ public: // メンバ関数
 	void Reset();
 	// ステージデータの削除
 	void StageClear();
-	// プレイヤーの初期位置の取得
-	XMFLOAT3 GetStartPlayerPos();
-	// 特定の種類のブロックの座標の取得
-	void GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray[], size_t arraySize);
 
 public: // メンバ変数
-	vector<BlockData::Data> blocks; //ブロックのデータ
-	vector<XMFLOAT4> blockColors;   //ブロックの色
-	vector<Object3d*> debugBoxObj;  //ブロックのオブジェクト
+	vector<int> blockType;              //ブロックの種類
+	vector<XMFLOAT4> blockColors;       //ブロックの色
+	vector<int> blockNumber; //ブロックの塊
+	vector<Object3d*> debugBoxObj;      //ブロックのオブジェクト
+
+	vector<Collision> collision;
 private:
-	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
+	vector<XMFLOAT3> blockPos; //ブロックの場所
 
 	NY_Model3D debugBox; //ブロックのモデル
 	UINT graph;          //ブロックのテクスチャ

@@ -158,7 +158,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Stage.cpp" />
-    <ClCompile Include="Warp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BlockData.h" />
@@ -166,7 +165,6 @@
     <ClInclude Include="LoadStage.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Stage.h" />
-    <ClInclude Include="Warp.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\background.png" />

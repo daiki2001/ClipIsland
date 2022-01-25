@@ -8,7 +8,6 @@
 #include <d3dcompiler.h>
 #include <wrl.h>
 #include <vector>
-#include <memory>
 
 using namespace Microsoft::WRL;
 using namespace std;
@@ -84,6 +83,7 @@ private:
 
 
 	//----------NY_Cameraクラスのポインタ----------//
+	NY_Camera *cam;
 
 
 	//----------その他----------//
@@ -139,6 +139,7 @@ public:
 	/// カメラのセット
 	/// </summary>
 	/// <param name="cam">NY_Camera変数</param>
+	void SetCamera(NY_Camera *cam);
 
 	/// <summary>
 	/// object3dの作成、コンテナに格納
@@ -160,7 +161,7 @@ public:
 	/// 3Dオブジェクトの描画を実行するための前準備を行う
 	/// </summary>
 	/// <param name="cmd">ID3D12GraphicsCommandListのポインタ</param>
-	void SetCommonBeginDrawObject3D();
+	void SetCommonBeginDrawObject3D(ID3D12GraphicsCommandList *cmd);
 
 	static ID3D12Device *GetDev() {
 		return dev;
@@ -203,6 +204,16 @@ inline void InitializeObject3DManager(ID3D12Device *dev, int window_w, int windo
 
 	//NY_Object3DManagerを生成、初期化
 	NY_Object3DManager::Get()->CreateObject3DManager(dev, window_w, window_h);
+}
+
+/// <summary>
+/// カメラの設定
+/// </summary>
+/// <param name="cam">カメラのポインタ</param>
+inline void SetCamera(NY_Camera *cam) {
+
+	//カメラをセット
+	NY_Object3DManager::Get()->SetCamera(cam);
 }
 
 /// <summary>
