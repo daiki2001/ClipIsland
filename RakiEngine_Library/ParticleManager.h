@@ -80,7 +80,7 @@ public:
 	/// <summary>
 	/// パーティクルマネージャー生成
 	/// </summary>
-	static ParticleManager *Create(NY_Camera *camera);
+	static ParticleManager *Create();
 
 	/// <summary>
 	/// パーティクルマネージャー初期化
@@ -123,8 +123,7 @@ private:
 	ComPtr<ID3D12Resource> constBuff;
 	// パーティクルコンテナ
 	std::forward_list<Particle> grains;
-	// カメラ
-	NY_Camera *cam;
+
 	HRESULT result = S_FALSE;
 
 
@@ -146,10 +145,9 @@ private:
 	/// <param name="dev">デバイス</param>
 	/// <param name="cmd">コマンド</param>
 	/// <param name="cam">カメラ</param>
-	ParticleManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd, NY_Camera *cam) {
+	ParticleManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd) {
 		this->dev = dev;
 		this->cmd = cmd;
-		this->cam = cam;
 	}
 };
 
