@@ -32,11 +32,13 @@ public: // メンバ関数
 	void StageClear();
 	// プレイヤーの初期位置の取得
 	XMFLOAT3 GetStartPlayerPos();
+	// 特定の種類のブロックの座標の取得
+	void GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray[], size_t arraySize);
 
 public: // メンバ変数
 	vector<BlockData::Data> blocks; //ブロックのデータ
-	vector<XMFLOAT4> blockColors;  //ブロックの色
-	vector<Object3d*> debugBoxObj; //ブロックのオブジェクト
+	vector<XMFLOAT4> blockColors;   //ブロックの色
+	vector<Object3d*> debugBoxObj;  //ブロックのオブジェクト
 private:
 	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
 

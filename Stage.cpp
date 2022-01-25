@@ -97,6 +97,7 @@ int Stage::Clip(bool flag)
 	if (moveFlag[blockType[0]].second == true && moveFlag[blockType[1]].second == true)
 	{
 		clip.playerPos = player->position;
+		clip.isClip = true;
 
 		if (flag)
 		{
@@ -158,6 +159,50 @@ void Stage::Reset()
 	}
 
 	player->position = stage.GetStartPlayerPos();
+}
+
+void Stage::GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2)
+{
+	if (pos1 == nullptr || pos2 == nullptr)
+	{
+		return;
+	}
+
+	if (clipBlock.top().isClip == false)
+	{
+		return;
+	}
+
+	*pos1 = stage.debugBoxObj[clipBlock.top().ReferencePoint1]->position;
+	*pos2 = stage.debugBoxObj[clipBlock.top().ReferencePoint2]->position;
+}
+
+void Stage::GetClipBlocksALL(int blocksArray[], const size_t& arraySize)
+{
+	if (clipBlock.top().isClip == false)
+	{
+		return;
+	}
+
+	for (size_t i = 0; i < arraySize; i++)
+	{
+		blocksArray[i] = -1;
+	}
+
+	for (size_t i = 0, j = 0; i < stage.blocks.size(); i++)
+	{
+		if (j >= arraySize)
+		{
+			break;
+		}
+
+		if (stage.blocks[i].number == clipBlock.top().blockNumber1 ||
+			stage.blocks[i].number == clipBlock.top().blockNumber2)
+		{
+			blocksArray[j] = i;
+			j++;
+		}
+	}
 }
 
 int Stage::Clip2d(ClipBlock* clip)

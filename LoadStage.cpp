@@ -270,3 +270,25 @@ XMFLOAT3 LoadStage::GetStartPlayerPos()
 
 	return debugBoxObj[num]->position;
 }
+
+void LoadStage::GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray[], size_t arraySize)
+{
+	for (size_t i = 0; i < arraySize; i++)
+	{
+		blocksArray[i] = -1;
+	}
+
+	for (size_t i = 0, j = 0; i < blocks.size(); i++)
+	{
+		if (j >= arraySize)
+		{
+			break;
+		}
+
+		if (blocks[i].type == blockType)
+		{
+			blocksArray[j] = i;
+			j++;
+		}
+	}
+}
