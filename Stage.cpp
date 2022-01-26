@@ -431,7 +431,8 @@ int Stage::Clip2d(ClipBlock* clip)
 			continue;
 		}
 
-		if (stage.blocks[i].type == BlockType::START)
+		if (stage.blocks[i].type < 0 ||
+			(moveFlag[stage.blocks[i].type].second == false && caughtFlag[stage.blocks[i].type].second == false))
 		{
 			continue;
 		}
@@ -455,7 +456,7 @@ int Stage::Clip2d(ClipBlock* clip)
 						continue;
 					}
 
-					if (stage.blocks[i].type == BlockType::START)
+					if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 					{
 						continue;
 					}
@@ -519,7 +520,7 @@ int Stage::Clip2d(ClipBlock* clip)
 						continue;
 					}
 
-					if (stage.blocks[k].type == BlockType::START)
+					if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 					{
 						continue;
 					}
@@ -763,7 +764,8 @@ int Stage::Clip3d(ClipBlock* clip)
 			continue;
 		}
 
-		if (stage.blocks[i].type == BlockType::START)
+		if (stage.blocks[i].type < 0 ||
+			(moveFlag[stage.blocks[i].type].second == false && caughtFlag[stage.blocks[i].type].second == false))
 		{
 			continue;
 		}
@@ -787,7 +789,7 @@ int Stage::Clip3d(ClipBlock* clip)
 						continue;
 					}
 
-					if (stage.blocks[i].type == BlockType::START)
+					if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 					{
 						continue;
 					}
@@ -851,7 +853,7 @@ int Stage::Clip3d(ClipBlock* clip)
 						continue;
 					}
 
-					if (stage.blocks[k].type == BlockType::START)
+					if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 					{
 						continue;
 					}
