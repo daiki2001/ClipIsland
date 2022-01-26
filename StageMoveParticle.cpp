@@ -21,7 +21,7 @@ StageMoveParticle::~StageMoveParticle()
 void StageMoveParticle::Init(NY_Camera *cam)
 {
 	//カメラを取り込み、エミッター生成
-	pManager = ParticleManager::Create(cam);
+	pManager = ParticleManager::Create();
 }
 
 void StageMoveParticle::Update()

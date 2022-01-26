@@ -2,6 +2,7 @@
 
 #include "ParticleManager.h"
 #include "Raki_DX12B.h"
+#include "TexManager.h"
 
 #pragma comment(lib,"d3dcompiler.lib")
 
@@ -20,6 +21,58 @@ ParticleManager *ParticleManager::Create() {
 	pm->Initialize();
 
 	return pm;
+}
+
+void ParticleManager::Draw(UINT drawTexNum)
+{
+	UINT drawNum = (UINT)std::distance(grains.begin(), grains.end());
+	if (drawNum > MAX_VERTEX) {
+		drawNum = MAX_VERTEX;
+	}
+
+	// パーティクルが1つもない場合
+	if (drawNum == 0) {
+		return;
+	}
+
+	// パイプラインステートの設定
+	cmd->SetPipelineState(pipeline.Get());
+	// ルートシグネチャの設定
+	cmd->SetGraphicsRootSignature(rootsig.Get());
+	// プリミティブ形状を設定
+	cmd->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	// 頂点バッファの設定
+	cmd->IASetVertexBuffers(0, 1, &vbview);
+
+	// デスクリプタヒープの配列
+	ID3D12DescriptorHeap* ppHeaps[] = { TexManager::texDsvHeap.Get() };
+	cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+
+	// 定数バッファビューをセット
+	cmd->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
+	// シェーダリソースビューをセット
+	cmd->SetGraphicsRootDescriptorTable(1,
+		CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
+			drawTexNum, Raki_DX12B::Get()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+
+	// 描画コマンド
+	cmd->DrawInstanced(drawNum, 1, 0, 0);
+}
+
+void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, float startScale, float endScale)
+{
+	//要素追加
+	grains.emplace_front();
+	//追加した要素の参照
+	Particle& p = grains.front();
+	p.pos = pos;			//初期位置
+	p.vel = vel;			//速度
+	p.acc = acc;			//加速度
+	p.s_scale = startScale; //開始時のスケールサイズ
+	p.e_scale = endScale;	//終了時のスケールサイズ
+	p.endFrame = life;		//生存時間
+
 }
 
 void ParticleManager::Initialize() {

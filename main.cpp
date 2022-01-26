@@ -226,7 +226,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             if (Input::isKey(DIK_1))
             {
                 stageData.Select("test.boxmap", true);
-                player.position = { 0.0f, -40.0f, 0.0f };
             }
 
             if (isTutorial)
@@ -312,6 +311,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (Input::isKeyTrigger(DIK_B))
                 {
                     stageData.StepBack();
+                }
+
+                if (Input::isKeyTrigger(DIK_E))
+                {
+                    stageData.Change();
                 }
             }
 

@@ -95,7 +95,7 @@ public:
 	/// <summary>
 	/// パーティクル描画
 	/// </summary>
-	void Draw();
+	void Draw(UINT drawTexNum);
 
 	/// <summary>
 	/// パーティクル追加
