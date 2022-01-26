@@ -8,7 +8,6 @@
 #include <d3dcompiler.h>
 #include <wrl.h>
 #include <vector>
-#include <memory>
 
 using namespace Microsoft::WRL;
 using namespace std;
@@ -82,10 +81,6 @@ private:
 	//----------object3dコンテナ----------//
 	vector<Object3d*> objects;
 
-
-	//----------NY_Cameraクラスのポインタ----------//
-
-
 	//----------その他----------//
 
 	//デフォルトテクスチャの色
@@ -134,11 +129,6 @@ public:
 	/// <param name="filename">ロードするテクスチャのパス（）</param>
 	/// <param name="dev"></param>
 	void LoadObject3DTexture(UINT &texNumber, string filename, ID3D12Device *dev);
-
-	/// <summary>
-	/// カメラのセット
-	/// </summary>
-	/// <param name="cam">NY_Camera変数</param>
 
 	/// <summary>
 	/// object3dの作成、コンテナに格納

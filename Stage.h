@@ -33,6 +33,7 @@ public: // メンバ関数
 
 	// 描画
 	void Update();
+
 	// 描画
 	void Draw();
 
@@ -44,6 +45,8 @@ public: // メンバ関数
 	int StepBack();
 	// リセット
 	void Reset();
+	// チェンジ
+	void Change();
 
 	// 挟めるブロック達の基準のブロックの座標を取得
 	void GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2);
@@ -55,12 +58,10 @@ private:
 	// ブロックを挟む(3d版)
 	int Clip3d(ClipBlock* clip);
 
-public: // メンバ変数
-	LoadStage stage; //読み込んだステージのデータ
-private:
-	Player* player;           //プレイヤーのデータ
-
-	stack<ClipBlock> clipBlock; //挟んだ時の情報
-	bool flag2d; //ステージが二次元かどうかのフラグ
-
+private: // メンバ変数
+	Player* player;
+	stack<ClipBlock> clipBlock;
+	bool flag2d;
+public:
+	LoadStage stage;
 };

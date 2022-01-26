@@ -44,12 +44,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     TexManager::InitTexManager();
 
     //カメラ
-    NY_Camera cam;
-    cam._eye = { 0.0f, 0.0f, -200.0f };
-    cam._target = { 0.0f, 0.0f, 0.0f };
-    cam._up = { 0.0f, 1.0f, 0.0f };
-    cam.UpdateViewMat();
-    NY_Object3DManager::Get()->SetCamera(&cam);
+    NY_Camera* cam = camera;
+    RVector3 eye = { 0.0f, 0.0f, -200.0f };
+    RVector3 target = { 0.0f, 0.0f, 0.0f };
+    RVector3 up = { 0.0f, 1.0f, 0.0f };
+    cam->SetViewStatusEyeTargetUp(eye, target, up);
 
     //音
     Audio::Init();
@@ -226,8 +225,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         case GAME_MAIN:
             if (Input::isKey(DIK_1))
             {
-                stageData.Select("map1.boxmap", true);
-                player.position = { 0.0f, -40.0f, 0.0f };
+                stageData.Select("test.boxmap", true);
             }
 
             if (isTutorial)
@@ -314,6 +312,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 {
                     stageData.StepBack();
                 }
+
+                if (Input::isKeyTrigger(DIK_E))
+                {
+                    stageData.Change();
+                }
             }
 
             if (player.goalFlag)
@@ -382,5 +385,3 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     return 0;
 }
-
-

@@ -152,9 +152,10 @@ int LoadStage::Load(const char* filePath)
 		{
 			if (blockData[3] >= 0)
 			{
-				blocks.push_back(Data());
+				blocks.push_back(BlockData::Data());
 				blocks[blocks.size() - 1].pos = XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]);
 				blocks[blocks.size() - 1].type = blockData[3];
+				blocks[blocks.size() - 1].InitType = blockData[3];
 				blocks[blocks.size() - 1].number = blockData[4];
 				blocks[blocks.size() - 1].collision = Collision(
 					{ -blockSize / 2.0f, -blockSize / 2.0f, -blockSize / 2.0f },
@@ -210,6 +211,18 @@ void LoadStage::Draw()
 		case BlockType::GOAL:
 			DrawObject3d(debugBoxObj[i]);
 			break;
+		case BlockType::SWITCH:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::DOOR:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::WARP_BLOCK:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::WARP_BLOCK_SET:
+			DrawObject3d(debugBoxObj[i]);
+			break;
 		default:
 			break;
 		}
@@ -241,7 +254,7 @@ void LoadStage::StageClear()
 		}
 
 		DeleteObject3d(debugBoxObj[i]);
-		debugBoxObj[i] = nullptr;
+		//debugBoxObj[i] = nullptr;
 	}
 
 	blocks.clear();
@@ -278,7 +291,7 @@ void LoadStage::GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray
 		blocksArray[i] = -1;
 	}
 
-	for (size_t i = 0, j = 0; i < blocks.size(); i++)
+	for (int i = 0, j = 0; i < blocks.size(); i++)
 	{
 		if (j >= arraySize)
 		{

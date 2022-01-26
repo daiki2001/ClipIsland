@@ -13,8 +13,6 @@ private: // エイリアス
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	template<class T> using vector = std::vector<T>;
 
-public: // 定数
-
 public: // メンバ関数
 	// コンストラクタ
 	LoadStage();
@@ -30,13 +28,14 @@ public: // メンバ関数
 	void Reset();
 	// ステージデータの削除
 	void StageClear();
-	// プレイヤーの初期位置の取得
+
+	// プレイヤーのスタート位置の取得
 	XMFLOAT3 GetStartPlayerPos();
-	// 特定の種類のブロックの座標の取得
+	// ブロックの情報を種類を指定して全て取得
 	void GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray[], size_t arraySize);
 
 public: // メンバ変数
-	vector<BlockData::Data> blocks; //ブロックのデータ
+	vector<BlockData::Data> blocks; //ブロックの情報
 	vector<XMFLOAT4> blockColors;   //ブロックの色
 	vector<Object3d*> debugBoxObj;  //ブロックのオブジェクト
 private:
