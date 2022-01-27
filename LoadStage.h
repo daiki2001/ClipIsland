@@ -1,5 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
+#include "RVector.h"
 #include <vector>
 #include "NY_Object3DMgr.h"
 #include "Warp.h"
@@ -10,7 +11,6 @@
 class LoadStage
 {
 private: // エイリアス
-	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	template<class T> using vector = std::vector<T>;
 	using BlockType = GameCommonData::BlockData::BlockType;
@@ -36,7 +36,7 @@ public: // メンバ関数
 	void StageClear();
 
 	// プレイヤーのスタート位置の取得
-	XMFLOAT3 GetStartPlayerPos();
+	RVector3 GetStartPlayerPos();
 	// ブロックの情報を種類を指定して全て取得
 	void GetBlocksTypeAll(BlockType blockType, int blocksArray[], size_t arraySize);
 

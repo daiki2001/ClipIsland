@@ -154,7 +154,7 @@ int LoadStage::Load(const char* filePath)
 			if (blockData[3] >= 0)
 			{
 				blocks.push_back(Data());
-				blocks[blocks.size() - 1].pos = XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]);
+				blocks[blocks.size() - 1].pos = RVector3((float)blockData[0], (float)blockData[1], (float)blockData[2]);
 				blocks[blocks.size() - 1].resetPos = blocks[blocks.size() - 1].pos;
 				blocks[blocks.size() - 1].type = blockData[3];
 				blocks[blocks.size() - 1].InitType = blocks[blocks.size() - 1].type;
@@ -354,7 +354,7 @@ void LoadStage::StageClear()
 	startPosNumber = -1;
 }
 
-XMFLOAT3 LoadStage::GetStartPlayerPos()
+RVector3 LoadStage::GetStartPlayerPos()
 {
 	size_t num;
 

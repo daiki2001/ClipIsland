@@ -198,10 +198,7 @@ void Stage::Change()
 			continue;
 		}
 		stage.blocks[DoorChange[i]].type = BlockType::NONE;
-// 		if (stage.blocks[DoorChange[i]].type = BlockData::BlockType::NONE)
-// 		{
-// 			isFlag = true;
-// 		}
+		isFlag = true;
 	}
 	if (isFlag == true)
 	{
