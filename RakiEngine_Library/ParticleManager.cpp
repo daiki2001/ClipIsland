@@ -51,8 +51,6 @@ void ParticleManager::Initialize() {
 
 void ParticleManager::Update() {
 
-	HRESULT result;
-
 	//寿命が切れたパーティクルを削除
 	grains.remove_if([](Particle &p) {return p.nowFrame >= p.endFrame; });
 
@@ -76,7 +74,7 @@ void ParticleManager::Update() {
 		itr->color = itr->s_color + (itr->e_color - itr->s_color) * rate;
 
 		//スケーリングの線形補間
-		itr->scale = itr->s_scale + (itr->e_scale - itr->s_scale) / rate;
+		itr->scale = itr->s_scale + (itr->e_scale - itr->s_scale) * rate;
 
 		//回転線形補間
 		itr->rot = itr->s_rotation + (itr->e_rotation - itr->s_rotation) / rate;
