@@ -16,9 +16,11 @@ Stage::~Stage()
 
 void Stage::Update()
 {
+	stage.Update();
+
 	for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
 	{
-		stage.blocks[i].collision.Update(stage.debugBoxObj[i]->position);
+		stage.blocks[i].collision.Update(stage.blocks[i].pos);
 	}
 }
 
@@ -52,7 +54,7 @@ int Stage::Select(const char* filePath, const bool& flag2d)
 
 int Stage::Clip(bool flag)
 {
-	using namespace BlockData;
+	using namespace GameCommonData::BlockData;
 
 	ClipBlock clip = {};
 	int isReturn = 0;
@@ -111,11 +113,11 @@ int Stage::Clip(bool flag)
 		{
 			if (stage.blocks[i].number == clipBlock.top().blockNumber1)
 			{
-				stage.debugBoxObj[i]->position += clipBlock.top().vec1;
+				stage.blocks[i].pos += clipBlock.top().vec1;
 			}
 			if (stage.blocks[i].number == clipBlock.top().blockNumber2)
 			{
-				stage.debugBoxObj[i]->position += clipBlock.top().vec2;
+				stage.blocks[i].pos += clipBlock.top().vec2;
 			}
 		}
 	}
@@ -135,11 +137,11 @@ int Stage::StepBack()
 		{
 			if (stage.blocks[i].number == clipBlock.top().blockNumber1)
 			{
-				stage.debugBoxObj[i]->position -= clipBlock.top().vec1;
+				stage.blocks[i].pos -= clipBlock.top().vec1;
 			}
 			if (stage.blocks[i].number == clipBlock.top().blockNumber2)
 			{
-				stage.debugBoxObj[i]->position -= clipBlock.top().vec2;
+				stage.blocks[i].pos -= clipBlock.top().vec2;
 			}
 
 			stage.blocks[i].type = stage.blocks[i].InitType;
@@ -174,14 +176,16 @@ void Stage::Reset()
 
 void Stage::Change()
 {
-	stage.GetBlocksTypeAll(BlockData::BlockType::DOOR, DoorChange, 50);
+	using namespace GameCommonData::BlockData;
+
+	stage.GetBlocksTypeAll(BlockType::DOOR, DoorChange, 50);
 	for (int i = 0; i < 50; i++)
 	{
 		if (DoorChange[i] < 0)
 		{
 			continue;
 		}
-		stage.blocks[DoorChange[i]].type = BlockData::BlockType::NONE;
+		stage.blocks[DoorChange[i]].type = BlockType::NONE;
 	}
 }
 
@@ -236,7 +240,7 @@ int Stage::Clip2d(ClipBlock* clip)
 		return EoF;
 	}
 
-	using namespace BlockData;
+	using namespace GameCommonData::BlockData;
 
 	auto& tmp = stage.debugBoxObj;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
@@ -577,7 +581,7 @@ int Stage::Clip3d(ClipBlock* clip)
 		return EoF;
 	}
 
-	using namespace BlockData;
+	using namespace GameCommonData::BlockData;
 
 	auto& tmp = stage.debugBoxObj;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
