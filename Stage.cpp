@@ -10,6 +10,7 @@ Stage::Stage(Player* player) :
 {
 }
 int DoorChange[50];
+
 Stage::~Stage()
 {
 }
@@ -55,6 +56,8 @@ int Stage::Clip(bool flag)
 	using namespace BlockData;
 
 	ClipBlock clip = {};
+	//ClipBlock swi = {};
+
 	int isReturn = 0;
 
 	if (flag2d)
@@ -125,13 +128,20 @@ int Stage::Clip(bool flag)
 
 int Stage::StepBack()
 {
+	if (clipBlock.empty())
 	{
-		if (clipBlock.empty())
+		return EoF;
+	}
+
+	for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
+	{
+
+		if (clipBlock.top().isVani == true)
 		{
-			return EoF;
+			stage.blocks[i].type = stage.blocks[i].InitType;
 		}
 
-		for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
+		if (clipBlock.top().isVani == false)
 		{
 			if (stage.blocks[i].number == clipBlock.top().blockNumber1)
 			{
@@ -141,16 +151,15 @@ int Stage::StepBack()
 			{
 				stage.debugBoxObj[i]->position -= clipBlock.top().vec2;
 			}
-
-			stage.blocks[i].type = stage.blocks[i].InitType;
 		}
-
-		player->position = clipBlock.top().playerPos;
-
-		clipBlock.pop();
-
-		return 0;
 	}
+
+	player->position = clipBlock.top().playerPos;
+
+	clipBlock.pop();
+
+	return 0;
+	
 }
 
 void Stage::Reset()
@@ -174,6 +183,9 @@ void Stage::Reset()
 
 void Stage::Change()
 {
+	ClipBlock swi = {};
+	bool isFlag = false;
+
 	stage.GetBlocksTypeAll(BlockData::BlockType::DOOR, DoorChange, 50);
 	for (int i = 0; i < 50; i++)
 	{
@@ -181,7 +193,15 @@ void Stage::Change()
 		{
 			continue;
 		}
-		stage.blocks[DoorChange[i]].type = BlockData::BlockType::NONE;
+		if (stage.blocks[DoorChange[i]].type = BlockData::BlockType::NONE)
+		{
+			isFlag = true;
+		}
+	}
+	if (isFlag == true)
+	{
+		swi.isVani = true;
+		clipBlock.push(swi);
 	}
 }
 

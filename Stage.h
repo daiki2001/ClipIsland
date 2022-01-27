@@ -21,6 +21,8 @@ public: // サブクラス
 		XMFLOAT3 playerPos = {};
 		/*挟めるブロックがあるかどうかのフラグ*/
 		bool isClip = false;
+		//
+		bool isVani = false;
 	};
 
 private: // エイリアス
