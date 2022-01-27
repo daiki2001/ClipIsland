@@ -44,11 +44,11 @@ public: // メンバ変数
 	vector<Data> blocks;          //ブロックの情報
 	vector<XMFLOAT4> blockColors; //ブロックの色
 
-	vector<Object3d*> debugBoxObj; //デバッグ用のブロックのオブジェクト
-	vector<int> debugBoxNumber;    //デバッグ用のブロックの番号
-
 	vector<Warp> warpBlock; //ワープブロックの情報
 private:
 	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
+
+	vector<Object3d*> debugBoxObj; //デバッグ用のブロックのオブジェクト
+	vector<int> debugBoxNumber;    //デバッグ用のブロックの番号
 
 };

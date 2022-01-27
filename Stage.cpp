@@ -18,7 +18,7 @@ void Stage::Update()
 {
 	stage.Update();
 
-	for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
+	for (size_t i = 0; i < stage.blocks.size(); i++)
 	{
 		stage.blocks[i].collision.Update(stage.blocks[i].pos);
 	}
@@ -109,7 +109,7 @@ int Stage::Clip(bool flag)
 
 	if (flag)
 	{
-		for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
+		for (size_t i = 0; i < stage.blocks.size(); i++)
 		{
 			if (stage.blocks[i].number == clipBlock.top().blockNumber1)
 			{
@@ -133,7 +133,7 @@ int Stage::StepBack()
 			return EoF;
 		}
 
-		for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
+		for (size_t i = 0; i < stage.blocks.size(); i++)
 		{
 			if (stage.blocks[i].number == clipBlock.top().blockNumber1)
 			{
@@ -165,7 +165,7 @@ void Stage::Reset()
 			clipBlock.pop();
 		}
 
-		for (size_t i = 0; i < stage.debugBoxObj.size(); i++)
+		for (size_t i = 0; i < stage.blocks.size(); i++)
 		{
 			stage.blocks[i].type = stage.blocks[i].InitType;
 		}
@@ -201,8 +201,8 @@ void Stage::GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2)
 		return;
 	}
 
-	*pos1 = stage.debugBoxObj[clipBlock.top().ReferencePoint1]->position;
-	*pos2 = stage.debugBoxObj[clipBlock.top().ReferencePoint2]->position;
+	*pos1 = stage.blocks[clipBlock.top().ReferencePoint1].pos;
+	*pos2 = stage.blocks[clipBlock.top().ReferencePoint2].pos;
 }
 
 void Stage::GetClipBlocksALL(int blocksArray[], const size_t& arraySize)
@@ -242,7 +242,7 @@ int Stage::Clip2d(ClipBlock* clip)
 
 	using namespace GameCommonData::BlockData;
 
-	auto& tmp = stage.debugBoxObj;
+	auto& tmp = stage.blocks;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
 
 	// 挟む軸がy軸の時
@@ -250,7 +250,7 @@ int Stage::Clip2d(ClipBlock* clip)
 	{
 		for (int i = 0; i < tmp.size(); i++)
 		{
-			if (tmp[i]->position.x != player->position.x || tmp[i]->position.y == player->position.y)
+			if (tmp[i].pos.x != player->position.x || tmp[i].pos.y == player->position.y)
 			{
 				// ブロックが同軸上に無い時は無視する
 				continue;
@@ -271,18 +271,18 @@ int Stage::Clip2d(ClipBlock* clip)
 			}
 
 			// ブロックがプレイヤーより+の方向にある時の処理
-			if ((player->position.y - tmp[i]->position.y) < 0.0f)
+			if ((player->position.y - tmp[i].pos.y) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 					clip->vec1.z = 0.0f;
 				}
-				else if ((player->position.y - tmp[i]->position.y) > clip->vec1.y)
+				else if ((player->position.y - tmp[i].pos.y) > clip->vec1.y)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 					clip->vec1.z = 0.0f;
 				}
 			}
@@ -292,13 +292,13 @@ int Stage::Clip2d(ClipBlock* clip)
 				if (clip->ReferencePoint2 == -1)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 					clip->vec2.z = 0.0f;
 				}
-				else if ((player->position.y - tmp[i]->position.y) < clip->vec2.y)
+				else if ((player->position.y - tmp[i].pos.y) < clip->vec2.y)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 					clip->vec2.z = 0.0f;
 				}
 			}
@@ -332,7 +332,7 @@ int Stage::Clip2d(ClipBlock* clip)
 	{
 		for (int i = 0; i < tmp.size(); i++)
 		{
-			if (tmp[i]->position.x == player->position.x || tmp[i]->position.y != player->position.y)
+			if (tmp[i].pos.x == player->position.x || tmp[i].pos.y != player->position.y)
 			{
 				// ブロックが同軸上に無い時は無視する
 				continue;
@@ -353,18 +353,18 @@ int Stage::Clip2d(ClipBlock* clip)
 			}
 
 			// ブロックがプレイヤーより+の方向にある時の処理
-			if ((player->position.x - tmp[i]->position.x) < 0.0f)
+			if ((player->position.x - tmp[i].pos.x) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 					clip->vec1.z = 0.0f;
 				}
-				else if ((player->position.x - tmp[i]->position.x) > clip->vec1.x)
+				else if ((player->position.x - tmp[i].pos.x) > clip->vec1.x)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 					clip->vec1.z = 0.0f;
 				}
 			}
@@ -374,13 +374,13 @@ int Stage::Clip2d(ClipBlock* clip)
 				if (clip->ReferencePoint2 == -1)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 					clip->vec2.z = 0.0f;
 				}
-				else if ((player->position.x - tmp[i]->position.x) < clip->vec2.x)
+				else if ((player->position.x - tmp[i].pos.x) < clip->vec2.x)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 					clip->vec2.z = 0.0f;
 				}
 			}
@@ -465,35 +465,35 @@ int Stage::Clip2d(ClipBlock* clip)
 						continue;
 					}
 
-					if (tmp[k]->position == tmp[i]->position ||
-						tmp[k]->position != tmp[i]->position + keepVec * blockSize * j)
+					if (tmp[k].pos == tmp[i].pos ||
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * j)
 					{
 						continue;
 					}
 
 					if (clip->vec1.x != 0.0f)
 					{
-						if (tmp[k]->position.x == tmp[i]->position.x || tmp[k]->position.y != tmp[i]->position.y)
+						if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.x - tmp[i]->position.x) > clip->vec1.x)
+						if ((tmp[k].pos.x - tmp[i].pos.x) > clip->vec1.x)
 						{
 							isEnd = true;
-							clip->vec1 = tmp[k]->position - tmp[i]->position;
+							clip->vec1 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}
 					if (clip->vec1.y != 0.0f)
 					{
-						if (tmp[k]->position.x != tmp[i]->position.x || tmp[k]->position.y == tmp[i]->position.y)
+						if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.y - tmp[i]->position.y) > clip->vec1.y)
+						if ((tmp[k].pos.y - tmp[i].pos.y) > clip->vec1.y)
 						{
 							isEnd = true;
-							clip->vec1 = tmp[k]->position - tmp[i]->position;
+							clip->vec1 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}
@@ -529,35 +529,35 @@ int Stage::Clip2d(ClipBlock* clip)
 						continue;
 					}
 
-					if (tmp[k]->position == tmp[i]->position ||
-						tmp[k]->position != tmp[i]->position + keepVec * blockSize * j)
+					if (tmp[k].pos == tmp[i].pos ||
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * j)
 					{
 						continue;
 					}
 
 					if (clip->vec2.x != 0.0f)
 					{
-						if (tmp[k]->position.x == tmp[i]->position.x || tmp[k]->position.y != tmp[i]->position.y)
+						if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.x - tmp[i]->position.x) < clip->vec2.x)
+						if ((tmp[k].pos.x - tmp[i].pos.x) < clip->vec2.x)
 						{
 							isEnd = true;
-							clip->vec2 = tmp[k]->position - tmp[i]->position;
+							clip->vec2 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}
 					if (clip->vec2.y != 0.0f)
 					{
-						if (tmp[k]->position.x != tmp[i]->position.x || tmp[k]->position.y == tmp[i]->position.y)
+						if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.y - tmp[i]->position.y) < clip->vec2.y)
+						if ((tmp[k].pos.y - tmp[i].pos.y) < clip->vec2.y)
 						{
 							isEnd = true;
-							clip->vec2 = tmp[k]->position - tmp[i]->position;
+							clip->vec2 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}
@@ -583,7 +583,7 @@ int Stage::Clip3d(ClipBlock* clip)
 
 	using namespace GameCommonData::BlockData;
 
-	auto& tmp = stage.debugBoxObj;
+	auto& tmp = stage.blocks;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
 
 	// 挟む軸がz軸の時(上方向ベクトルはy軸固定)
@@ -591,7 +591,7 @@ int Stage::Clip3d(ClipBlock* clip)
 	{
 		for (int i = 0; i < (int)tmp.size(); i++)
 		{
-			if (tmp[i]->position.x != player->position.x || tmp[i]->position.y != player->position.y || tmp[i]->position.z == player->position.z)
+			if (tmp[i].pos.x != player->position.x || tmp[i].pos.y != player->position.y || tmp[i].pos.z == player->position.z)
 			{
 				// ブロックが同軸上に無い時は無視する
 				continue;
@@ -612,17 +612,17 @@ int Stage::Clip3d(ClipBlock* clip)
 			}
 
 			// ブロックがプレイヤーより+の方向にある時の処理
-			if ((player->position.z - tmp[i]->position.z) < 0.0f)
+			if ((player->position.z - tmp[i].pos.z) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 				}
-				else if ((player->position.z - tmp[i]->position.z) > clip->vec1.z)
+				else if ((player->position.z - tmp[i].pos.z) > clip->vec1.z)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 				}
 			}
 			// ブロックがプレイヤーより-の方向にある時の処理
@@ -631,12 +631,12 @@ int Stage::Clip3d(ClipBlock* clip)
 				if (clip->ReferencePoint2 == -1)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 				}
-				else if ((player->position.z - tmp[i]->position.z) < clip->vec2.z)
+				else if ((player->position.z - tmp[i].pos.z) < clip->vec2.z)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 				}
 			}
 		}
@@ -669,7 +669,7 @@ int Stage::Clip3d(ClipBlock* clip)
 	{
 		for (int i = 0; i < (int)tmp.size(); i++)
 		{
-			if (tmp[i]->position.x == player->position.x || tmp[i]->position.y != player->position.y || tmp[i]->position.z != player->position.z)
+			if (tmp[i].pos.x == player->position.x || tmp[i].pos.y != player->position.y || tmp[i].pos.z != player->position.z)
 			{
 				// ブロックが同軸上に無い時は無視する
 				continue;
@@ -690,17 +690,17 @@ int Stage::Clip3d(ClipBlock* clip)
 			}
 
 			// ブロックがプレイヤーより+の方向にある時の処理
-			if ((player->position.x - tmp[i]->position.x) < 0.0f)
+			if ((player->position.x - tmp[i].pos.x) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 				}
-				else if ((player->position.x - tmp[i]->position.x) > clip->vec1.x)
+				else if ((player->position.x - tmp[i].pos.x) > clip->vec1.x)
 				{
 					clip->ReferencePoint1 = i;
-					clip->vec1 = player->position - tmp[i]->position;
+					clip->vec1 = player->position - tmp[i].pos;
 				}
 			}
 			// ブロックがプレイヤーより-の方向にある時の処理
@@ -709,12 +709,12 @@ int Stage::Clip3d(ClipBlock* clip)
 				if (clip->ReferencePoint2 == -1)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 				}
-				else if ((player->position.x - tmp[i]->position.x) < clip->vec2.x)
+				else if ((player->position.x - tmp[i].pos.x) < clip->vec2.x)
 				{
 					clip->ReferencePoint2 = i;
-					clip->vec2 = player->position - tmp[i]->position;
+					clip->vec2 = player->position - tmp[i].pos;
 				}
 			}
 		}
@@ -784,7 +784,7 @@ int Stage::Clip3d(ClipBlock* clip)
 			keepVec = clip->vec1;
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * j != clip->vec1; j++)
+			for (size_t j = 1; keepVec * (float)j != clip->vec1; j++)
 			{
 				for (size_t k = 0; k < stage.blocks.size(); k++)
 				{
@@ -798,35 +798,35 @@ int Stage::Clip3d(ClipBlock* clip)
 						continue;
 					}
 
-					if (tmp[k]->position == tmp[i]->position ||
-						tmp[k]->position != tmp[i]->position + keepVec * blockSize * j)
+					if (tmp[k].pos == tmp[i].pos ||
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (float)j)
 					{
 						continue;
 					}
 
 					if (clip->vec1.x != 0.0f)
 					{
-						if (tmp[k]->position.x == tmp[i]->position.x || tmp[k]->position.y != tmp[i]->position.y || tmp[k]->position.y != tmp[i]->position.y)
+						if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.y != tmp[i].pos.y)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.x - tmp[i]->position.x) > clip->vec1.x)
+						if ((tmp[k].pos.x - tmp[i].pos.x) > clip->vec1.x)
 						{
 							isEnd = true;
-							clip->vec1 = tmp[k]->position - tmp[i]->position;
+							clip->vec1 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}
 					if (clip->vec1.z != 0.0f)
 					{
-						if (tmp[k]->position.x != tmp[i]->position.x || tmp[k]->position.y != tmp[i]->position.y || tmp[k]->position.y == tmp[i]->position.y)
+						if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.y == tmp[i].pos.y)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.z - tmp[i]->position.z) > clip->vec1.z)
+						if ((tmp[k].pos.z - tmp[i].pos.z) > clip->vec1.z)
 						{
 							isEnd = true;
-							clip->vec1 = tmp[k]->position - tmp[i]->position;
+							clip->vec1 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}
@@ -848,7 +848,7 @@ int Stage::Clip3d(ClipBlock* clip)
 			keepVec = clip->vec2;
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * j != clip->vec2; j++)
+			for (size_t j = 1; keepVec * (float)j != clip->vec2; j++)
 			{
 				for (size_t k = 0; k < stage.blocks.size(); k++)
 				{
@@ -862,35 +862,35 @@ int Stage::Clip3d(ClipBlock* clip)
 						continue;
 					}
 
-					if (tmp[k]->position == tmp[i]->position ||
-						tmp[k]->position != tmp[i]->position + keepVec * blockSize * j)
+					if (tmp[k].pos == tmp[i].pos ||
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (float)j)
 					{
 						continue;
 					}
 
 					if (clip->vec2.x != 0.0f)
 					{
-						if (tmp[k]->position.x == tmp[i]->position.x || tmp[k]->position.y != tmp[i]->position.y || tmp[k]->position.z != tmp[i]->position.z)
+						if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.z != tmp[i].pos.z)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.x - tmp[i]->position.x) < clip->vec2.x)
+						if ((tmp[k].pos.x - tmp[i].pos.x) < clip->vec2.x)
 						{
 							isEnd = true;
-							clip->vec2 = tmp[k]->position - tmp[i]->position;
+							clip->vec2 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}
 					if (clip->vec2.z != 0.0f)
 					{
-						if (tmp[k]->position.x != tmp[i]->position.x || tmp[k]->position.y == tmp[i]->position.y || tmp[k]->position.z == tmp[i]->position.z)
+						if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y || tmp[k].pos.z == tmp[i].pos.z)
 						{
 							continue;
 						}
-						if ((tmp[k]->position.z - tmp[i]->position.z) < clip->vec2.z)
+						if ((tmp[k].pos.z - tmp[i].pos.z) < clip->vec2.z)
 						{
 							isEnd = true;
-							clip->vec2 = tmp[k]->position - tmp[i]->position;
+							clip->vec2 = tmp[k].pos - tmp[i].pos;
 							break;
 						}
 					}

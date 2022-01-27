@@ -280,9 +280,6 @@ void LoadStage::Draw()
 			DrawObject3d(debugBoxObj[debugBlockCount]);
 			debugBlockCount++;
 			break;
-		case BlockType::START:
-			debugBlockCount++;
-			break;
 		case BlockType::SWITCH:
 			DrawObject3d(debugBoxObj[debugBlockCount]);
 			debugBlockCount++;
@@ -297,6 +294,7 @@ void LoadStage::Draw()
 			warpBlockCount++;
 			break;
 		default:
+			debugBlockCount++;
 			break;
 		}
 	}

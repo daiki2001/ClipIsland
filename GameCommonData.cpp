@@ -13,4 +13,10 @@ void CommonData::StaticInitiizer()
 	boxGraph = TexManager::LoadTexture("./Resources/test.jpeg");
 	boxModel.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, boxGraph);
 }
+RVector3 ScreenToWorld(const XMFLOAT2& screen)
+{
+	RVector3 returnPos;
+
+	return returnPos;
+}
 } //GameCommonData

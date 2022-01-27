@@ -14,6 +14,7 @@ public:
 	// 描画
 	void Draw();
 
+	// ワープゲートを開く
 	void WarpOpen(const RVector3 pos, const RVector3& forwordVec);
 
 	// オブジェクトの座標の取得
