@@ -54,9 +54,9 @@ void NY_Camera::SetProjecion()
 void NY_Camera::SetViewStatusEyeTargetUp(XMFLOAT3 &eye, XMFLOAT3 &target, XMFLOAT3 &up)
 {
 	//パラメータ設定
-	_eye = eye;
+	_eye	= eye;
 	_target = target;
-	_up = up;
+	_up		= up;
 
 	//更新
 	UpdateViewMat();
@@ -78,7 +78,7 @@ void NY_Camera::SetViewStatusTarget(XMFLOAT3 &target)
 	UpdateViewMat();
 }
 
-void NY_Camera::SetViewStatusUp(XMFLOAT3 &up)
+void NY_Camera::SetViewStatusUp(XMFLOAT3 &up) 
 {
 	_up = up;
 
