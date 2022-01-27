@@ -13,14 +13,106 @@ ParticleManager *ParticleManager::Create() {
 	//パーティクルマネージャー生成
 	ParticleManager *pm = new ParticleManager(
 		Raki_DX12B::Get()->GetDevice(),
-		Raki_DX12B::Get()->GetGCommandList(),
-		camera
+		Raki_DX12B::Get()->GetGCommandList()
 	);
 
 	//生成したものを初期化
 	pm->Initialize();
 
 	return pm;
+}
+
+void ParticleManager::Initialize() {
+	//nullチェック
+
+	HRESULT result;
+
+	//パイプライン初期化
+	InitializeGraphicsPipeline();
+
+	//パーティクル用モデル作成
+	CreateModel();
+
+	//定数バッファ生成
+	auto heapprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	auto resdesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff);
+	result = dev->CreateCommittedResource(
+		&heapprop,
+		D3D12_HEAP_FLAG_NONE,
+		&resdesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(&constBuff)
+	);
+	if (FAILED(result)) {
+		assert(0);
+	}
+}
+
+void ParticleManager::Update() {
+
+	//寿命が切れたパーティクルを削除
+	grains.remove_if([](Particle &p) {return p.nowFrame >= p.endFrame; });
+
+	//全パーティクル更新
+	for (std::forward_list<Particle>::iterator itr = grains.begin();
+		itr != grains.end(); itr++) {
+
+		//フレーム数カウント
+		itr->nowFrame++;
+
+		//進行度を0~1の割合に
+		float rate = (float)itr->nowFrame / itr->endFrame;
+
+		//速度加算
+		itr->vel = itr->vel + itr->acc;
+
+		//速度による移動
+		itr->pos += itr->vel;
+
+		//色線形補間
+		itr->color = itr->s_color + (itr->e_color - itr->s_color) * rate;
+
+		//スケーリングの線形補間
+		itr->scale = itr->s_scale + (itr->e_scale - itr->s_scale) * rate;
+
+		//回転線形補間
+		itr->rot = itr->s_rotation + (itr->e_rotation - itr->s_rotation) / rate;
+	}
+
+	//頂点バッファデータ転送
+	int vcount = 0;
+	PVertex *vertMap = nullptr;
+	result = vertbuff->Map(0, nullptr, (void **)&vertMap);
+	if (SUCCEEDED(result)) {
+		// パーティクルの情報を1つずつ反映
+		for (std::forward_list<Particle>::iterator it = grains.begin();
+			it != grains.end();
+			it++) {
+			// 座標
+			vertMap->pos = it->pos;
+			// スケール
+			vertMap->scale = it->scale;
+			// 次の頂点へ
+			vertMap++;
+			if (++vcount >= MAX_VERTEX) {
+				break;
+			}
+		}
+		vertbuff->Unmap(0, nullptr);
+	}
+
+	//定数バッファデータ転送
+	ConstBufferData *constMap = nullptr;
+	result = constBuff->Map(0, nullptr, (void **)&constMap);
+	if (result == S_OK) {
+		//ビュープロジェクション行列
+		constMap->mat = camera->GetMatrixViewProjection();
+		//全方向ビルボード
+		constMap->matBillBoard = camera->GetMatrixBillBoardAll();
+		constBuff->Unmap(0, nullptr);
+	}
+
 }
 
 void ParticleManager::Draw(UINT drawTexNum)
@@ -46,7 +138,7 @@ void ParticleManager::Draw(UINT drawTexNum)
 	cmd->IASetVertexBuffers(0, 1, &vbview);
 
 	// デスクリプタヒープの配列
-	ID3D12DescriptorHeap* ppHeaps[] = { TexManager::texDsvHeap.Get() };
+	ID3D12DescriptorHeap *ppHeaps[] = { TexManager::texDsvHeap.Get() };
 	cmd->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
 
 	// 定数バッファビューをセット
@@ -65,7 +157,7 @@ void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, fl
 	//要素追加
 	grains.emplace_front();
 	//追加した要素の参照
-	Particle& p = grains.front();
+	Particle &p = grains.front();
 	p.pos = pos;			//初期位置
 	p.vel = vel;			//速度
 	p.acc = acc;			//加速度
@@ -75,135 +167,86 @@ void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, fl
 
 }
 
-void ParticleManager::Initialize() {
-	//nullチェック
-	assert(dev == nullptr);
-	assert(cmd == nullptr);
-	assert(cam == nullptr);
 
-	HRESULT result;
-
-	//パイプライン初期化
-	InitializeGraphicsPipeline();
-	//パーティクル用モデル作成
-	CreateModel();
-
-	//定数バッファ生成
-	auto heapprop = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-	auto resdesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferData) + 0xff) & ~0xff);
-	result = dev->CreateCommittedResource(
-		&heapprop,
-		D3D12_HEAP_FLAG_NONE,
-		&resdesc,
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(&constBuff)
-	);
-	if (FAILED(result)) {
-		assert(0);
-	}
-}
-
-void ParticleManager::Update() {
-
-	HRESULT result;
-
-	//寿命が切れたパーティクルを削除
-	grains.remove_if([](Particle &p) {return p.nowFrame >= p.endFrame; });
-
-	//全パーティクル更新
-	for (std::forward_list<Particle>::iterator itr = grains.begin();
-		itr != grains.end(); itr++) {
-
-		//フレーム数カウント
-		itr->nowFrame++;
-		//進行度を0~1の割合に
-		float rate = (float)itr->nowFrame / itr->endFrame;
-
-		//速度加算
-		itr->vel = itr->vel + itr->acc;
-
-
-	}
-}
 
 void ParticleManager::InitializeGraphicsPipeline() {
-	HRESULT result = S_FALSE;
+
+	result = S_FALSE;
 	ComPtr<ID3DBlob> vsBlob; // 頂点シェーダオブジェクト
 	ComPtr<ID3DBlob> psBlob;	// ピクセルシェーダオブジェクト
 	ComPtr<ID3DBlob> gsBlob;	// ジオメトリシェーダオブジェクト
 	ComPtr<ID3DBlob> errorBlob; // エラーオブジェクト
 
 	// 頂点シェーダの読み込みとコンパイル
-	//result = D3DCompileFromFile(
-	//	L"Resources/shaders/ParticleVS.hlsl",	// シェーダファイル名
-	//	nullptr,
-	//	D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-	//	"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
-	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-	//	0,
-	//	&vsBlob, &errorBlob);
-	//if (FAILED(result)) {
-	//	// errorBlobからエラー内容をstring型にコピー
-	//	std::string errstr;
-	//	errstr.resize(errorBlob->GetBufferSize());
+	result = D3DCompileFromFile(
+		L"Resources/Shaders/ParticleVS.hlsl",	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "vs_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&vsBlob, &errorBlob);
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
 
-	//	std::copy_n((char *)errorBlob->GetBufferPointer(),
-	//		errorBlob->GetBufferSize(),
-	//		errstr.begin());
-	//	errstr += "\n";
-	//	// エラー内容を出力ウィンドウに表示
-	//	OutputDebugStringA(errstr.c_str());
-	//	exit(1);
-	//}
+		std::copy_n((char *)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
 
-	//// ピクセルシェーダの読み込みとコンパイル
-	//result = D3DCompileFromFile(
-	//	L"Resources/shaders/ParticlePS.hlsl",	// シェーダファイル名
-	//	nullptr,
-	//	D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-	//	"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
-	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-	//	0,
-	//	&psBlob, &errorBlob);
-	//if (FAILED(result)) {
-	//	// errorBlobからエラー内容をstring型にコピー
-	//	std::string errstr;
-	//	errstr.resize(errorBlob->GetBufferSize());
+	// ピクセルシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/Shaders/ParticlePS.hlsl",	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "ps_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&psBlob, &errorBlob);
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
 
-	//	std::copy_n((char *)errorBlob->GetBufferPointer(),
-	//		errorBlob->GetBufferSize(),
-	//		errstr.begin());
-	//	errstr += "\n";
-	//	// エラー内容を出力ウィンドウに表示
-	//	OutputDebugStringA(errstr.c_str());
-	//	exit(1);
-	//}
+		std::copy_n((char *)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
 
-	//// ジオメトリシェーダの読み込みとコンパイル
-	//result = D3DCompileFromFile(
-	//	L"Resources/shaders/ParticleGS.hlsl",	// シェーダファイル名
-	//	nullptr,
-	//	D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
-	//	"main", "gs_5_0",	// エントリーポイント名、シェーダーモデル指定
-	//	D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
-	//	0,
-	//	&gsBlob, &errorBlob);
-	//if (FAILED(result)) {
-	//	// errorBlobからエラー内容をstring型にコピー
-	//	std::string errstr;
-	//	errstr.resize(errorBlob->GetBufferSize());
+	// ジオメトリシェーダの読み込みとコンパイル
+	result = D3DCompileFromFile(
+		L"Resources/Shaders/ParticleGS.hlsl",	// シェーダファイル名
+		nullptr,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE, // インクルード可能にする
+		"main", "gs_5_0",	// エントリーポイント名、シェーダーモデル指定
+		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, // デバッグ用設定
+		0,
+		&gsBlob, &errorBlob);
+	if (FAILED(result)) {
+		// errorBlobからエラー内容をstring型にコピー
+		std::string errstr;
+		errstr.resize(errorBlob->GetBufferSize());
 
-	//	std::copy_n((char *)errorBlob->GetBufferPointer(),
-	//		errorBlob->GetBufferSize(),
-	//		errstr.begin());
-	//	errstr += "\n";
-	//	// エラー内容を出力ウィンドウに表示
-	//	OutputDebugStringA(errstr.c_str());
-	//	exit(1);
-	//}
+		std::copy_n((char *)errorBlob->GetBufferPointer(),
+			errorBlob->GetBufferSize(),
+			errstr.begin());
+		errstr += "\n";
+		// エラー内容を出力ウィンドウに表示
+		OutputDebugStringA(errstr.c_str());
+		exit(1);
+	}
 
-	//// 頂点レイアウト
+	// 頂点レイアウト
 	D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 		{ // xy座標(1行で書いたほうが見やすい)
 			"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
@@ -261,7 +304,7 @@ void ParticleManager::InitializeGraphicsPipeline() {
 	gpipeline.InputLayout.pInputElementDescs = inputLayout;
 	gpipeline.InputLayout.NumElements = _countof(inputLayout);
 
-	// 図形の形状設定（三角形）
+	// 図形の形状設定（点）
 	gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
 	gpipeline.NumRenderTargets = 1;	// 描画対象は1つ
@@ -296,7 +339,7 @@ void ParticleManager::InitializeGraphicsPipeline() {
 	gpipeline.pRootSignature = rootsig.Get();
 
 	// グラフィックスパイプラインの生成
-	result = dev->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipeline));
+	result = Raki_DX12B::Get()->GetDevice()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(&pipeline));
 
 	if (FAILED(result)) {
 		assert(0);
@@ -321,8 +364,10 @@ void ParticleManager::CreateModel() {
 		return;
 	}
 
-	// 頂点バッファビューの作成
+	//// 頂点バッファビューの作成
 	vbview.BufferLocation = vertbuff->GetGPUVirtualAddress();
 	vbview.SizeInBytes = sizeof(PVertex) * MAX_VERTEX;
 	vbview.StrideInBytes = sizeof(PVertex);
+
+
 }

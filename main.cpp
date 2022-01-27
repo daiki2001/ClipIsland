@@ -229,7 +229,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         case GAME_MAIN:
             if (Input::isKey(DIK_1))
             {
-                stageData.Select("test.boxmap", true);
+                stageData.Select("test1.boxmap", true);
             }
 
             if (isTutorial)
@@ -278,6 +278,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     //player.object->color = { 0, 0, 1, 1 };
                 }
 
+                if (stageData.stage.blocks[i].type == BlockType::SWITCH && AB == true)
+                {
+                    stageData.Change();
+                }
+
                 if (AB == true)
                 {
                     nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK /*|| stageData.stage.blocks[i].type == BlockType::START*/ || nFlag == false;
@@ -293,6 +298,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 player.object->position = player.position;
                 //player.object->color = { 0, 0, 1, 1 };
             }
+           
 
             if (actFlag == true && actnFlag == true)
             {
