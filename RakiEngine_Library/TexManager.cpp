@@ -10,7 +10,7 @@ ID3D12Device *TexManager::dev;
 void TexManager::InitTexManager()
 {
     HRESULT result;
-    //ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãƒ’ãƒ¼ãƒ—ç”Ÿæˆ
+    //ƒfƒXƒNƒŠƒvƒ^ƒq[ƒv¶¬
     D3D12_DESCRIPTOR_HEAP_DESC descHeapDesc{};
     descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
     descHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -22,16 +22,16 @@ void TexManager::InitTexManager()
 
 UINT TexManager::LoadTexture(const char *filename)
 {
-    //ãƒŒãƒ«ãƒã‚§ãƒƒã‚¯
+    //ƒkƒ‹ƒ`ƒFƒbƒN
     assert(filename != nullptr);
 
     HRESULT result;
-    // ä½¿ç”¨ã™ã‚‹ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç•ªå·ã‚’è¨­å®š
+    // g—p‚·‚éƒeƒNƒXƒ`ƒƒ‚Ì”Ô†‚ğİ’è
     UINT useTexIndexNum = 0;
     for (int i = 0; i < MAX_TEXNUM; i++) {
-        //ç©ºã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ç™ºè¦‹
+        //‹ó‚ÌƒeƒNƒXƒ`ƒƒ‚ğ”­Œ©
         if (textureData[i].texBuff == nullptr) {
-            //ç•ªå·è¨­å®š
+            //”Ô†İ’è
             useTexIndexNum = (UINT)i;
             textureData[i].texNumber = i;
             break;
@@ -40,35 +40,35 @@ UINT TexManager::LoadTexture(const char *filename)
 
     // const char => wchar_t
     size_t newsize = strlen(filename) + 1;
-    //wchar_tã«å¤‰æ›ã—ãŸæ–‡å­—åˆ—ã‚’æ ¼ç´ã™ã‚‹å¤‰æ•°ã‚’ä½œæˆ
+    //wchar_t‚É•ÏŠ·‚µ‚½•¶š—ñ‚ğŠi”[‚·‚é•Ï”‚ğì¬
     wchar_t *FileName = new wchar_t[newsize];
-    //wchar_tã«å¤‰æ›
+    //wchar_t‚É•ÏŠ·
     size_t convertedChars = 0;
     mbstowcs_s(&convertedChars, FileName, newsize, filename, _TRUNCATE);
 
-    // WICãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰
+    // WICƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh
     result = LoadFromWICFile(FileName,
         WIC_FLAGS_NONE,
         &textureData[useTexIndexNum].metaData,
         textureData[useTexIndexNum].scratchImg);
     textureData[useTexIndexNum].img = textureData[useTexIndexNum].scratchImg.GetImage(0, 0, 0);
 
-    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
-    D3D12_HEAP_PROPERTIES texHeapProp{};//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ’ãƒ¼ãƒ—è¨­å®š
+    // ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@¶¬
+    D3D12_HEAP_PROPERTIES texHeapProp{};//ƒeƒNƒXƒ`ƒƒƒq[ƒvİ’è
     texHeapProp.Type                    = D3D12_HEAP_TYPE_CUSTOM;
     texHeapProp.CPUPageProperty         = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
     texHeapProp.MemoryPoolPreference    = D3D12_MEMORY_POOL_L0;
 
-    D3D12_RESOURCE_DESC texresDesc{};//ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
-    texresDesc.Dimension        = static_cast<D3D12_RESOURCE_DIMENSION>(textureData[useTexIndexNum].metaData.dimension);//2Dãƒ†ã‚¯ã‚¹ãƒãƒ£ç”¨
-    texresDesc.Format           = textureData[useTexIndexNum].metaData.format;//RGBAãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
-    texresDesc.Width            = textureData[useTexIndexNum].metaData.width;//æ¨ª
-    texresDesc.Height           = (UINT)textureData[useTexIndexNum].metaData.height;//ç¸¦
+    D3D12_RESOURCE_DESC texresDesc{};//ƒŠƒ\[ƒXİ’è
+    texresDesc.Dimension        = static_cast<D3D12_RESOURCE_DIMENSION>(textureData[useTexIndexNum].metaData.dimension);//2DƒeƒNƒXƒ`ƒƒ—p
+    texresDesc.Format           = textureData[useTexIndexNum].metaData.format;//RGBAƒtƒH[ƒ}ƒbƒg
+    texresDesc.Width            = textureData[useTexIndexNum].metaData.width;//‰¡
+    texresDesc.Height           = (UINT)textureData[useTexIndexNum].metaData.height;//c
     texresDesc.DepthOrArraySize = (UINT16)textureData[useTexIndexNum].metaData.arraySize;
     texresDesc.MipLevels        = (UINT16)textureData[useTexIndexNum].metaData.mipLevels;
     texresDesc.SampleDesc.Count = 1;
 
-    result = dev->CreateCommittedResource(//GPUãƒªã‚½ãƒ¼ã‚¹ç”Ÿæˆ
+    result = dev->CreateCommittedResource(//GPUƒŠƒ\[ƒX¶¬
         &texHeapProp,
         D3D12_HEAP_FLAG_NONE,
         &texresDesc,
@@ -77,7 +77,7 @@ UINT TexManager::LoadTexture(const char *filename)
         IID_PPV_ARGS(&textureData[useTexIndexNum].texBuff)
     );
 
-    //ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒ‡ãƒ¼ã‚¿è»¢é€
+    //ƒeƒNƒXƒ`ƒƒƒoƒbƒtƒ@‚Ö‚Ìƒf[ƒ^“]‘—
     result = textureData[useTexIndexNum].texBuff->WriteToSubresource(
         0,
         nullptr,
@@ -86,14 +86,14 @@ UINT TexManager::LoadTexture(const char *filename)
         (UINT)textureData[useTexIndexNum].img->slicePitch
     );
 
-    //ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼è¨­å®š
+    //ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[İ’è
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
     srvDesc.Format = textureData[useTexIndexNum].metaData.format;
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = 1;
 
-    //ãƒ’ãƒ¼ãƒ—ã«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ä½œæˆ
+    //ƒq[ƒv‚ÉƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[ì¬
     D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV = texDsvHeap.Get()->GetCPUDescriptorHandleForHeapStart();
     D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleSRV = texDsvHeap.Get()->GetGPUDescriptorHandleForHeapStart();
     dev->CreateShaderResourceView(textureData[useTexIndexNum].texBuff.Get(), &srvDesc,
@@ -111,18 +111,18 @@ UINT TexManager::LoadTexture(std::string filename)
 
 UINT TexManager::LoadDivTextureTest(const char *filename, const int numDivTex, int sizeX)
 {
-    //ãƒ†ã‚¯ã‚¹ãƒãƒ£èª­ã¿è¾¼ã¿
+    //ƒeƒNƒXƒ`ƒƒ“Ç‚İ‚İ
     UINT useNo = LoadTexture(filename);
 
-    //è©²å½“ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®uvã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’ç”¨æ„
+    //ŠY“–ƒeƒNƒXƒ`ƒƒ‚ÌuvƒIƒtƒZƒbƒg‚ğ—pˆÓ
 
     XMFLOAT2 offset_temp;
-    //åˆ†å‰²æ•°åˆ†ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’ç”¨æ„ï¼ˆxæ–¹å‘ï¼‰
+    //•ªŠ„”•ª‚ÌƒIƒtƒZƒbƒg‚ğ—pˆÓix•ûŒüj
     for (int i = 0; i < numDivTex; i++) {
         offset_temp.x = (float)sizeX / textureData[useNo].metaData.width;
         offset_temp.y = textureData[useNo].metaData.height / textureData[useNo].metaData.height;
 
-        //ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’ã‚³ãƒ³ãƒ†ãƒŠã«æ ¼ç´
+        //ƒIƒtƒZƒbƒg‚ğƒRƒ“ƒeƒi‚ÉŠi”[
         textureData[useNo].uv_offsets.push_back(offset_temp);
     }
 

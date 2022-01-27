@@ -80,7 +80,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //頂点シェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"./RakiEngine_Library/Shaders/OBJVertexShader.hlsl", //シェーダーファイル名
+        L"Resources/Shaders/OBJVertexShader.hlsl", //シェーダーファイル名
         nullptr,//シェーダーマクロオブジェクト（今回は使わない）
         D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
         "main", "vs_5_0", //エントリーポイント名、シェーダーモデル指定
@@ -106,7 +106,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //標準ジオメトリシェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"./RakiEngine_Library/Shaders/OBJGeometryShader.hlsl", //シェーダーファイル名
+        L"Resources/Shaders/OBJGeometryShader.hlsl", //シェーダーファイル名
         nullptr,//シェーダーマクロオブジェクト（今回は使わない）
         D3D_COMPILE_STANDARD_FILE_INCLUDE, //インクルードオブジェクト（インクルード可能にする）
         "main", "gs_5_0", //エントリーポイント名、シェーダーモデル指定
@@ -132,7 +132,7 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
 
     //ピクセルシェーダーの読み込みとコンパイル
     result = D3DCompileFromFile(
-        L"./RakiEngine_Library/Shaders/OBJPixelShader.hlsl",
+        L"Resources/Shaders/OBJPixelShader.hlsl",
         nullptr,
         D3D_COMPILE_STANDARD_FILE_INCLUDE,
         "main", "ps_5_0",
@@ -350,8 +350,14 @@ void NY_Object3DManager::LoadObject3DTexture(UINT &texNumber, string filename, I
 
 }
 
+
+
 Object3d *NY_Object3DManager::CreateObject3d(NY_Model3D *modelData)
 {
+    if (modelData == nullptr) {
+        assert(modelData == nullptr);
+    }
+
     //Object3dのデータを新たに作成
     Object3d *newobj = new Object3d;
 
@@ -375,11 +381,14 @@ void NY_Object3DManager::DeleteObject3d(Object3d *obj)
         //消すオブジェクトと同じオブジェクトを検出
         if (obj == objects[i]) {
             objects.erase(objects.begin() + i);
+            break;
         }
     }
 
-    //オブジェクトの消去
+    objects.shrink_to_fit();
+
     delete obj;
+    obj = nullptr;
 }
 
 void NY_Object3DManager::UpdateAllObjects()

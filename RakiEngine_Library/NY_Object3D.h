@@ -16,25 +16,25 @@ using namespace std;
 using namespace DirectX;
 using namespace Microsoft::WRL;
 
-//å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“B0
+//’è”ƒoƒbƒtƒ@ƒf[ƒ^\‘¢‘ÌB0
 struct ConstBufferDataB0
 {
 	XMMATRIX mat;
 	XMFLOAT4 color;
 };
 
-//å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“B1
+//’è”ƒoƒbƒtƒ@ƒf[ƒ^\‘¢‘ÌB1
 struct ConstBufferDataB1
 {
-	XMFLOAT3 amdient;  //ã‚¢ãƒ³ãƒ“ã‚¨ãƒ³ãƒˆ
-	float pad1;//ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
-	XMFLOAT3 diffuse;  //ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚º
-	float pad2;//ãƒ‘ãƒ‡ã‚£ãƒ³ã‚°
-	XMFLOAT3 specular; //ã‚¹ãƒšã‚­ãƒ¥ãƒ©ãƒ¼
-	float alpha;       //ã‚¢ãƒ«ãƒ•ã‚¡
+	XMFLOAT3 amdient;  //ƒAƒ“ƒrƒGƒ“ƒg
+	float pad1;//ƒpƒfƒBƒ“ƒO
+	XMFLOAT3 diffuse;  //ƒfƒBƒtƒ…[ƒY
+	float pad2;//ƒpƒfƒBƒ“ƒO
+	XMFLOAT3 specular; //ƒXƒyƒLƒ…ƒ‰[
+	float alpha;       //ƒAƒ‹ƒtƒ@
 };
 
-//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
+//ƒrƒ‹ƒ{[ƒhƒp[ƒeƒBƒNƒ‹’¸“_ƒf[ƒ^
 struct ParticleVertex
 {
 	XMFLOAT3 pos;
@@ -48,75 +48,80 @@ extern class NY_Object3DManager;
 class Object3d
 {
 public:
-	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åå‰
+	//ƒIƒuƒWƒFƒNƒg‚Ì–¼‘O
 	string tagName;
 
-	//é©ç”¨ã™ã‚‹ãƒªã‚½ãƒ¼ã‚¹ã®ç•ªå·
+	//“K—p‚·‚éƒŠƒ\[ƒX‚Ì”Ô†
 	UINT resourceNumber;
 
-	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿
-	NY_Model3D* model;
+	//ƒ‚ƒfƒ‹ƒf[ƒ^
+	NY_Model3D *model;
 
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡
+	//’è”ƒoƒbƒtƒ@
 	ComPtr<ID3D12Resource> constBuffB0;
 	ComPtr<ID3D12Resource> constBuffB1;
 
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ãƒãƒ³ãƒ‰ãƒ«(CPU)
+	//’è”ƒoƒbƒtƒ@ƒrƒ…[ƒnƒ“ƒhƒ‹(CPU)
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuDescHandleCBV;
 
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ãƒãƒ³ãƒ‰ãƒ«(GPU)
+	//’è”ƒoƒbƒtƒ@ƒrƒ…[ƒnƒ“ƒhƒ‹(GPU)
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuDescHandleCBV;
 
-	//ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›æƒ…å ±
-	RVector3 scale = { 1,1,1 };
+	//ƒAƒtƒBƒ“•ÏŠ·î•ñ
+	RVector3 scale    = { 1,1,1 };
 	RVector3 rotation = { 0,0,0 };
 	RVector3 position = { 0,0,0 };
 
-	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›è¡Œåˆ—
+	//ƒ[ƒ‹ƒh•ÏŠ·s—ñ
 	XMMATRIX matWorld;
 
-	//è¦ªå­(è¦ªè¦ç´ ã¸ã®ãƒã‚¤ãƒ³ã‚¿)
-	Object3d* parent = nullptr;
+	//eq(e—v‘f‚Ö‚Ìƒ|ƒCƒ“ƒ^)
+	Object3d *parent = nullptr;
 
-	//è‰²æƒ…å ±
+	//Fî•ñ
 	XMFLOAT4 color = { 1,1,1,1 };
 
-	//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ãƒ•ãƒ©ã‚°
+	//ƒrƒ‹ƒ{[ƒhƒtƒ‰ƒO
 	bool isBillBoard;
 
-	//ãƒ€ãƒ¼ãƒ†ã‚£ãƒ•ãƒ©ã‚°
+	//ƒ_[ƒeƒBƒtƒ‰ƒO
 	bool isDirty;
 
 public:
-	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 	Object3d() {
 		isBillBoard = false;
 		isDirty = true;
 	};
 
-	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åˆæœŸåŒ–
+	//ƒIƒuƒWƒFƒNƒg‚Ì‰Šú‰»
 	//static void InitObject3D(Object3d *obj, ID3D12Device *dev);
-	void InitObject3D(ID3D12Device* dev);
+	void InitObject3D(ID3D12Device *dev);
 
-	//ãƒ­ãƒ¼ãƒ‰æ¸ˆãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã®è¨­å®š
+	//ƒ[ƒhÏƒ‚ƒfƒ‹ƒf[ƒ^‚Ìİ’è
 	//static void SetLoadedModelData(Object3d *obj, NY_Model3D *loadedModel);
-	void SetLoadedModelData(NY_Model3D* loadedModel);
+	void SetLoadedModelData(NY_Model3D *loadedModel);
 
-	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
+	//ƒIƒuƒWƒFƒNƒgXV
 	//static void UpdateObject3D(Object3d *obj, XMMATRIX &matview);
 	void UpdateObject3D();
 
-	//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰æ›´æ–°ï¼ˆã‚«ãƒ¡ãƒ©ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãã®ã¾ã¾å–ã‚Šè¾¼ã‚“ã§ã€ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ç”¨ã®æ›´æ–°å‡¦ç†ã‚’è¡Œã†ï¼‰
+	//ƒrƒ‹ƒ{[ƒhXViƒJƒƒ‰ƒIƒuƒWƒFƒNƒg‚ğ‚»‚Ì‚Ü‚Üæ‚è‚ñ‚ÅAƒrƒ‹ƒ{[ƒh—p‚ÌXVˆ—‚ğs‚¤j
 	//static void UpdateBillBoard3D(Object3d *obj, NY_Camera cam);
 	void UpdateBillBoard3D();
 
-	//ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚’ä½¿ç”¨ã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæç”»
+	//ƒ‚ƒfƒ‹ƒf[ƒ^‚ğg—p‚µ‚½ƒIƒuƒWƒFƒNƒg•`‰æ
 	static void DrawModel3D(Object3d *obj, ID3D12GraphicsCommandList *cmd,ID3D12Device *dev);
 	void DrawModel3D(ID3D12GraphicsCommandList *cmd, ID3D12Device *dev);
 	void DrawModel3DSelectTexture(UINT useTexNum);
 
 
 private:
-	/// ãƒ—ãƒ©ã‚¤ãƒ™ãƒ¼ãƒˆãƒ¡ãƒ³ãƒå¤‰æ•°
+	/// ƒvƒ‰ƒCƒx[ƒgƒƒ“ƒo•Ï”
 
 };
+
+
+
+
+

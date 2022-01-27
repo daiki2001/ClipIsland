@@ -11,7 +11,7 @@
 //	const auto HEAP_PROP = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 //	const auto RESDESC = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff);
 //
-//	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b0ç”Ÿæˆ
+//	//’è”ƒoƒbƒtƒ@b0¶¬
 //	result = dev->CreateCommittedResource(
 //		&HEAP_PROP,
 //		D3D12_HEAP_FLAG_NONE,
@@ -21,7 +21,7 @@
 //		IID_PPV_ARGS(&obj->constBuffB0)
 //	);
 //
-//	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b1ç”Ÿæˆ
+//	//’è”ƒoƒbƒtƒ@b1¶¬
 //	result = dev->CreateCommittedResource(
 //		&HEAP_PROP,
 //		D3D12_HEAP_FLAG_NONE,
@@ -33,17 +33,17 @@
 //
 //}
 
-void Object3d::InitObject3D(ID3D12Device* dev)
+void Object3d::InitObject3D(ID3D12Device *dev)
 {
-	//è¦ªã«ãƒŒãƒ«ã‚’ä»£å…¥
+	//e‚Éƒkƒ‹‚ð‘ã“ü
 	parent = nullptr;
 
 	HRESULT result;
 	const auto HEAP_PROP = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 	const auto RESDESC = CD3DX12_RESOURCE_DESC::Buffer((sizeof(ConstBufferDataB0) + 0xff) & ~0xff);
-
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b0ç”Ÿæˆ
-	result = dev->CreateCommittedResource(
+	
+	//’è”ƒoƒbƒtƒ@b0¶¬
+	result =  dev->CreateCommittedResource(
 		&HEAP_PROP,
 		D3D12_HEAP_FLAG_NONE,
 		&RESDESC,
@@ -52,7 +52,7 @@ void Object3d::InitObject3D(ID3D12Device* dev)
 		IID_PPV_ARGS(&constBuffB0)
 	);
 
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡b1ç”Ÿæˆ
+	//’è”ƒoƒbƒtƒ@b1¶¬
 	result = dev->CreateCommittedResource(
 		&HEAP_PROP,
 		D3D12_HEAP_FLAG_NONE,
@@ -69,7 +69,7 @@ void Object3d::InitObject3D(ID3D12Device* dev)
 //	obj->model = loadedModel;
 //}
 
-void Object3d::SetLoadedModelData(NY_Model3D* loadedModel)
+void Object3d::SetLoadedModelData(NY_Model3D *loadedModel)
 {
 	model = loadedModel;
 
@@ -80,7 +80,7 @@ void Object3d::SetLoadedModelData(NY_Model3D* loadedModel)
 //{
 //	XMMATRIX matScale, matRot, matTrans;
 //
-//	// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›žè»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
+//	// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvŽZ
 //
 //	matScale = XMMatrixScaling(obj->scale.x, obj->scale.y, obj->scale.z);
 //
@@ -92,7 +92,7 @@ void Object3d::SetLoadedModelData(NY_Model3D* loadedModel)
 //	matTrans = XMMatrixTranslation(obj->position.x, obj->position.y, obj->position.z);
 //
 //	obj->matWorld = XMMatrixIdentity();
-//	obj->matWorld *= matScale;//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã‚’åæ˜ 
+//	obj->matWorld *= matScale;//ƒ[ƒ‹ƒhs—ñ‚ÉƒXƒP[ƒŠƒ“ƒO‚ð”½‰f
 //	obj->matWorld *= matRot;
 //	obj->matWorld *= matTrans;
 //
@@ -101,7 +101,7 @@ void Object3d::SetLoadedModelData(NY_Model3D* loadedModel)
 //		obj->matWorld *= obj->parent->matWorld;
 //	}
 //
-//	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
+//	//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
 //	ConstBufferDataB0 *ConstMapB0 = nullptr;
 //	if (SUCCEEDED(obj->constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 //	{
@@ -109,7 +109,7 @@ void Object3d::SetLoadedModelData(NY_Model3D* loadedModel)
 //		obj->constBuffB0->Unmap(0, nullptr);
 //	}
 //
-//	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
+//	//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
 //	ConstBufferDataB1 *ConstMapB1 = nullptr;
 //	if (SUCCEEDED(obj->constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 //	{
@@ -124,15 +124,15 @@ void Object3d::SetLoadedModelData(NY_Model3D* loadedModel)
 
 void Object3d::UpdateObject3D()
 {
-	//ãƒ€ãƒ¼ãƒ†ã‚£ãƒ•ãƒ©ã‚°ã®æŒ™å‹•ã¯æ¤œè¨Žä¸­
+	//ƒ_[ƒeƒBƒtƒ‰ƒO‚Ì‹““®‚ÍŒŸ“¢’†
 	isDirty = true;
 
-	//ãƒ€ãƒ¼ãƒ†ã‚£ãƒ•ãƒ©ã‚°ãŒæœ‰åŠ¹ãªæ™‚æ›´æ–°ï¼ˆé€šå¸¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼‰
+	//ƒ_[ƒeƒBƒtƒ‰ƒO‚ª—LŒø‚ÈŽžXVi’ÊíƒIƒuƒWƒFƒNƒgj
 	if (isDirty && isBillBoard != true) {
 
 		XMMATRIX matScale, matRot, matTrans;
 
-		// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›žè»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
+		// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvŽZ
 
 		matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 
@@ -144,7 +144,7 @@ void Object3d::UpdateObject3D()
 		matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
 		matWorld = XMMatrixIdentity();
-		matWorld *= matScale;//ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã«ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã‚’åæ˜ 
+		matWorld *= matScale;//ƒ[ƒ‹ƒhs—ñ‚ÉƒXƒP[ƒŠƒ“ƒO‚ð”½‰f
 		matWorld *= matRot;
 		matWorld *= matTrans;
 
@@ -153,18 +153,18 @@ void Object3d::UpdateObject3D()
 			matWorld *= parent->matWorld;
 		}
 
-		//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
-		ConstBufferDataB0* ConstMapB0 = nullptr;
-		if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void**)&ConstMapB0)))
+		//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
+		ConstBufferDataB0 *ConstMapB0 = nullptr;
+		if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 		{
 			ConstMapB0->mat = matWorld * camera->GetMatrixView() * NY_Object3DManager::Get()->matProjection;
 			ConstMapB0->color = this->color;
 			constBuffB0->Unmap(0, nullptr);
 		}
 
-		//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
-		ConstBufferDataB1* ConstMapB1 = nullptr;
-		if (SUCCEEDED(constBuffB1->Map(0, nullptr, (void**)&ConstMapB1)))
+		//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
+		ConstBufferDataB1 *ConstMapB1 = nullptr;
+		if (SUCCEEDED(constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 		{
 			ConstMapB1->amdient = model->material.ambient;
 			ConstMapB1->diffuse = model->material.diffuse;
@@ -173,10 +173,10 @@ void Object3d::UpdateObject3D()
 			constBuffB1->Unmap(0, nullptr);
 		}
 
-		//ãƒ€ãƒ¼ãƒ†ã‚£ãƒ•ãƒ©ã‚°ãƒªã‚»ãƒƒãƒˆ
+		//ƒ_[ƒeƒBƒtƒ‰ƒOƒŠƒZƒbƒg
 		isDirty = false;
 	}
-	//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®ã¨ã
+	//ƒrƒ‹ƒ{[ƒh‚Ì‚Æ‚«
 	else if (isDirty && isBillBoard) {
 		UpdateBillBoard3D();
 
@@ -187,20 +187,20 @@ void Object3d::UpdateObject3D()
 //void Object3d::UpdateBillBoard3D(Object3d *obj, NY_Camera cam)
 //{
 //	/*
-//	ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®åŽŸç†ã¯ã€ãƒ“ãƒ¥ãƒ¼ã§å›žã™æ–¹å‘ã®åå¯¾ã‚’äºˆã‚ã‹ã‘ã‚Šã‚ƒãˆãˆã‚„ã‚“ï¼ã ãŒ
-//	NY_Cameraã‚¯ãƒ©ã‚¹ã®æ¬ ç‚¹ã¨ã—ã¦ã€Cameraæœ¬ä½“ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã¯ä¸€åˆ‡æ›¿ã‚ã‚‰ãªã„ã®ã§
-//	NY_Cameraã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã§ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®æ›´æ–°ã¯å‡ºæ¥ãªã„ã€‚
-//	ã‚ˆã£ã¦ã€Cameraã®ã€Œè¿½å¾“ã™ã‚‹ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã€ã‚’ç”¨ã„ã¦é€†å›žè»¢ã‚’æ±‚ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹?
+//	ƒrƒ‹ƒ{[ƒh‚ÌŒ´—‚ÍAƒrƒ…[‚Å‰ñ‚·•ûŒü‚Ì”½‘Î‚ð—\‚ß‚©‚¯‚è‚á‚¦‚¦‚â‚ñI‚¾‚ª
+//	NY_CameraƒNƒ‰ƒX‚ÌŒ‡“_‚Æ‚µ‚ÄACamera–{‘Ì‚Ìƒ[ƒ‹ƒhÀ•W‚ÍˆêØ‘Ö‚í‚ç‚È‚¢‚Ì‚Å
+//	NY_Camera‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Åƒrƒ‹ƒ{[ƒh‚ÌXV‚Ío—ˆ‚È‚¢B
+//	‚æ‚Á‚ÄACamera‚Ìu’Ç]‚·‚éƒ^[ƒQƒbƒgv‚ð—p‚¢‚Ä‹t‰ñ“]‚ð‹‚ß‚é•K—v‚ª‚ ‚é?
 //	*/
 //
 //
-//	////ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ç”¨å¤‰æ›è¡Œåˆ—ã‚’å®£è¨€
+//	////ƒrƒ‹ƒ{[ƒh—p•ÏŠ·s—ñ‚ðéŒ¾
 //
 //
-//	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ç”¨
+//	//ƒ[ƒ‹ƒh•ÏŠ·—p
 //	XMMATRIX matScale, matRot, matTrans;
 //
-//	// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›žè»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
+//	// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvŽZ
 //
 //	matScale = XMMatrixScaling(obj->scale.x, obj->scale.y, obj->scale.z);
 //
@@ -224,7 +224,7 @@ void Object3d::UpdateObject3D()
 //		obj->matWorld *= obj->parent->matWorld;
 //	}
 //
-//	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
+//	//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
 //	ConstBufferDataB0 *ConstMapB0 = nullptr;
 //	if (SUCCEEDED(obj->constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 //	{
@@ -233,7 +233,7 @@ void Object3d::UpdateObject3D()
 //		obj->constBuffB0->Unmap(0, nullptr);
 //	}
 //
-//	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
+//	//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
 //	ConstBufferDataB1 *ConstMapB1 = nullptr;
 //	if (SUCCEEDED(obj->constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 //	{
@@ -249,10 +249,10 @@ void Object3d::UpdateObject3D()
 void Object3d::UpdateBillBoard3D()
 {
 
-	//ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ç”¨
+	//ƒ[ƒ‹ƒh•ÏŠ·—p
 	XMMATRIX matScale, matRot, matTrans;
 
-	// ã‚¹ã‚±ãƒ¼ãƒ«ã€å›žè»¢ã€å¹³è¡Œè¡Œåˆ—ã®è¨ˆç®—
+	// ƒXƒP[ƒ‹A‰ñ“]A•½ss—ñ‚ÌŒvŽZ
 
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 
@@ -276,64 +276,64 @@ void Object3d::UpdateBillBoard3D()
 		matWorld *= parent->matWorld;
 	}
 
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B0ãƒ‡ãƒ¼ã‚¿è»¢é€
-	ConstBufferDataB0* ConstMapB0 = nullptr;
-	if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void**)&ConstMapB0)))
+	//’è”ƒoƒbƒtƒ@B0ƒf[ƒ^“]‘—
+	ConstBufferDataB0 *ConstMapB0 = nullptr;
+	if (SUCCEEDED(constBuffB0->Map(0, nullptr, (void **)&ConstMapB0)))
 	{
 		ConstMapB0->mat = matWorld * camera->GetMatrixView() * NY_Object3DManager::Get()->matProjection;
 		ConstMapB0->color = this->color;
 		constBuffB0->Unmap(0, nullptr);
 	}
 
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡B1ãƒ‡ãƒ¼ã‚¿è»¢é€
-	ConstBufferDataB1* ConstMapB1 = nullptr;
-	if (SUCCEEDED(constBuffB1->Map(0, nullptr, (void**)&ConstMapB1)))
+	//’è”ƒoƒbƒtƒ@B1ƒf[ƒ^“]‘—
+	ConstBufferDataB1 *ConstMapB1 = nullptr;
+	if (SUCCEEDED(constBuffB1->Map(0, nullptr, (void **)&ConstMapB1)))
 	{
-		ConstMapB1->amdient = model->material.ambient;
-		ConstMapB1->diffuse = model->material.diffuse;
-		ConstMapB1->specular = model->material.specurar;
-		ConstMapB1->alpha = model->material.alpha;
+		ConstMapB1->amdient		= model->material.ambient;
+		ConstMapB1->diffuse		= model->material.diffuse;
+		ConstMapB1->specular	= model->material.specurar;
+		ConstMapB1->alpha		= model->material.alpha;
 		constBuffB1->Unmap(0, nullptr);
 	}
 }
 
-void Object3d::DrawModel3D(Object3d* obj, ID3D12GraphicsCommandList* cmd, ID3D12Device* dev)
+void Object3d::DrawModel3D(Object3d *obj, ID3D12GraphicsCommandList *cmd, ID3D12Device *dev)
 {
-	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//’¸“_ƒoƒbƒtƒ@Ý’è
 	cmd->IASetVertexBuffers(0, 1, &obj->model->vbView);
-	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@Ý’è
 	cmd->IASetIndexBuffer(&obj->model->ibview);
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//’è”ƒoƒbƒtƒ@Ý’è
 	cmd->SetGraphicsRootConstantBufferView(0, obj->constBuffB0->GetGPUVirtualAddress());
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//’è”ƒoƒbƒtƒ@Ý’è
 	cmd->SetGraphicsRootConstantBufferView(1, obj->constBuffB1->GetGPUVirtualAddress());
 
-	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
+	//ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[‚ðƒZƒbƒg
 	cmd->SetGraphicsRootDescriptorTable(2,
-		CD3DX12_GPU_DESCRIPTOR_HANDLE(NY_Object3DManager::Get()->descheap->GetGPUDescriptorHandleForHeapStart(),
-			obj->model->material.texNumber, dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+	CD3DX12_GPU_DESCRIPTOR_HANDLE(NY_Object3DManager::Get()->descheap->GetGPUDescriptorHandleForHeapStart(),
+	obj->model->material.texNumber, dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
-	//æç”»
+	//•`‰æ
 	cmd->DrawIndexedInstanced(obj->model->indices.size(), 1, 0, 0, 0);
 }
 
-void Object3d::DrawModel3D(ID3D12GraphicsCommandList* cmd, ID3D12Device* dev)
+void Object3d::DrawModel3D(ID3D12GraphicsCommandList *cmd, ID3D12Device *dev)
 {
-	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//’¸“_ƒoƒbƒtƒ@Ý’è
 	cmd->IASetVertexBuffers(0, 1, &model->vbView);
-	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@Ý’è
 	cmd->IASetIndexBuffer(&model->ibview);
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//’è”ƒoƒbƒtƒ@Ý’è
 	cmd->SetGraphicsRootConstantBufferView(0, constBuffB0->GetGPUVirtualAddress());
-	//å®šæ•°ãƒãƒƒãƒ•ã‚¡è¨­å®š
+	//’è”ƒoƒbƒtƒ@Ý’è
 	cmd->SetGraphicsRootConstantBufferView(1, constBuffB1->GetGPUVirtualAddress());
 
-	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
+	//ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[‚ðƒZƒbƒg
 	cmd->SetGraphicsRootDescriptorTable(2,
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
 			model->material.texNumber, dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
-	//æç”»
+	//•`‰æ
 	cmd->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
 
@@ -352,6 +352,7 @@ void Object3d::DrawModel3DSelectTexture(UINT useTexNum)
 		CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap.Get()->GetGPUDescriptorHandleForHeapStart(),
 			useTexNum, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
 
-	//æç”»
+	//•`‰æ
 	RAKI_DX12B_CMD->DrawIndexedInstanced(model->indices.size(), 1, 0, 0, 0);
 }
+
