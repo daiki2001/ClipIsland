@@ -18,7 +18,7 @@ public: // サブクラス
 		int blockNumber2 = -1;
 		RVector3 vec2 = {};
 		/*プレイヤーの座標*/
-		XMFLOAT3 playerPos = {};
+		RVector3 playerPos = {};
 		/*挟めるブロックがあるかどうかのフラグ*/
 		bool isClip = false;
 		//

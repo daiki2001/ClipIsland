@@ -39,7 +39,7 @@ Player::~Player()
 
 void Player::Update()
 {
-	using namespace BlockData;
+	using namespace GameCommonData::BlockData;
 
 	playerOldPos = position;
 

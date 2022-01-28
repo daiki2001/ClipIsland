@@ -7,6 +7,8 @@
 #include "Sprite.h"
 #include "Raki_imguiMgr.h"
 
+#include "GameCommonData.h"
+
 #include "Player.h"
 #include "Stage.h"
 
@@ -14,7 +16,8 @@
 
 using namespace DirectX;
 using namespace Microsoft::WRL;
-using namespace  BlockData;
+using namespace GameCommonData;
+using namespace GameCommonData::BlockData;
 
 //-----------RakiEngine_Alpha.ver-----------//
 
@@ -56,6 +59,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 #pragma endregion GameValue
 
     FPS::Get()->Start();
+
+    GameCommonData::CommonData::StaticInitiizer();
 
     /*背景*/
     UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.png");
@@ -117,7 +122,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     /*ステージ*/
     Stage stageData(&player);
-    //stageData.Select("test6.boxmap", true);
     int stageNumber = 0;
 
     /*シーン遷移*/
@@ -253,21 +257,21 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
                 player.object->color = { 1, 1, 1, 1 };
 
-                for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
+            for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
+            {
+                actFlag = true;
+                if (player.position == stageData.stage.blocks[i].pos)
                 {
-                    actFlag = true;
-                    if (player.position == stageData.stage.debugBoxObj[i]->position)
-                    {
-                        nFlag = true;
-                        actFlag = false;
-                        break;
-                    }
+                    nFlag = true;
+                    actFlag = false;
+                    break;
                 }
-
-                for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
-                {
-                    actnFlag = true;
-                    bool AB = intersectAABB(player.playerCollision, stageData.stage.blocks[i].collision);
+            }
+            ///true
+            for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
+            {
+                actnFlag = true;
+                bool AB = intersectAABB(player.playerCollision, stageData.stage.blocks[i].collision);
 
                     if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
                     {
