@@ -13,13 +13,20 @@ Player::Player() :
 {
 	model.LoadObjModel("player");
 	object = CreateObject3d(&model);
-
-	//object->position.z = -20.0f;
+	object->position = RVector3(0.0f, 0.0f, 0.0f);
 	object->scale = { 10.0f, 10.0f, 10.0f };
 	object->rotation = RVector3(-90, 0, 0);
 	object->color = { 1, 1, 1, 1 };
 	goalFlag = false;
 }
+
+//時間計測に必要なデータ
+long long startCount = 0;
+long long Count = 0;
+long long nowCount = 0;
+long long elapsedCount = 0;
+float maxTime = 5.0f;			//全体時間[s]
+float timeRate;					//何％ 時間進んだか(率)
 
 Player::~Player()
 {
@@ -35,6 +42,9 @@ void Player::Update()
 	using namespace BlockData;
 
 	playerOldPos = position;
+
+	startCount = 0;
+	Count++;
 
 	if (Input::isKeyTrigger(DIK_W))
 	{
@@ -93,3 +103,9 @@ void Player::Reset()
 	object->color = { 1, 1, 1, 1 };
 	goalFlag = false;
 }
+
+ //const RVector3 
+// (const RVector3 &start, const RVector3 &end, const float t)
+//{
+////	return start * (1.0f - t) + end * t;
+//}

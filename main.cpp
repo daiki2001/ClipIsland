@@ -180,8 +180,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                    stageData.Select("map1.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    stageData.Select("test1.boxmap", true);
+                    player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 1:
                     stageData.Select("map2.boxmap", true);
@@ -246,90 +246,85 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 stageData.Update();
             }
 
-            nFlag = false;
-            actFlag = false;
-            actnFlag = false;
-
-            player.object->color = { 1, 1, 1, 1 };
-
-            for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
             {
-                actFlag = true;
-                if (player.position == stageData.stage.debugBoxObj[i]->position)
-                {
-                    nFlag = true;
-                    actFlag = false;
-                    break;
-                }
-            }
-            ///true
-            for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
-            {
-                actnFlag = true;
-                bool AB = intersectAABB(player.playerCollision, stageData.stage.blocks[i].collision);
+                nFlag = false;
+                actFlag = false;
+                actnFlag = false;
 
-                if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
+                player.object->color = { 1, 1, 1, 1 };
+
+                for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
                 {
-                    player.goalFlag = true;
-                    //player.object->color = { 0, 0, 1, 1 };
+                    actFlag = true;
+                    if (player.position == stageData.stage.debugBoxObj[i]->position)
+                    {
+                        nFlag = true;
+                        actFlag = false;
+                        break;
+                    }
                 }
 
-                if (stageData.stage.blocks[i].type == BlockType::SWITCH && AB == true)
+                for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
                 {
-                    stageData.Change();
+                    actnFlag = true;
+                    bool AB = intersectAABB(player.playerCollision, stageData.stage.blocks[i].collision);
+
+                    if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
+                    {
+                        player.goalFlag = true;
+                    }
+
+                    if (stageData.stage.blocks[i].type == BlockType::SWITCH && AB == true)
+                    {
+                        stageData.Change();
+                    }
+
+                    if (AB == true)
+                    {
+                        nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK /*|| stageData.stage.blocks[i].type == BlockType::START*/ || nFlag == false;
+                        actnFlag = false;
+                        break;
+                    }
                 }
 
-                if (AB == true)
+                if (nFlag == true)
                 {
-                    nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK /*|| stageData.stage.blocks[i].type == BlockType::START*/ || nFlag == false;
-                    actnFlag = false;
-                    break;
-                }
-            }
-            ///false
-
-            if (nFlag == true)
-            {
-                player.position = player.playerOldPos;
-                player.object->position = player.position;
-                //player.object->color = { 0, 0, 1, 1 };
-            }
-           
-
-            if (actFlag == true && actnFlag == true)
-            {
-                player.position = player.playerOldPos;
-                player.object->position = player.position;
-                //  player.object->color = { 0, 0, 1, 1 };
-            }
-
-            // player.object->color = { 1, 1, 1, 1 };
-
-            if (isTutorial == false)
-            {
-                stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
-
-                if (Input::isKeyTrigger(DIK_R))
-                {
-                    stageData.Reset();
+                    player.position = player.playerOldPos;
+                    player.object->position = player.position;
                 }
 
-                if (Input::isKeyTrigger(DIK_B))
+                if (actFlag == true && actnFlag == true)
                 {
-                    stageData.StepBack();
+                    player.position = player.playerOldPos;
+                    player.object->position = player.position;
                 }
 
-                if (Input::isKeyTrigger(DIK_E))
+                if (isTutorial == false)
                 {
-                    stageData.Change();
+                    stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
+
+                    if (Input::isKeyTrigger(DIK_R))
+                    {
+                        stageData.Reset();
+                    }
+
+                    if (Input::isKeyTrigger(DIK_B))
+                    {
+                        stageData.StepBack();
+                    }
+
+                    if (Input::isKeyTrigger(DIK_E))
+                    {
+                        stageData.Change();
+                    }
                 }
-            }
 
-            if (player.goalFlag)
-            {
-                scene = Scene::GAME_CLEAR;
+                if (player.goalFlag)
+                {
+                    scene = Scene::GAME_CLEAR;
 
-                player.goalFlag = false;
+                    player.goalFlag = false;
+                }
             }
 
             NY_Object3DManager::Get()->UpdateAllObjects();

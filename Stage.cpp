@@ -3,7 +3,7 @@
 
 #define EoF (-1) // Error of function
 
-Stage::Stage(Player* player) :
+Stage::Stage(Player *player) :
 	stage{},
 	player(player),
 	flag2d(false)
@@ -28,7 +28,7 @@ void Stage::Draw()
 	stage.Draw();
 }
 
-int Stage::Select(const char* filePath, const bool& flag2d)
+int Stage::Select(const char *filePath, const bool &flag2d)
 {
 	if (filePath == nullptr)
 	{
@@ -155,11 +155,12 @@ int Stage::StepBack()
 	}
 
 	player->position = clipBlock.top().playerPos;
+	//player->forwardVec=clipBlock.top().
 
 	clipBlock.pop();
 
 	return 0;
-	
+
 }
 
 void Stage::Reset()
@@ -201,11 +202,12 @@ void Stage::Change()
 	if (isFlag == true)
 	{
 		swi.isVani = true;
+		swi.playerPos = player->playerOldPos;
 		clipBlock.push(swi);
 	}
 }
 
-void Stage::GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2)
+void Stage::GetClipBlocksReferencePoint(RVector3 *pos1, RVector3 *pos2)
 {
 	if (pos1 == nullptr || pos2 == nullptr)
 	{
@@ -221,7 +223,7 @@ void Stage::GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2)
 	*pos2 = stage.debugBoxObj[clipBlock.top().ReferencePoint2]->position;
 }
 
-void Stage::GetClipBlocksALL(int blocksArray[], const size_t& arraySize)
+void Stage::GetClipBlocksALL(int blocksArray[], const size_t &arraySize)
 {
 	if (clipBlock.top().isClip == false)
 	{
@@ -249,7 +251,7 @@ void Stage::GetClipBlocksALL(int blocksArray[], const size_t& arraySize)
 	}
 }
 
-int Stage::Clip2d(ClipBlock* clip)
+int Stage::Clip2d(ClipBlock *clip)
 {
 	if (clip == nullptr)
 	{
@@ -258,7 +260,7 @@ int Stage::Clip2d(ClipBlock* clip)
 
 	using namespace BlockData;
 
-	auto& tmp = stage.debugBoxObj;
+	auto &tmp = stage.debugBoxObj;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
 
 	// 挟む軸がy軸の時
@@ -590,7 +592,7 @@ int Stage::Clip2d(ClipBlock* clip)
 	return 0;
 }
 
-int Stage::Clip3d(ClipBlock* clip)
+int Stage::Clip3d(ClipBlock *clip)
 {
 	if (clip == nullptr)
 	{
@@ -599,7 +601,7 @@ int Stage::Clip3d(ClipBlock* clip)
 
 	using namespace BlockData;
 
-	auto& tmp = stage.debugBoxObj;
+	auto &tmp = stage.debugBoxObj;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
 
 	// 挟む軸がz軸の時(上方向ベクトルはy軸固定)
