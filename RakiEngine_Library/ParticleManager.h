@@ -60,11 +60,11 @@ public:
 		//回転
 		float rot;
 		//初期値
-		RVector3 s_color = {};
+		XMFLOAT4 s_color = {};
 		float s_scale = 1.0f;
 		float s_rotation = 0.0f;
 		// 最終値
-		RVector3 e_color = {};
+		XMFLOAT4 e_color = {};
 		float e_scale = 0.0f;
 		float e_rotation = 0.0f;
 		// 現在フレーム

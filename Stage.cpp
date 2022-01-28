@@ -157,7 +157,6 @@ int Stage::StepBack()
 	}
 
 	player->position = clipBlock.top().playerPos;
-	//player->forwardVec=clipBlock.top().
 
 	clipBlock.pop();
 
@@ -204,7 +203,6 @@ void Stage::Change()
 	if (isFlag == true)
 	{
 		swi.isVani = true;
-		swi.playerPos = player->playerOldPos;
 		clipBlock.push(swi);
 	}
 }
@@ -262,32 +260,36 @@ int Stage::Clip2d(ClipBlock *clip)
 
 	using namespace GameCommonData::BlockData;
 
-	auto& tmp = stage.blocks;
+	auto &tmp = stage.blocks;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
 
-
-	// 謖溘・霆ｸ縺軽霆ｸ縺ｮ譎・	if (player->forwardVec.x != 0.0f)
+	// 挟む軸がy軸の時
+	if (player->forwardVec.x != 0.0f)
 	{
 		for (int i = 0; i < tmp.size(); i++)
 		{
 			if (tmp[i].pos.x != player->position.x || tmp[i].pos.y == player->position.y)
 			{
-				// 繝悶Ο繝・け縺悟酔霆ｸ荳翫↓辟｡縺・凾縺ｯ辟｡隕悶☆繧・				continue;
+				// ブロックが同軸上に無い時は無視する
+				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// 繝悶Ο繝・け縺ｮ蜃ｦ逅・′辟｡縺・ｴ蜷医・辟｡隕悶☆繧・				continue;
+				// ブロックの処理が無い場合は無視する
+				continue;
 			}
 
-			// 荳榊虚繝悶Ο繝・け縺ｮ譎ゅ・蜃ｦ逅・			if (moveFlag[stage.blocks[i].type].second == false)
+			// 不動ブロックの時の処理
+			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.y);
 				continue;
 			}
 
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ+縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			if ((player->position.y - tmp[i].pos.y) < 0.0f)
+			// ブロックがプレイヤーより+の方向にある時の処理
+			if ((player->position.y - tmp[i].pos.y) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
@@ -302,7 +304,8 @@ int Stage::Clip2d(ClipBlock *clip)
 					clip->vec1.z = 0.0f;
 				}
 			}
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ-縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			else
+			// ブロックがプレイヤーより-の方向にある時の処理
+			else
 			{
 				if (clip->ReferencePoint2 == -1)
 				{
@@ -321,7 +324,7 @@ int Stage::Clip2d(ClipBlock *clip)
 
 		float space = 0.0f;
 
-		// 蠑輔▲縺九°繧九ヶ繝ｭ繝・け縺後≠繧九°縺ｩ縺・°
+		// 引っかかるブロックがあるかどうか
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.y - dontMoveBlocksPos[i];
@@ -342,28 +345,33 @@ int Stage::Clip2d(ClipBlock *clip)
 			}
 		}
 	}
-	// 謖溘・霆ｸ縺警霆ｸ縺ｮ譎・	else if (player->forwardVec.y != 0.0f)
+	// 挟む軸がx軸の時
+	else if (player->forwardVec.y != 0.0f)
 	{
 		for (int i = 0; i < tmp.size(); i++)
 		{
 			if (tmp[i].pos.x == player->position.x || tmp[i].pos.y != player->position.y)
 			{
-				// 繝悶Ο繝・け縺悟酔霆ｸ荳翫↓辟｡縺・凾縺ｯ辟｡隕悶☆繧・				continue;
+				// ブロックが同軸上に無い時は無視する
+				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// 繝悶Ο繝・け縺ｮ蜃ｦ逅・′辟｡縺・ｴ蜷医・辟｡隕悶☆繧・				continue;
+				// ブロックの処理が無い場合は無視する
+				continue;
 			}
 
-			// 荳榊虚繝悶Ο繝・け縺ｮ譎ゅ・蜃ｦ逅・			if (moveFlag[stage.blocks[i].type].second == false)
+			// 不動ブロックの時の処理
+			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.x);
 				continue;
 			}
 
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ+縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			if ((player->position.x - tmp[i].pos.x) < 0.0f)
+			// ブロックがプレイヤーより+の方向にある時の処理
+			if ((player->position.x - tmp[i].pos.x) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
@@ -378,7 +386,8 @@ int Stage::Clip2d(ClipBlock *clip)
 					clip->vec1.z = 0.0f;
 				}
 			}
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ-縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			else
+			// ブロックがプレイヤーより-の方向にある時の処理
+			else
 			{
 				if (clip->ReferencePoint2 == -1)
 				{
@@ -397,7 +406,7 @@ int Stage::Clip2d(ClipBlock *clip)
 
 		float space = 0.0f;
 
-		// 蠑輔▲縺九°繧九ヶ繝ｭ繝・け縺後≠繧九°縺ｩ縺・°
+		// 引っかかるブロックがあるかどうか
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.x - dontMoveBlocksPos[i];
@@ -421,13 +430,13 @@ int Stage::Clip2d(ClipBlock *clip)
 
 	if (clip->ReferencePoint1 < 0 || clip->ReferencePoint2 < 0)
 	{
-		// 謖溘・繝悶Ο繝・け縺檎┌縺代ｌ縺ｰ繝ｪ繧ｿ繝ｼ繝ｳ
+		// 挟むブロックが無ければリターン
 		return EoF;
 	}
 
 	if (stage.blocks[clip->ReferencePoint1].number == stage.blocks[clip->ReferencePoint2].number)
 	{
-		// 蜷後§蝪翫・荳ｭ縺ｮ繝悶Ο繝・け縺ｮ蝣ｴ蜷医Μ繧ｿ繝ｼ繝ｳ
+		// 同じ塊の中のブロックの場合リターン
 		return EoF;
 	}
 
@@ -592,32 +601,36 @@ int Stage::Clip3d(ClipBlock *clip)
 
 	using namespace GameCommonData::BlockData;
 
-	auto& tmp = stage.blocks;
+	auto &tmp = stage.blocks;
 	std::vector<float> dontMoveBlocksPos; //プレイヤーと同軸上にある不動ブロックの場所
 
-	// 謖溘・霆ｸ縺頚霆ｸ縺ｮ譎・荳頑婿蜷代・繧ｯ繝医Ν縺ｯy霆ｸ蝗ｺ螳・
+	// 挟む軸がz軸の時(上方向ベクトルはy軸固定)
 	if (player->forwardVec.x != 0.0f)
 	{
 		for (int i = 0; i < (int)tmp.size(); i++)
 		{
 			if (tmp[i].pos.x != player->position.x || tmp[i].pos.y != player->position.y || tmp[i].pos.z == player->position.z)
 			{
-				// 繝悶Ο繝・け縺悟酔霆ｸ荳翫↓辟｡縺・凾縺ｯ辟｡隕悶☆繧・				continue;
+				// ブロックが同軸上に無い時は無視する
+				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// 繝悶Ο繝・け縺ｮ蜃ｦ逅・′辟｡縺・ｴ蜷医・辟｡隕悶☆繧・				continue;
+				// ブロックの処理が無い場合は無視する
+				continue;
 			}
 
-			// 荳榊虚繝悶Ο繝・け縺ｮ譎ゅ・蜃ｦ逅・			if (moveFlag[stage.blocks[i].type].second == false)
+			// 不動ブロックの時の処理
+			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.x);
 				continue;
 			}
 
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ+縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			if ((player->position.z - tmp[i].pos.z) < 0.0f)
+			// ブロックがプレイヤーより+の方向にある時の処理
+			if ((player->position.z - tmp[i].pos.z) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
@@ -630,7 +643,8 @@ int Stage::Clip3d(ClipBlock *clip)
 					clip->vec1 = player->position - tmp[i].pos;
 				}
 			}
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ-縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			else
+			// ブロックがプレイヤーより-の方向にある時の処理
+			else
 			{
 				if (clip->ReferencePoint2 == -1)
 				{
@@ -647,7 +661,7 @@ int Stage::Clip3d(ClipBlock *clip)
 
 		float space = 0.0f;
 
-		// 蠑輔▲縺九°繧九ヶ繝ｭ繝・け縺後≠繧九°縺ｩ縺・°
+		// 引っかかるブロックがあるかどうか
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.z - dontMoveBlocksPos[i];
@@ -668,29 +682,33 @@ int Stage::Clip3d(ClipBlock *clip)
 			}
 		}
 	}
-	// 謖溘・霆ｸ縺警霆ｸ縺ｮ譎・荳頑婿蜷代・繧ｯ繝医Ν縺ｯy霆ｸ蝗ｺ螳・
+	// 挟む軸がx軸の時(上方向ベクトルはy軸固定)
 	else if (player->forwardVec.z != 0.0f)
 	{
 		for (int i = 0; i < (int)tmp.size(); i++)
 		{
 			if (tmp[i].pos.x == player->position.x || tmp[i].pos.y != player->position.y || tmp[i].pos.z != player->position.z)
 			{
-				// 繝悶Ο繝・け縺悟酔霆ｸ荳翫↓辟｡縺・凾縺ｯ辟｡隕悶☆繧・				continue;
+				// ブロックが同軸上に無い時は無視する
+				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// 繝悶Ο繝・け縺ｮ蜃ｦ逅・′辟｡縺・ｴ蜷医・辟｡隕悶☆繧・				continue;
+				// ブロックの処理が無い場合は無視する
+				continue;
 			}
 
-			// 荳榊虚繝悶Ο繝・け縺ｮ譎ゅ・蜃ｦ逅・			if (moveFlag[stage.blocks[i].type].second == false)
+			// 不動ブロックの時の処理
+			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.x);
 				continue;
 			}
 
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ+縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			if ((player->position.x - tmp[i].pos.x) < 0.0f)
+			// ブロックがプレイヤーより+の方向にある時の処理
+			if ((player->position.x - tmp[i].pos.x) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
 				{
@@ -703,7 +721,8 @@ int Stage::Clip3d(ClipBlock *clip)
 					clip->vec1 = player->position - tmp[i].pos;
 				}
 			}
-			// 繝悶Ο繝・け縺後・繝ｬ繧､繝､繝ｼ繧医ｊ-縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ・蜃ｦ逅・			else
+			// ブロックがプレイヤーより-の方向にある時の処理
+			else
 			{
 				if (clip->ReferencePoint2 == -1)
 				{
@@ -720,7 +739,7 @@ int Stage::Clip3d(ClipBlock *clip)
 
 		float space = 0.0f;
 
-		// 蠑輔▲縺九°繧九ヶ繝ｭ繝・け縺後≠繧九°縺ｩ縺・°
+		// 引っかかるブロックがあるかどうか
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.x - dontMoveBlocksPos[i];
@@ -744,13 +763,13 @@ int Stage::Clip3d(ClipBlock *clip)
 
 	if (clip->ReferencePoint1 < 0 || clip->ReferencePoint2 < 0)
 	{
-		// 謖溘・繝悶Ο繝・け縺檎┌縺代ｌ縺ｰ繝ｪ繧ｿ繝ｼ繝ｳ
+		// 挟むブロックが無ければリターン
 		return EoF;
 	}
 
 	if (stage.blocks[clip->ReferencePoint1].number == stage.blocks[clip->ReferencePoint2].number)
 	{
-		// 蜷後§蝪翫・荳ｭ縺ｮ繝悶Ο繝・け縺ｮ蝣ｴ蜷医Μ繧ｿ繝ｼ繝ｳ
+		// 同じ塊の中のブロックの場合リターン
 		return EoF;
 	}
 

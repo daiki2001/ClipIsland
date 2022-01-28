@@ -285,7 +285,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
                     if (AB == true)
                     {
-                        nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK /*|| stageData.stage.blocks[i].type == BlockType::START*/ || nFlag == false;
+                        nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK|| stageData.stage.blocks[i].type == BlockType::DOOR || stageData.stage.blocks[i].type == BlockType::NONE || nFlag == false;
                         actnFlag = false;
                         break;
                     }
