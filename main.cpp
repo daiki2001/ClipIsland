@@ -180,8 +180,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                    stageData.Select("map1.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    stageData.Select("map001.boxmap", true);
+                    player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 1:
                     stageData.Select("map2.boxmap", true);
