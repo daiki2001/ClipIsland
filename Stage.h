@@ -23,6 +23,7 @@ public: // サブクラス
 		bool isClip = false;
 		//
 		bool isVani = false;
+		float backPosZ = 0;
 	};
 
 private: // エイリアス

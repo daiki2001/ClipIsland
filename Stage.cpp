@@ -141,6 +141,7 @@ int Stage::StepBack()
 		if (clipBlock.top().isVani == true)
 		{
 			stage.blocks[i].type = stage.blocks[i].InitType;
+			stage.blocks[i].pos.z = clipBlock.top().backPosZ;
 		}
 
 		if (clipBlock.top().isVani == false)
@@ -203,6 +204,8 @@ void Stage::Change()
 	if (isFlag == true)
 	{
 		swi.isVani = true;
+		swi.backPosZ = 0;
+
 		clipBlock.push(swi);
 	}
 }

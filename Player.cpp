@@ -21,12 +21,14 @@ Player::Player() :
 }
 
 //時間計測に必要なデータ
-long long startCount = 0;
-long long Count = 0;
-long long nowCount = 0;
-long long elapsedCount = 0;
+float startCount = 0;
+float Count = 0;
+float nowCount = 0;
+float elapsedCount = 0;
+
 float maxTime = 5.0f;			//全体時間[s]
-float timeRate;					//何％ 時間進んだか(率)
+float timeRate = 0;					//何％ 時間進んだか(率)
+float GetNowHiPerformanceCount = 0.0f;
 
 Player::~Player()
 {
@@ -43,8 +45,7 @@ void Player::Update()
 
 	playerOldPos = position;
 
-	startCount = 0;
-	Count++;
+	startCount += 1;
 
 	if (Input::isKeyTrigger(DIK_W))
 	{

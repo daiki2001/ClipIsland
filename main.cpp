@@ -130,6 +130,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     bool nFlag = false;
     bool actFlag = false;
     bool actnFlag = false;
+    bool doorFlag = false;
 
     while (true)  // ゲームループ
     {
@@ -184,7 +185,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                    stageData.Select("test1.boxmap", true);
+                    stageData.Select("test02.boxmap", true);
                     player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 1:
@@ -273,23 +274,28 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 actnFlag = true;
                 bool AB = intersectAABB(player.playerCollision, stageData.stage.blocks[i].collision);
 
-                    if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
-                    {
-                        player.goalFlag = true;
-                    }
-
-                    if (stageData.stage.blocks[i].type == BlockType::SWITCH && AB == true)
-                    {
-                        stageData.Change();
-                    }
-
-                    if (AB == true)
-                    {
-                        nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK|| stageData.stage.blocks[i].type == BlockType::DOOR || stageData.stage.blocks[i].type == BlockType::NONE || nFlag == false;
-                        actnFlag = false;
-                        break;
-                    }
+                if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
+                {
+                    player.goalFlag = true;
                 }
+
+                if (stageData.stage.blocks[i].type == BlockType::SWITCH && AB == true)
+                {
+                    stageData.Change();
+                }
+
+                if (stageData.stage.blocks[i].type == BlockType::NONE)
+                {
+                    stageData.stage.blocks[i].pos.z -= 50;
+                }
+
+                if (AB == true)
+                {
+                   nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK || stageData.stage.blocks[i].type == BlockType::DOOR || nFlag == false;
+                   actnFlag = false;
+                   break;
+                }
+            }
 
                 if (nFlag == true)
                 {
@@ -309,6 +315,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
                     if (Input::isKeyTrigger(DIK_R))
                     {
+                        doorFlag = false;
                         stageData.Reset();
                     }
 
