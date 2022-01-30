@@ -14,7 +14,7 @@ Player::Player() :
 	model.LoadObjModel("player");
 	object = CreateObject3d(&model);
 	object->position = RVector3(0.0f, 0.0f, 0.0f);
-	object->scale = { 10.0f, 10.0f, 10.0f };
+	object->scale = { 6.0f, 6.0f, 6.0f };
 	object->rotation = RVector3(-90, 0, 0);
 	object->color = { 1, 1, 1, 1 };
 	goalFlag = false;

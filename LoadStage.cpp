@@ -348,10 +348,14 @@ void LoadStage::StageClear()
 	blocks.clear();
 	blockColors.clear();
 	debugBoxObj.clear();
+	debugBoxNumber.clear();
+	warpBlock.clear();
 
 	blocks.shrink_to_fit();
 	blockColors.shrink_to_fit();
 	debugBoxObj.shrink_to_fit();
+	debugBoxNumber.shrink_to_fit();
+	warpBlock.shrink_to_fit();
 
 	startPosNumber = -1;
 }
