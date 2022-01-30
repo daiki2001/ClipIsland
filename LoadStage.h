@@ -44,7 +44,8 @@ public: // メンバ変数
 	vector<Data> blocks;          //ブロックの情報
 	vector<XMFLOAT4> blockColors; //ブロックの色
 
-	vector<Warp> warpBlock; //ワープブロックの情報
+	vector<Warp*> warpBlock; //ワープブロックの情報
+	size_t openGateCount;
 private:
 	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
 

@@ -2,6 +2,7 @@
 #include "LoadStage.h"
 #include "Player.h"
 #include "RVector.h"
+#include <vector>
 #include <stack>
 
 class Stage
@@ -12,11 +13,13 @@ public: // サブクラス
 		/*1つ目*/
 		int ReferencePoint1 = -1;
 		int blockNumber1 = -1;
-		RVector3 vec1 = {};
+		vector<RVector3> vec1 = {};
+		vector<int> gateNumber1 = {};
 		/*2つ目*/
 		int ReferencePoint2 = -1;
 		int blockNumber2 = -1;
-		RVector3 vec2 = {};
+		vector<RVector3> vec2 = {};
+		vector<int> gateNumber2 = {};
 		/*プレイヤーの座標*/
 		RVector3 playerPos = {};
 		/*挟めるブロックがあるかどうかのフラグ*/
