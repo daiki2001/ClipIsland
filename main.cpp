@@ -23,38 +23,38 @@ using namespace GameCommonData::BlockData;
 
 enum Scene
 {
-    TITLE,
-    SELECT,
-    GAME_MAIN,
-    GAME_OVER,
-    GAME_CLEAR
+	TITLE,
+	SELECT,
+	GAME_MAIN,
+	GAME_OVER,
+	GAME_CLEAR
 };
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-    Raki_WinAPI *rakiWinApp;
-    rakiWinApp = new Raki_WinAPI;
-    rakiWinApp->CreateGameWindow();
+	Raki_WinAPI* rakiWinApp;
+	rakiWinApp = new Raki_WinAPI;
+	rakiWinApp->CreateGameWindow();
 
-    Raki_DX12B::Get()->Initialize(rakiWinApp);
+	Raki_DX12B::Get()->Initialize(rakiWinApp);
 
-    myImgui::InitializeImGui(Raki_DX12B::Get()->GetDevice(), Raki_WinAPI::GetHWND());
+	myImgui::InitializeImGui(Raki_DX12B::Get()->GetDevice(), Raki_WinAPI::GetHWND());
 
-    //オブジェクト管理
-    NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
-    SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(), rakiWinApp->window_width, rakiWinApp->window_height);
-    TexManager::InitTexManager();
+	//オブジェクト管理
+	NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
+	SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(), rakiWinApp->window_width, rakiWinApp->window_height);
+	TexManager::InitTexManager();
 
-    //カメラ
-    NY_Camera* cam = camera;
-    RVector3 eye = { 0.0f, 0.0f, -200.0f };
-    RVector3 target = { 0.0f, 0.0f, 0.0f };
-    RVector3 up = { 0.0f, 1.0f, 0.0f };
-    cam->SetViewStatusEyeTargetUp(eye, target, up);
+	//カメラ
+	NY_Camera* cam = camera;
+	RVector3 eye = { 0.0f, 0.0f, -200.0f };
+	RVector3 target = { 0.0f, 0.0f, 0.0f };
+	RVector3 up = { 0.0f, 1.0f, 0.0f };
+	cam->SetViewStatusEyeTargetUp(eye, target, up);
 
-    //音
-    Audio::Init();
+	//音
+	Audio::Init();
 
 #pragma endregion GameValue
 
