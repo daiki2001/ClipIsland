@@ -121,7 +121,7 @@ int Stage::Clip(bool flag)
 	for (size_t i = 0; i < clip.vec1.size(); i++)
 	{
 		if (clip.vec1[i].length() == 0.0f && clip.vec2[i].length() == 0.0f &&
-			clip.gateNumber1.size() <= 0 && clip.gateNumber1.size() <= 0)
+			clip.gateNumber1.size() <= 0 && clip.gateNumber2.size() <= 0)
 		{
 			return EoF;
 		}
@@ -390,7 +390,7 @@ int Stage::Clip2d(ClipBlock *clip)
 
 		for (size_t i = 0; i < warpBlockNumber.size(); i++)
 		{
-			// 繝悶Ο繝�け縺後�繝ｬ繧､繝､繝ｼ繧医ｊ+縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ�蜃ｦ逅
+			// ブロックがプレイヤーより+の方向にある時の処理
 			if ((player->position.y - tmp[warpBlockNumber[i]].pos.y) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
@@ -407,7 +407,7 @@ int Stage::Clip2d(ClipBlock *clip)
 					clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 				}
 			}
-			// 繝悶Ο繝�け縺後�繝ｬ繧､繝､繝ｼ繧医ｊ-縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ�蜃ｦ逅
+			// ブロックがプレイヤーより-の方向にある時の処理
 			else
 			{
 				if (clip->ReferencePoint2 == -1)
@@ -517,7 +517,7 @@ int Stage::Clip2d(ClipBlock *clip)
 
 		for (size_t i = 0; i < warpBlockNumber.size(); i++)
 		{
-			// 繝悶Ο繝�け縺後�繝ｬ繧､繝､繝ｼ繧医ｊ+縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ�蜃ｦ逅
+			// ブロックがプレイヤーより+の方向にある時の処理
 			if ((player->position.x - tmp[warpBlockNumber[i]].pos.x) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
@@ -534,7 +534,7 @@ int Stage::Clip2d(ClipBlock *clip)
 					clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 				}
 			}
-			// 繝悶Ο繝�け縺後�繝ｬ繧､繝､繝ｼ繧医ｊ-縺ｮ譁ｹ蜷代↓縺ゅｋ譎ゅ�蜃ｦ逅
+			// ブロックがプレイヤーより-の方向にある時の処理
 			else
 			{
 				if (clip->ReferencePoint2 == -1)
@@ -607,7 +607,7 @@ int Stage::Clip2d(ClipBlock *clip)
 			if ((tmp[i].pos.x != tmp[warp1->twinBlockNumber].pos.x && tmp[i].pos.y == tmp[warp1->twinBlockNumber].pos.y) ||
 				(tmp[i].pos.x == tmp[warp1->twinBlockNumber].pos.x && tmp[i].pos.y != tmp[warp1->twinBlockNumber].pos.y))
 			{
-				// 繝悶Ο繝�け縺悟酔霆ｸ荳翫↓辟｡縺�凾縺ｯ辟｡隕悶☆繧
+				// ブロックが同軸上に無い時は無視する
 				continue;
 			}
 
@@ -626,11 +626,11 @@ int Stage::Clip2d(ClipBlock *clip)
 			if (tmp[i].type < 0 ||
 				(caughtFlag[tmp[i].type].second == false && moveFlag[tmp[i].type].second == false))
 			{
-				// 繝悶Ο繝�け縺ｮ蜃ｦ逅�′辟｡縺�ｴ蜷医�辟｡隕悶☆繧
+				// ブロックの処理が無い場合は無視する
 				continue;
 			}
 
-			// 荳榊虚繝悶Ο繝�け縺ｮ譎ゅ�蜃ｦ逅
+			// 不動ブロックの時の処理
 			if (moveFlag[tmp[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(tmp[i].pos);
@@ -716,7 +716,7 @@ int Stage::Clip2d(ClipBlock *clip)
 				continue;
 			}
 
-			// 繝悶Ο繝�け縺悟酔霆ｸ荳翫↓辟｡縺�凾縺ｯ辟｡隕悶☆繧
+			// ブロックが同軸上に無い時は無視する
 			if ((tmp[i].pos.x != tmp[warp2->twinBlockNumber].pos.x && tmp[i].pos.y == tmp[warp2->twinBlockNumber].pos.y) ||
 				(tmp[i].pos.x == tmp[warp2->twinBlockNumber].pos.x && tmp[i].pos.y != tmp[warp2->twinBlockNumber].pos.y))
 			{
@@ -738,11 +738,11 @@ int Stage::Clip2d(ClipBlock *clip)
 			if (tmp[i].type < 0 ||
 				(caughtFlag[tmp[i].type].second == false && moveFlag[tmp[i].type].second == false))
 			{
-				// 繝悶Ο繝�け縺ｮ蜃ｦ逅�′辟｡縺�ｴ蜷医�辟｡隕悶☆繧
+				// ブロックの処理が無い場合は無視する
 				continue;
 			}
 
-			// 荳榊虚繝悶Ο繝�け縺ｮ譎ゅ�蜃ｦ逅
+			// 不動ブロックの時の処理
 			if (moveFlag[tmp[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(tmp[i].pos);
@@ -867,7 +867,7 @@ int Stage::Clip2d(ClipBlock *clip)
 				keepVec = clip->vec1[l];
 				keepVec = keepVec.norm();
 
-				for (size_t j = 1; keepVec * (const float)j != clip->vec1; j++)
+				for (size_t j = 1; keepVec * (const float)j != clip->vec1[l]; j++)
 				{
 					for (size_t k = 0; k < stage.blocks.size(); k++)
 					{
@@ -933,7 +933,7 @@ int Stage::Clip2d(ClipBlock *clip)
 
 				keepVec = clip->vec2[l];
 				keepVec = keepVec.norm();
-        
+		
 				for (size_t j = 1; keepVec * blockSize * (const float)j != clip->vec2[l]; j++)
 				{
 					for (size_t k = 0; k < stage.blocks.size(); k++)
@@ -1029,7 +1029,7 @@ int Stage::Clip3d(ClipBlock *clip)
 			{
 				continue;
 			}
-      
+	
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
