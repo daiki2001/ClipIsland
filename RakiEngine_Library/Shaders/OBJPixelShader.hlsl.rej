@@ -1,0 +1,10 @@
+diff a/RakiEngine_Library/Shaders/OBJPixelShader.hlsl b/RakiEngine_Library/Shaders/OBJPixelShader.hlsl	(rejected hunks)
+@@ -7,7 +7,7 @@
+ {
+ 	float4 texColor = float4(tex.Sample(smp, input.uv));
+ 
+-    float3 light = normalize(float3(1, -1, 1)); //�E�����������C�g
++    float3 light = normalize(float3(0, -1, 0)); //�E�����������C�g
+     float diffuse = saturate(dot(-light, input.normal));
+ 	
+ 	float3 shade_color;

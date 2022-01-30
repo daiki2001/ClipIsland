@@ -1,4 +1,11 @@
-float4 main( float4 pos : POSITION ) : SV_POSITION
+#include "ParticleShaderHeader.hlsli"
+
+VSOutput main( float4 pos : POSITION ,float scale : TEXCOORD,float4 color : COLOR)
 {
-	return pos;
+    //æ“¾‚µ‚½’¸“_î•ñ‚ğ‚»‚Ì‚Ü‚Ü•Ô‹p
+    VSOutput output;
+    output.pos = pos;
+    output.scale = scale;
+    output.color = color;
+    return output;
 }

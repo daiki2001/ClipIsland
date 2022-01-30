@@ -6,12 +6,13 @@
 #define EoF (-1) // Error of function
 
 LoadStage::LoadStage() :
-	debugBox{},
-	graph(0),
+	blocks{},
+	blockColors{},
+	debugBoxObj{},
+	debugBoxNumber{},
+	warpBlock{},
 	startPosNumber(-1)
 {
-	graph = TexManager::LoadTexture("./Resources/test.jpeg");
-	debugBox.CreateBoxModel(BlockData::blockSize / 2.0f, 1.0f, 1.0f, graph);
 }
 
 LoadStage::~LoadStage()
@@ -30,7 +31,7 @@ LoadStage::~LoadStage()
 
 int LoadStage::Load(const char* filePath)
 {
-	using namespace BlockData;
+	using namespace GameCommonData::BlockData;
 
 	if (filePath == nullptr) { return EoF; }
 
@@ -152,30 +153,53 @@ int LoadStage::Load(const char* filePath)
 		{
 			if (blockData[3] >= 0)
 			{
-				blocks.push_back(BlockData::Data());
-				blocks[blocks.size() - 1].pos = XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]);
+				blocks.push_back(Data());
+				blocks[blocks.size() - 1].pos = RVector3((float)blockData[0], (float)blockData[1], (float)blockData[2]);
+				blocks[blocks.size() - 1].resetPos = blocks[blocks.size() - 1].pos;
 				blocks[blocks.size() - 1].type = blockData[3];
-				blocks[blocks.size() - 1].InitType = blockData[3];
+				blocks[blocks.size() - 1].InitType = blocks[blocks.size() - 1].type;
 				blocks[blocks.size() - 1].number = blockData[4];
 				blocks[blocks.size() - 1].collision = Collision(
 					{ -blockSize / 2.0f, -blockSize / 2.0f, -blockSize / 2.0f },
 					{ blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f },
 					RVector3(0.0f, 0.0f, 0.0f));
-				debugBoxObj.push_back(CreateObject3d(&debugBox));
-				debugBoxObj[debugBoxObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
+
+				if (blocks[blocks.size() - 1].type == BlockType::WARP_CLOSE_BLOCK ||
+					blocks[blocks.size() - 1].type == BlockType::WARP_OPEN_BLOCK)
+				{
+					warpBlock.push_back(Warp());
+					warpBlock[warpBlock.size() - 1].blockNumber = (int)blocks.size() - 1;
+					warpBlock[warpBlock.size() - 1].CreateObj(blocks[blocks.size() - 1].pos);
+					warpBlock[warpBlock.size() - 1].isOpen = blocks[blocks.size() - 1].type == BlockType::WARP_OPEN_BLOCK;
+				}
+				else
+				{
+					debugBoxObj.push_back(CreateObject3d(&CommonData::boxModel));
+					debugBoxNumber.push_back((int)blocks.size() - 1);
+					debugBoxObj[debugBoxObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
+				}
 			}
 
-			if (blockData[3] == BlockData::BlockType::START)
+			if (blockData[3] == BlockType::START)
 			{
 				startPosNumber = (int)blocks.size() - 1;
 			}
 		}
 	}
 
+	size_t warpBlockCount = 0;
+	size_t debugBlockCount = 0;
+
 	for (size_t i = 0; i < debugBoxObj.size(); i++)
 	{
 		if (blocks[i].type >= blockColors.size())
 		{
+			if (blocks[i].type == BlockType::START)
+			{
+				debugBoxObj[debugBlockCount]->color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+				debugBlockCount++;
+			}
+
 			continue;
 		}
 
@@ -188,42 +212,91 @@ int LoadStage::Load(const char* filePath)
 			number = blocks[i].type;
 		}
 
-		debugBoxObj[i]->color = blockColors[number];
+		if (blocks[i].type == BlockType::START)
+		{
+			debugBoxObj[debugBlockCount]->color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+			debugBlockCount++;
+		}
+		else if (number == BlockType::WARP_CLOSE_BLOCK)
+		{
+			warpBlock[warpBlockCount].SetWarpCloseColor(blockColors[number]);
+			warpBlockCount++;
+		}
+		else if (number == BlockType::WARP_OPEN_BLOCK)
+		{
+			warpBlock[warpBlockCount].SetWarpOpenColor(blockColors[number]);
+			warpBlockCount++;
+		}
+		else
+		{
+			debugBoxObj[debugBlockCount]->color = blockColors[number];
+			debugBlockCount++;
+		}
 	}
 
 	return 0;
 }
 
+void LoadStage::Update()
+{
+	size_t warpBlockCount = 0;
+	size_t debugBlockCount = 0;
+
+	for (size_t i = 0; i < blocks.size(); i++)
+	{
+		if (warpBlockCount < warpBlock.size() &&
+			i == warpBlock[warpBlockCount].blockNumber)
+		{
+			warpBlock[warpBlockCount].SetObjectPos(blocks[i].pos);
+			warpBlockCount++;
+		}
+		if (debugBlockCount < debugBoxNumber.size() &&
+			i == debugBoxNumber[debugBlockCount])
+		{
+			debugBoxObj[debugBlockCount]->position = blocks[i].pos;
+			debugBlockCount++;
+		}
+	}
+}
+
 void LoadStage::Draw()
 {
-	using namespace BlockData;
+	using namespace GameCommonData::BlockData;
+
+	size_t warpBlockCount = 0;
+	size_t debugBlockCount = 0;
 
 	for (size_t i = 0; i < blocks.size(); i++)
 	{
 		switch (blocks[i].type)
 		{
 		case BlockType::BLOCK:
-			DrawObject3d(debugBoxObj[i]);
+			DrawObject3d(debugBoxObj[debugBlockCount]);
+			debugBlockCount++;
 			break;
 		case BlockType::DONT_MOVE_BLOCK:
-			DrawObject3d(debugBoxObj[i]);
+			DrawObject3d(debugBoxObj[debugBlockCount]);
+			debugBlockCount++;
 			break;
 		case BlockType::GOAL:
-			DrawObject3d(debugBoxObj[i]);
+			DrawObject3d(debugBoxObj[debugBlockCount]);
+			debugBlockCount++;
 			break;
 		case BlockType::SWITCH:
-			DrawObject3d(debugBoxObj[i]);
+			DrawObject3d(debugBoxObj[debugBlockCount]);
+			debugBlockCount++;
 			break;
 		case BlockType::DOOR:
-			DrawObject3d(debugBoxObj[i]);
+			DrawObject3d(debugBoxObj[debugBlockCount]);
+			debugBlockCount++;
 			break;
-		case BlockType::WARP_BLOCK:
-			DrawObject3d(debugBoxObj[i]);
-			break;
-		case BlockType::WARP_BLOCK_SET:
-			DrawObject3d(debugBoxObj[i]);
+		case BlockType::WARP_CLOSE_BLOCK:
+		case BlockType::WARP_OPEN_BLOCK:
+			warpBlock[warpBlockCount].Draw();
+			warpBlockCount++;
 			break;
 		default:
+			debugBlockCount++;
 			break;
 		}
 	}
@@ -231,16 +304,31 @@ void LoadStage::Draw()
 
 void LoadStage::Reset()
 {
-	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	size_t warpBlockCount = 0;
+	size_t debugBlockCount = 0;
+
+	for (size_t i = 0; i < blocks.size(); i++)
 	{
-		if (debugBoxObj[i] == nullptr)
+		if (warpBlockCount < warpBlock.size() &&
+			i == warpBlock[warpBlockCount].blockNumber)
 		{
-			continue;
+			warpBlock[warpBlockCount].SetObjectPos(blocks[i].resetPos);
+			warpBlockCount++;
+		}
+		if (debugBlockCount < debugBoxNumber.size() &&
+			i == debugBoxNumber[debugBlockCount])
+		{
+			if (debugBoxObj[debugBlockCount] == nullptr)
+			{
+				continue;
+			}
+
+			debugBoxObj[debugBlockCount]->position = blocks[i].resetPos;
+			debugBlockCount++;
 		}
 
-		debugBoxObj[i]->position.x = blocks[i].pos.x;
-		debugBoxObj[i]->position.y = blocks[i].pos.y;
-		debugBoxObj[i]->position.z = blocks[i].pos.z;
+		blocks[i].pos = blocks[i].resetPos;
+		blocks[i].type = blocks[i].InitType;
 	}
 }
 
@@ -254,7 +342,7 @@ void LoadStage::StageClear()
 		}
 
 		DeleteObject3d(debugBoxObj[i]);
-		//debugBoxObj[i] = nullptr;
+		debugBoxObj[i] = nullptr;
 	}
 
 	blocks.clear();
@@ -268,7 +356,7 @@ void LoadStage::StageClear()
 	startPosNumber = -1;
 }
 
-XMFLOAT3 LoadStage::GetStartPlayerPos()
+RVector3 LoadStage::GetStartPlayerPos()
 {
 	size_t num;
 
@@ -284,7 +372,7 @@ XMFLOAT3 LoadStage::GetStartPlayerPos()
 	return debugBoxObj[num]->position;
 }
 
-void LoadStage::GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray[], size_t arraySize)
+void LoadStage::GetBlocksTypeAll(BlockType blockType, int blocksArray[], size_t arraySize)
 {
 	for (size_t i = 0; i < arraySize; i++)
 	{

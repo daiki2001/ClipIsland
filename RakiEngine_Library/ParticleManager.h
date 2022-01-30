@@ -20,12 +20,14 @@ private:
 	using XMFLOAT3 = DirectX::XMFLOAT3;
 	using XMFLOAT4 = DirectX::XMFLOAT4;
 	using XMMATRIX = DirectX::XMMATRIX;
+	
 
 public:
 	// 頂点データ
 	struct PVertex {
-		RVector3 pos;
-		float scale;
+		RVector3	pos;
+		float		scale;
+		XMFLOAT4	color;
 	};
 
 	//定数バッファデータ構造体
@@ -52,17 +54,17 @@ public:
 		//加速度
 		RVector3 acc;
 		//色
-		RVector3 color;
+		XMFLOAT4 color;
 		//スケーリング
 		float scale;
 		//回転
 		float rot;
 		//初期値
-		XMFLOAT3 s_color = {};
+		XMFLOAT4 s_color = {};
 		float s_scale = 1.0f;
 		float s_rotation = 0.0f;
 		// 最終値
-		XMFLOAT3 e_color = {};
+		XMFLOAT4 e_color = {};
 		float e_scale = 0.0f;
 		float e_rotation = 0.0f;
 		// 現在フレーム
@@ -74,7 +76,6 @@ public:
 private:
 	// 最大生成頂点数
 	static const int MAX_VERTEX = 65536;
-
 
 public:
 	/// <summary>
@@ -100,7 +101,7 @@ public:
 	/// <summary>
 	/// パーティクル追加
 	/// </summary>
-	void Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, float startScale, float endScale);
+	void Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, float startScale, float endScale, XMFLOAT4 s_color, XMFLOAT4 e_color);
 
 private:
 	//ディスクリプタヒープ、テクスチャバッファはTexManager依存
@@ -117,18 +118,14 @@ private:
 	ComPtr<ID3D12PipelineState> pipeline;
 	// 頂点バッファ
 	ComPtr <ID3D12Resource> vertbuff;
-	// シェーダーリソースビューハンドル
-	CD3DX12_CPU_DESCRIPTOR_HANDLE cpuDescHandleSRV;
-	CD3DX12_GPU_DESCRIPTOR_HANDLE gpuDeschandleSRV;
 	// 頂点バッファビュー
 	D3D12_VERTEX_BUFFER_VIEW vbview;
 	// 定数バッファ
 	ComPtr<ID3D12Resource> constBuff;
 	// パーティクルコンテナ
 	std::forward_list<Particle> grains;
-	// カメラ
-	NY_Camera *cam;
 
+	HRESULT result = S_FALSE;
 
 private:
 
@@ -148,10 +145,8 @@ private:
 	/// <param name="dev">デバイス</param>
 	/// <param name="cmd">コマンド</param>
 	/// <param name="cam">カメラ</param>
-	ParticleManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd, NY_Camera *cam) {
+	ParticleManager(ID3D12Device *dev, ID3D12GraphicsCommandList *cmd) {
 		this->dev = dev;
 		this->cmd = cmd;
-		this->cam = cam;
 	}
 };
-

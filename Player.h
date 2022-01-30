@@ -33,6 +33,4 @@ public:
 	Object3d *object; //プレイヤーのオブジェクト
 private:
 	NY_Model3D model; //プレイヤーのモデル
-	
-
 };
