@@ -185,32 +185,32 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                    stageData.Select("test02.boxmap", true);
-                    player.position = { 0.0f, 0.0f, 0.0f };
+                    stageData.Select("map1.boxmap", true);
+                    //player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 1:
                     stageData.Select("map2.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 2:
                     stageData.Select("map3.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 3:
                     stageData.Select("map4.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 4:
                     stageData.Select("map5.boxmap", true);
-                    player.position = { 0.0f, 0.0f, 0.0f };
+                    //player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 5:
                     stageData.Select("map6.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 default:
                     stageData.Select("map1.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 }
             }
@@ -228,10 +228,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             Raki_DX12B::Get()->EndDraw();
             break;
         case GAME_MAIN:
+#if _DEBUG
             if (Input::isKey(DIK_1))
             {
                 stageData.Select("test1.boxmap", true);
             }
+#endif
 
             if (isTutorial)
             {
