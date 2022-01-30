@@ -7,7 +7,7 @@ float4 main(GSOutput input):SV_TARGET
 {
 	float4 texColor = float4(tex.Sample(smp, input.uv));
 
-    float3 light = normalize(float3(1, -1, 1)); //右下奥向きライト
+    float3 light = normalize(float3(0, 0, 1)); //窶ｰE窶ｰﾅ溪ｰﾅ崘堙ｼ窶堋ｫﾂ�窶ｰﾂイﾂト
     float diffuse = saturate(dot(-light, input.normal));
 	
 	float3 shade_color;
