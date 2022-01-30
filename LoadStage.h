@@ -30,7 +30,7 @@ public: // メンバ関数
 	void StageClear();
 
 	// プレイヤーのスタート位置の取得
-	XMFLOAT3 GetStartPlayerPos();
+	RVector3 GetStartPlayerPos();
 	// ブロックの情報を種類を指定して全て取得
 	void GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray[], size_t arraySize);
 

@@ -10,6 +10,7 @@ public:
 	//コンストラクタ
 	RVector3(float x, float y, float z) : XMFLOAT3(x, y, z) {};
 	RVector3() :XMFLOAT3(0, 0, 0) {};
+	RVector3(const XMFLOAT3& v) : XMFLOAT3(v) {}
 
 	RVector3 operator+(const RVector3 &other)const { return RVector3(x + other.x, y + other.y, z + other.z); }
 	RVector3 operator-(const RVector3 &other)const { return RVector3(x - other.x, y - other.y, z - other.z); }
@@ -29,9 +30,9 @@ public:
 	RVector3 &operator*=(const XMFLOAT3 &other) { this->x *= other.x; this->y *= other.y; this->z *= other.z; return *this; }
 	RVector3 &operator/=(const XMFLOAT3 &other) { this->x /= other.x; this->y /= other.y; this->z /= other.z; return *this; }
 
-	RVector3 &operator=(const XMFLOAT3 &other) { 
+	RVector3 operator=(const XMFLOAT3 &other) {
 		RVector3 result = RVector3(other.x, other.y, other.z);
-		return result; 
+		return result;
 	}
 	
 
