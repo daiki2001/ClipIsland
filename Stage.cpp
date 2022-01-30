@@ -248,7 +248,7 @@ void Stage::GetClipBlocksALL(int blocksArray[], const size_t &arraySize)
 		if (stage.blocks[i].number == clipBlock.top().blockNumber1 ||
 			stage.blocks[i].number == clipBlock.top().blockNumber2)
 		{
-			blocksArray[j] = i;
+			blocksArray[j] = (int)i;
 			j++;
 		}
 	}
@@ -472,7 +472,7 @@ int Stage::Clip2d(ClipBlock *clip)
 			keepVec = clip->vec1;
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * j != clip->vec1; j++)
+			for (size_t j = 1; keepVec * (const float)j != clip->vec1; j++)
 			{
 				for (size_t k = 0; k < stage.blocks.size(); k++)
 				{
@@ -487,7 +487,7 @@ int Stage::Clip2d(ClipBlock *clip)
 					}
 
 					if (tmp[k].pos == tmp[i].pos ||
-						tmp[k].pos != tmp[i].pos + keepVec * blockSize * j)
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 					{
 						continue;
 					}
@@ -536,7 +536,7 @@ int Stage::Clip2d(ClipBlock *clip)
 			keepVec = clip->vec2;
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * j != clip->vec2; j++)
+			for (size_t j = 1; keepVec * blockSize * (const float)j != clip->vec2; j++)
 			{
 				for (size_t k = 0; k < stage.blocks.size(); k++)
 				{
@@ -551,7 +551,7 @@ int Stage::Clip2d(ClipBlock *clip)
 					}
 
 					if (tmp[k].pos == tmp[i].pos ||
-						tmp[k].pos != tmp[i].pos + keepVec * blockSize * j)
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 					{
 						continue;
 					}
@@ -805,7 +805,7 @@ int Stage::Clip3d(ClipBlock *clip)
 			keepVec = clip->vec1;
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * (float)j != clip->vec1; j++)
+			for (size_t j = 1; keepVec * (const float)j != clip->vec1; j++)
 			{
 				for (size_t k = 0; k < stage.blocks.size(); k++)
 				{
@@ -820,7 +820,7 @@ int Stage::Clip3d(ClipBlock *clip)
 					}
 
 					if (tmp[k].pos == tmp[i].pos ||
-						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (float)j)
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 					{
 						continue;
 					}
@@ -869,7 +869,7 @@ int Stage::Clip3d(ClipBlock *clip)
 			keepVec = clip->vec2;
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * (float)j != clip->vec2; j++)
+			for (size_t j = 1; keepVec * (const float)j != clip->vec2; j++)
 			{
 				for (size_t k = 0; k < stage.blocks.size(); k++)
 				{
@@ -884,7 +884,7 @@ int Stage::Clip3d(ClipBlock *clip)
 					}
 
 					if (tmp[k].pos == tmp[i].pos ||
-						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (float)j)
+						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 					{
 						continue;
 					}

@@ -261,6 +261,8 @@ void LoadStage::Update()
 
 void LoadStage::Draw()
 {
+	using namespace GameCommonData::BlockData;
+
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
 
