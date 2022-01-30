@@ -199,7 +199,7 @@ void ParticleManager::Draw(UINT drawTexNum)
 	cmd->DrawInstanced(drawNum, 1, 0, 0);
 }
 
-void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc, 
+void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc,
 	float startScale, float endScale, XMFLOAT4 s_color, XMFLOAT4 e_color)
 {
 	//—v‘f’Ç‰Á
@@ -215,8 +215,6 @@ void ParticleManager::Add(int life, RVector3 pos, RVector3 vel, RVector3 acc,
 	p.s_color = s_color;
 	p.e_color = e_color;
 }
-
-
 
 void ParticleManager::InitializeGraphicsPipeline() {
 
@@ -422,6 +420,4 @@ void ParticleManager::CreateModel() {
 	vbview.BufferLocation = vertbuff->GetGPUVirtualAddress();
 	vbview.SizeInBytes = sizeof(PVertex) * MAX_VERTEX;
 	vbview.StrideInBytes = sizeof(PVertex);
-
-
 }

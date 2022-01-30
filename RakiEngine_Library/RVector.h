@@ -21,10 +21,10 @@ public:
 	RVector3 &operator*=(const RVector3 &other) { this->x *= other.x; this->y *= other.y; this->z *= other.z; return *this; }
 	RVector3 &operator/=(const RVector3 &other) { this->x /= other.x; this->y /= other.y; this->z /= other.z; return *this; }
 
-	RVector3 operator+(const XMFLOAT3 &other)const { return RVector3(x + other.x, y + other.y, z + other.z); }
-	RVector3 operator-(const XMFLOAT3 &other)const { return RVector3(x - other.x, y - other.y, z - other.z); }
-	RVector3 operator*(const XMFLOAT3 &other)const { return RVector3(x * other.x, y * other.y, z * other.z); }
-	RVector3 operator/(const XMFLOAT3 &other)const { return RVector3(x / other.x, y / other.y, z / other.z); }
+	RVector3 operator+(const XMFLOAT3 &other) const { return RVector3(x + other.x, y + other.y, z + other.z); }
+	RVector3 operator-(const XMFLOAT3 &other) const { return RVector3(x - other.x, y - other.y, z - other.z); }
+	RVector3 operator*(const XMFLOAT3 &other) const { return RVector3(x * other.x, y * other.y, z * other.z); }
+	RVector3 operator/(const XMFLOAT3 &other) const { return RVector3(x / other.x, y / other.y, z / other.z); }
 	RVector3 &operator+=(const XMFLOAT3 &other) { this->x += other.x; this->y += other.y; this->z += other.z; return *this; }
 	RVector3 &operator-=(const XMFLOAT3 &other) { this->x -= other.x; this->y -= other.y; this->z -= other.z; return *this; }
 	RVector3 &operator*=(const XMFLOAT3 &other) { this->x *= other.x; this->y *= other.y; this->z *= other.z; return *this; }
