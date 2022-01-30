@@ -23,38 +23,38 @@ using namespace GameCommonData::BlockData;
 
 enum Scene
 {
-    TITLE,
-    SELECT,
-    GAME_MAIN,
-    GAME_OVER,
-    GAME_CLEAR
+	TITLE,
+	SELECT,
+	GAME_MAIN,
+	GAME_OVER,
+	GAME_CLEAR
 };
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-    Raki_WinAPI *rakiWinApp;
-    rakiWinApp = new Raki_WinAPI;
-    rakiWinApp->CreateGameWindow();
+	Raki_WinAPI* rakiWinApp;
+	rakiWinApp = new Raki_WinAPI;
+	rakiWinApp->CreateGameWindow();
 
-    Raki_DX12B::Get()->Initialize(rakiWinApp);
+	Raki_DX12B::Get()->Initialize(rakiWinApp);
 
-    myImgui::InitializeImGui(Raki_DX12B::Get()->GetDevice(), Raki_WinAPI::GetHWND());
+	myImgui::InitializeImGui(Raki_DX12B::Get()->GetDevice(), Raki_WinAPI::GetHWND());
 
-    //オブジェクト管理
-    NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
-    SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(), rakiWinApp->window_width, rakiWinApp->window_height);
-    TexManager::InitTexManager();
+	//オブジェクト管理
+	NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
+	SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(), rakiWinApp->window_width, rakiWinApp->window_height);
+	TexManager::InitTexManager();
 
-    //カメラ
-    NY_Camera* cam = camera;
-    RVector3 eye = { 0.0f, 0.0f, -200.0f };
-    RVector3 target = { 0.0f, 0.0f, 0.0f };
-    RVector3 up = { 0.0f, 1.0f, 0.0f };
-    cam->SetViewStatusEyeTargetUp(eye, target, up);
+	//カメラ
+	NY_Camera* cam = camera;
+	RVector3 eye = { 0.0f, 0.0f, -200.0f };
+	RVector3 target = { 0.0f, 0.0f, 0.0f };
+	RVector3 up = { 0.0f, 1.0f, 0.0f };
+	cam->SetViewStatusEyeTargetUp(eye, target, up);
 
-    //音
-    Audio::Init();
+	//音
+	Audio::Init();
 
 #pragma endregion GameValue
 
@@ -130,6 +130,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     bool nFlag = false;
     bool actFlag = false;
     bool actnFlag = false;
+    bool doorFlag = false;
 
     while (true)  // ゲームループ
     {
@@ -184,32 +185,34 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
+                    stageData.Select("map001.boxmap", true);
+                    player.position = { 0.0f, 0.0f, 0.0f };
                     stageData.Select("map1.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 1:
                     stageData.Select("map2.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 2:
                     stageData.Select("map3.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 3:
                     stageData.Select("map4.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 4:
                     stageData.Select("map5.boxmap", true);
-                    player.position = { 0.0f, 0.0f, 0.0f };
+                    //player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 5:
                     stageData.Select("map6.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 default:
                     stageData.Select("map1.boxmap", true);
-                    player.position = { 0.0f, -40.0f, 0.0f };
+                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 }
             }
@@ -227,10 +230,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             Raki_DX12B::Get()->EndDraw();
             break;
         case GAME_MAIN:
+#if _DEBUG
             if (Input::isKey(DIK_1))
             {
                 stageData.Select("test1.boxmap", true);
             }
+#endif
 
             if (isTutorial)
             {
@@ -250,11 +255,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 stageData.Update();
             }
 
-            nFlag = false;
-            actFlag = false;
-            actnFlag = false;
+            {
+                nFlag = false;
+                actFlag = false;
+                actnFlag = false;
 
-            player.object->color = { 1, 1, 1, 1 };
+                player.object->color = { 1, 1, 1, 1 };
 
             for (size_t i = 0; i < stageData.stage.blocks.size(); i++)
             {
@@ -275,7 +281,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (stageData.stage.blocks[i].type == BlockType::GOAL && AB == true)
                 {
                     player.goalFlag = true;
-                    //player.object->color = { 0, 0, 1, 1 };
                 }
 
                 if (stageData.stage.blocks[i].type == BlockType::SWITCH && AB == true)
@@ -283,57 +288,58 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     stageData.Change();
                 }
 
+                if (stageData.stage.blocks[i].type == BlockType::NONE)
+                {
+                    stageData.stage.blocks[i].pos.z -= 50;
+                }
+
                 if (AB == true)
                 {
-                    nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK /*|| stageData.stage.blocks[i].type == BlockType::START*/ || nFlag == false;
-                    actnFlag = false;
-                    break;
+                   nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK || stageData.stage.blocks[i].type == BlockType::DOOR || nFlag == false;
+                   actnFlag = false;
+                   break;
                 }
             }
-            ///false
 
-            if (nFlag == true)
-            {
-                player.position = player.playerOldPos;
-                player.object->position = player.position;
-                //player.object->color = { 0, 0, 1, 1 };
-            }
-           
-
-            if (actFlag == true && actnFlag == true)
-            {
-                player.position = player.playerOldPos;
-                player.object->position = player.position;
-                //  player.object->color = { 0, 0, 1, 1 };
-            }
-
-            // player.object->color = { 1, 1, 1, 1 };
-
-            if (isTutorial == false)
-            {
-                stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
-
-                if (Input::isKeyTrigger(DIK_R))
+                if (nFlag == true)
                 {
-                    stageData.Reset();
+                    player.position = player.playerOldPos;
+                    player.object->position = player.position;
                 }
 
-                if (Input::isKeyTrigger(DIK_B))
+                if (actFlag == true && actnFlag == true)
                 {
-                    stageData.StepBack();
+                    player.position = player.playerOldPos;
+                    player.object->position = player.position;
                 }
 
-                if (Input::isKeyTrigger(DIK_E))
+                if (isTutorial == false)
                 {
-                    stageData.Change();
+                    stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
+
+                    if (Input::isKeyTrigger(DIK_R))
+                    {
+                        doorFlag = false;
+                        stageData.Reset();
+                    }
+
+                    if (Input::isKeyTrigger(DIK_B))
+                    {
+                        stageData.StepBack();
+                    }
+
+                    if (Input::isKeyTrigger(DIK_E))
+                    {
+                        stageData.Change();
+                    }
                 }
-            }
 
-            if (player.goalFlag)
-            {
-                scene = Scene::GAME_CLEAR;
+                if (player.goalFlag)
+                {
+                    scene = Scene::GAME_CLEAR;
 
-                player.goalFlag = false;
+                    player.goalFlag = false;
+                }
             }
 
             NY_Object3DManager::Get()->UpdateAllObjects();

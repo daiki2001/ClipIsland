@@ -19,14 +19,17 @@
     <Filter Include="リソース ファイル\モデル\プレイヤー">
       <UniqueIdentifier>{f20dd498-bf41-464e-9977-658fed3c8340}</UniqueIdentifier>
     </Filter>
-    <Filter Include="player">
-      <UniqueIdentifier>{213ba8cd-b827-412c-b2be-aa722522c6d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="LoadStage">
       <UniqueIdentifier>{94fa7845-1877-46cd-9453-25ffa81d4782}</UniqueIdentifier>
     </Filter>
     <Filter Include="Stage">
       <UniqueIdentifier>{cd040f15-28b5-4246-835b-dc08daba465f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Warp">
+      <UniqueIdentifier>{3aeb4d46-beb2-4996-9487-76972b80a976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player">
+      <UniqueIdentifier>{213ba8cd-b827-412c-b2be-aa722522c6d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,7 +37,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>player</Filter>
+      <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="LoadStage.cpp">
       <Filter>LoadStage</Filter>
@@ -48,10 +51,13 @@
     <ClCompile Include="StageMoveParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Warp.cpp">
+    <ClCompile Include="GameCommonData.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="GameCommonData.cpp">
+    <ClCompile Include="Warp.cpp">
+      <Filter>Warp</Filter>
+    </ClCompile>
+    <ClCompile Include="SeaParticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -60,7 +66,7 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>player</Filter>
+      <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="LoadStage.h">
       <Filter>LoadStage</Filter>
@@ -74,11 +80,14 @@
     <ClInclude Include="StageMoveParticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Warp.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="GameCommonData.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Warp.h">
+      <Filter>Warp</Filter>
+    </ClInclude>
+    <ClInclude Include="SeaParticle.h">
+      <Filter>ソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

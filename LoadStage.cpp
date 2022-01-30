@@ -11,6 +11,7 @@ LoadStage::LoadStage() :
 	debugBoxObj{},
 	debugBoxNumber{},
 	warpBlock{},
+	openGateCount(0),
 	startPosNumber(-1)
 {
 }
@@ -26,6 +27,17 @@ LoadStage::~LoadStage()
 
 		DeleteObject3d(debugBoxObj[i]);
 		debugBoxObj[i] = nullptr;
+	}
+
+	for (size_t i = 0; i < warpBlock.size(); i++)
+	{
+		if (warpBlock[i] == nullptr)
+		{
+			continue;
+		}
+
+		delete warpBlock[i];
+		warpBlock[i] = nullptr;
 	}
 }
 
@@ -167,10 +179,10 @@ int LoadStage::Load(const char* filePath)
 				if (blocks[blocks.size() - 1].type == BlockType::WARP_CLOSE_BLOCK ||
 					blocks[blocks.size() - 1].type == BlockType::WARP_OPEN_BLOCK)
 				{
-					warpBlock.push_back(Warp());
-					warpBlock[warpBlock.size() - 1].blockNumber = (int)blocks.size() - 1;
-					warpBlock[warpBlock.size() - 1].CreateObj(blocks[blocks.size() - 1].pos);
-					warpBlock[warpBlock.size() - 1].isOpen = blocks[blocks.size() - 1].type == BlockType::WARP_OPEN_BLOCK;
+					warpBlock.push_back(new Warp());
+					warpBlock[warpBlock.size() - 1]->blockNumber = (int)blocks.size() - 1;
+					warpBlock[warpBlock.size() - 1]->CreateObj(blocks[blocks.size() - 1].pos);
+					warpBlock[warpBlock.size() - 1]->isOpen = blocks[blocks.size() - 1].type == BlockType::WARP_OPEN_BLOCK;
 				}
 				else
 				{
@@ -219,12 +231,12 @@ int LoadStage::Load(const char* filePath)
 		}
 		else if (number == BlockType::WARP_CLOSE_BLOCK)
 		{
-			warpBlock[warpBlockCount].SetWarpCloseColor(blockColors[number]);
+			warpBlock[warpBlockCount]->SetWarpCloseColor(blockColors[number]);
 			warpBlockCount++;
 		}
 		else if (number == BlockType::WARP_OPEN_BLOCK)
 		{
-			warpBlock[warpBlockCount].SetWarpOpenColor(blockColors[number]);
+			warpBlock[warpBlockCount]->SetWarpOpenColor(blockColors[number]);
 			warpBlockCount++;
 		}
 		else
@@ -245,9 +257,9 @@ void LoadStage::Update()
 	for (size_t i = 0; i < blocks.size(); i++)
 	{
 		if (warpBlockCount < warpBlock.size() &&
-			i == warpBlock[warpBlockCount].blockNumber)
+			i == warpBlock[warpBlockCount]->blockNumber)
 		{
-			warpBlock[warpBlockCount].SetObjectPos(blocks[i].pos);
+			warpBlock[warpBlockCount]->SetObjectPos(blocks[i].pos);
 			warpBlockCount++;
 		}
 		if (debugBlockCount < debugBoxNumber.size() &&
@@ -261,6 +273,8 @@ void LoadStage::Update()
 
 void LoadStage::Draw()
 {
+	using namespace GameCommonData::BlockData;
+
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
 
@@ -290,7 +304,7 @@ void LoadStage::Draw()
 			break;
 		case BlockType::WARP_CLOSE_BLOCK:
 		case BlockType::WARP_OPEN_BLOCK:
-			warpBlock[warpBlockCount].Draw();
+			warpBlock[warpBlockCount]->Draw();
 			warpBlockCount++;
 			break;
 		default:
@@ -302,15 +316,21 @@ void LoadStage::Draw()
 
 void LoadStage::Reset()
 {
+	openGateCount = 0;
+
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
 
 	for (size_t i = 0; i < blocks.size(); i++)
 	{
+		blocks[i].pos = blocks[i].resetPos;
+		blocks[i].type = blocks[i].InitType;
+
 		if (warpBlockCount < warpBlock.size() &&
-			i == warpBlock[warpBlockCount].blockNumber)
+			i == warpBlock[warpBlockCount]->blockNumber)
 		{
-			warpBlock[warpBlockCount].SetObjectPos(blocks[i].resetPos);
+			warpBlock[warpBlockCount]->CreateObj(blocks[i].resetPos);
+			warpBlock[warpBlockCount]->gateNumber=(size_t)-1;
 			warpBlockCount++;
 		}
 		if (debugBlockCount < debugBoxNumber.size() &&
@@ -324,9 +344,6 @@ void LoadStage::Reset()
 			debugBoxObj[debugBlockCount]->position = blocks[i].resetPos;
 			debugBlockCount++;
 		}
-
-		blocks[i].pos = blocks[i].resetPos;
-		blocks[i].type = blocks[i].InitType;
 	}
 }
 
@@ -343,13 +360,29 @@ void LoadStage::StageClear()
 		debugBoxObj[i] = nullptr;
 	}
 
+	for (size_t i = 0; i < warpBlock.size(); i++)
+	{
+		if (warpBlock[i] == nullptr)
+		{
+			continue;
+		}
+
+		warpBlock[i]->DeleteObject();
+		delete warpBlock[i];
+		warpBlock[i] = nullptr;
+	}
+
 	blocks.clear();
 	blockColors.clear();
 	debugBoxObj.clear();
+	debugBoxNumber.clear();
+	warpBlock.clear();
 
 	blocks.shrink_to_fit();
 	blockColors.shrink_to_fit();
 	debugBoxObj.shrink_to_fit();
+	debugBoxNumber.shrink_to_fit();
+	warpBlock.shrink_to_fit();
 
 	startPosNumber = -1;
 }
