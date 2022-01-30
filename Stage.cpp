@@ -3,7 +3,7 @@
 
 #define EoF (-1) // Error of function
 
-Stage::Stage(Player* player) :
+Stage::Stage(Player *player) :
 	stage{},
 	player(player),
 	flag2d(false)
@@ -30,7 +30,7 @@ void Stage::Draw()
 	stage.Draw();
 }
 
-int Stage::Select(const char* filePath, const bool& flag2d)
+int Stage::Select(const char *filePath, const bool &flag2d)
 {
 	if (filePath == nullptr)
 	{
@@ -141,6 +141,7 @@ int Stage::StepBack()
 		if (clipBlock.top().isVani == true)
 		{
 			stage.blocks[i].type = stage.blocks[i].InitType;
+			stage.blocks[i].pos.z = clipBlock.top().backPosZ;
 		}
 
 		if (clipBlock.top().isVani == false)
@@ -161,7 +162,7 @@ int Stage::StepBack()
 	clipBlock.pop();
 
 	return 0;
-	
+
 }
 
 void Stage::Reset()
@@ -203,11 +204,13 @@ void Stage::Change()
 	if (isFlag == true)
 	{
 		swi.isVani = true;
+		swi.backPosZ = 0;
+
 		clipBlock.push(swi);
 	}
 }
 
-void Stage::GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2)
+void Stage::GetClipBlocksReferencePoint(RVector3 *pos1, RVector3 *pos2)
 {
 	if (pos1 == nullptr || pos2 == nullptr)
 	{
@@ -223,7 +226,7 @@ void Stage::GetClipBlocksReferencePoint(RVector3* pos1, RVector3* pos2)
 	*pos2 = stage.blocks[clipBlock.top().ReferencePoint2].pos;
 }
 
-void Stage::GetClipBlocksALL(int blocksArray[], const size_t& arraySize)
+void Stage::GetClipBlocksALL(int blocksArray[], const size_t &arraySize)
 {
 	if (clipBlock.top().isClip == false)
 	{
@@ -251,7 +254,7 @@ void Stage::GetClipBlocksALL(int blocksArray[], const size_t& arraySize)
 	}
 }
 
-int Stage::Clip2d(ClipBlock* clip)
+int Stage::Clip2d(ClipBlock *clip)
 {
 	if (clip == nullptr)
 	{
@@ -260,35 +263,35 @@ int Stage::Clip2d(ClipBlock* clip)
 
 	using namespace GameCommonData::BlockData;
 
-	auto& tmp = stage.blocks;
-	std::vector<float> dontMoveBlocksPos; //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨åŒè»¸ä¸Šã«ã‚ã‚‹ä¸å‹•ãƒ–ãƒ­ãƒƒã‚¯ã®å ´æ‰€
+	auto &tmp = stage.blocks;
+	std::vector<float> dontMoveBlocksPos; //ƒvƒŒƒCƒ„[‚Æ“¯²ã‚É‚ ‚é•s“®ƒuƒƒbƒN‚ÌêŠ
 
-	// æŒŸã‚€è»¸ãŒyè»¸ã®æ™‚
+	// ‹²‚Ş²‚ªy²‚Ì
 	if (player->forwardVec.x != 0.0f)
 	{
 		for (int i = 0; i < tmp.size(); i++)
 		{
 			if (tmp[i].pos.x != player->position.x || tmp[i].pos.y == player->position.y)
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ãŒåŒè»¸ä¸Šã«ç„¡ã„æ™‚ã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚ª“¯²ã‚É–³‚¢‚Í–³‹‚·‚é
 				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ã®å‡¦ç†ãŒç„¡ã„å ´åˆã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚Ìˆ—‚ª–³‚¢ê‡‚Í–³‹‚·‚é
 				continue;
 			}
 
-			// ä¸å‹•ãƒ–ãƒ­ãƒƒã‚¯ã®æ™‚ã®å‡¦ç†
+			// •s“®ƒuƒƒbƒN‚Ì‚Ìˆ—
 			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.y);
 				continue;
 			}
 
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š+ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è+‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			if ((player->position.y - tmp[i].pos.y) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
@@ -304,7 +307,7 @@ int Stage::Clip2d(ClipBlock* clip)
 					clip->vec1.z = 0.0f;
 				}
 			}
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š-ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è-‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			else
 			{
 				if (clip->ReferencePoint2 == -1)
@@ -324,7 +327,7 @@ int Stage::Clip2d(ClipBlock* clip)
 
 		float space = 0.0f;
 
-		// å¼•ã£ã‹ã‹ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ãŒã‚ã‚‹ã‹ã©ã†ã‹
+		// ˆø‚Á‚©‚©‚éƒuƒƒbƒN‚ª‚ ‚é‚©‚Ç‚¤‚©
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.y - dontMoveBlocksPos[i];
@@ -345,32 +348,32 @@ int Stage::Clip2d(ClipBlock* clip)
 			}
 		}
 	}
-	// æŒŸã‚€è»¸ãŒxè»¸ã®æ™‚
+	// ‹²‚Ş²‚ªx²‚Ì
 	else if (player->forwardVec.y != 0.0f)
 	{
 		for (int i = 0; i < tmp.size(); i++)
 		{
 			if (tmp[i].pos.x == player->position.x || tmp[i].pos.y != player->position.y)
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ãŒåŒè»¸ä¸Šã«ç„¡ã„æ™‚ã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚ª“¯²ã‚É–³‚¢‚Í–³‹‚·‚é
 				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ã®å‡¦ç†ãŒç„¡ã„å ´åˆã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚Ìˆ—‚ª–³‚¢ê‡‚Í–³‹‚·‚é
 				continue;
 			}
 
-			// ä¸å‹•ãƒ–ãƒ­ãƒƒã‚¯ã®æ™‚ã®å‡¦ç†
+			// •s“®ƒuƒƒbƒN‚Ì‚Ìˆ—
 			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.x);
 				continue;
 			}
 
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š+ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è+‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			if ((player->position.x - tmp[i].pos.x) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
@@ -386,7 +389,7 @@ int Stage::Clip2d(ClipBlock* clip)
 					clip->vec1.z = 0.0f;
 				}
 			}
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š-ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è-‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			else
 			{
 				if (clip->ReferencePoint2 == -1)
@@ -406,7 +409,7 @@ int Stage::Clip2d(ClipBlock* clip)
 
 		float space = 0.0f;
 
-		// å¼•ã£ã‹ã‹ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ãŒã‚ã‚‹ã‹ã©ã†ã‹
+		// ˆø‚Á‚©‚©‚éƒuƒƒbƒN‚ª‚ ‚é‚©‚Ç‚¤‚©
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.x - dontMoveBlocksPos[i];
@@ -430,13 +433,13 @@ int Stage::Clip2d(ClipBlock* clip)
 
 	if (clip->ReferencePoint1 < 0 || clip->ReferencePoint2 < 0)
 	{
-		// æŒŸã‚€ãƒ–ãƒ­ãƒƒã‚¯ãŒç„¡ã‘ã‚Œã°ãƒªã‚¿ãƒ¼ãƒ³
+		// ‹²‚ŞƒuƒƒbƒN‚ª–³‚¯‚ê‚ÎƒŠƒ^[ƒ“
 		return EoF;
 	}
 
 	if (stage.blocks[clip->ReferencePoint1].number == stage.blocks[clip->ReferencePoint2].number)
 	{
-		// åŒã˜å¡Šã®ä¸­ã®ãƒ–ãƒ­ãƒƒã‚¯ã®å ´åˆãƒªã‚¿ãƒ¼ãƒ³
+		// “¯‚¶‰ò‚Ì’†‚ÌƒuƒƒbƒN‚Ìê‡ƒŠƒ^[ƒ“
 		return EoF;
 	}
 
@@ -592,7 +595,7 @@ int Stage::Clip2d(ClipBlock* clip)
 	return 0;
 }
 
-int Stage::Clip3d(ClipBlock* clip)
+int Stage::Clip3d(ClipBlock *clip)
 {
 	if (clip == nullptr)
 	{
@@ -601,35 +604,35 @@ int Stage::Clip3d(ClipBlock* clip)
 
 	using namespace GameCommonData::BlockData;
 
-	auto& tmp = stage.blocks;
-	std::vector<float> dontMoveBlocksPos; //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨åŒè»¸ä¸Šã«ã‚ã‚‹ä¸å‹•ãƒ–ãƒ­ãƒƒã‚¯ã®å ´æ‰€
+	auto &tmp = stage.blocks;
+	std::vector<float> dontMoveBlocksPos; //ƒvƒŒƒCƒ„[‚Æ“¯²ã‚É‚ ‚é•s“®ƒuƒƒbƒN‚ÌêŠ
 
-	// æŒŸã‚€è»¸ãŒzè»¸ã®æ™‚(ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã¯yè»¸å›ºå®š)
+	// ‹²‚Ş²‚ªz²‚Ì(ã•ûŒüƒxƒNƒgƒ‹‚Íy²ŒÅ’è)
 	if (player->forwardVec.x != 0.0f)
 	{
 		for (int i = 0; i < (int)tmp.size(); i++)
 		{
 			if (tmp[i].pos.x != player->position.x || tmp[i].pos.y != player->position.y || tmp[i].pos.z == player->position.z)
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ãŒåŒè»¸ä¸Šã«ç„¡ã„æ™‚ã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚ª“¯²ã‚É–³‚¢‚Í–³‹‚·‚é
 				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ã®å‡¦ç†ãŒç„¡ã„å ´åˆã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚Ìˆ—‚ª–³‚¢ê‡‚Í–³‹‚·‚é
 				continue;
 			}
 
-			// ä¸å‹•ãƒ–ãƒ­ãƒƒã‚¯ã®æ™‚ã®å‡¦ç†
+			// •s“®ƒuƒƒbƒN‚Ì‚Ìˆ—
 			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.x);
 				continue;
 			}
 
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š+ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è+‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			if ((player->position.z - tmp[i].pos.z) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
@@ -643,7 +646,7 @@ int Stage::Clip3d(ClipBlock* clip)
 					clip->vec1 = player->position - tmp[i].pos;
 				}
 			}
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š-ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è-‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			else
 			{
 				if (clip->ReferencePoint2 == -1)
@@ -661,7 +664,7 @@ int Stage::Clip3d(ClipBlock* clip)
 
 		float space = 0.0f;
 
-		// å¼•ã£ã‹ã‹ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ãŒã‚ã‚‹ã‹ã©ã†ã‹
+		// ˆø‚Á‚©‚©‚éƒuƒƒbƒN‚ª‚ ‚é‚©‚Ç‚¤‚©
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.z - dontMoveBlocksPos[i];
@@ -682,32 +685,32 @@ int Stage::Clip3d(ClipBlock* clip)
 			}
 		}
 	}
-	// æŒŸã‚€è»¸ãŒxè»¸ã®æ™‚(ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã¯yè»¸å›ºå®š)
+	// ‹²‚Ş²‚ªx²‚Ì(ã•ûŒüƒxƒNƒgƒ‹‚Íy²ŒÅ’è)
 	else if (player->forwardVec.z != 0.0f)
 	{
 		for (int i = 0; i < (int)tmp.size(); i++)
 		{
 			if (tmp[i].pos.x == player->position.x || tmp[i].pos.y != player->position.y || tmp[i].pos.z != player->position.z)
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ãŒåŒè»¸ä¸Šã«ç„¡ã„æ™‚ã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚ª“¯²ã‚É–³‚¢‚Í–³‹‚·‚é
 				continue;
 			}
 
 			if (stage.blocks[i].type < 0 ||
 				(caughtFlag[stage.blocks[i].type].second == false && moveFlag[stage.blocks[i].type].second == false))
 			{
-				// ãƒ–ãƒ­ãƒƒã‚¯ã®å‡¦ç†ãŒç„¡ã„å ´åˆã¯ç„¡è¦–ã™ã‚‹
+				// ƒuƒƒbƒN‚Ìˆ—‚ª–³‚¢ê‡‚Í–³‹‚·‚é
 				continue;
 			}
 
-			// ä¸å‹•ãƒ–ãƒ­ãƒƒã‚¯ã®æ™‚ã®å‡¦ç†
+			// •s“®ƒuƒƒbƒN‚Ì‚Ìˆ—
 			if (moveFlag[stage.blocks[i].type].second == false)
 			{
 				dontMoveBlocksPos.push_back(stage.blocks[i].pos.x);
 				continue;
 			}
 
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š+ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è+‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			if ((player->position.x - tmp[i].pos.x) < 0.0f)
 			{
 				if (clip->ReferencePoint1 == -1)
@@ -721,7 +724,7 @@ int Stage::Clip3d(ClipBlock* clip)
 					clip->vec1 = player->position - tmp[i].pos;
 				}
 			}
-			// ãƒ–ãƒ­ãƒƒã‚¯ãŒãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Š-ã®æ–¹å‘ã«ã‚ã‚‹æ™‚ã®å‡¦ç†
+			// ƒuƒƒbƒN‚ªƒvƒŒƒCƒ„[‚æ‚è-‚Ì•ûŒü‚É‚ ‚é‚Ìˆ—
 			else
 			{
 				if (clip->ReferencePoint2 == -1)
@@ -739,7 +742,7 @@ int Stage::Clip3d(ClipBlock* clip)
 
 		float space = 0.0f;
 
-		// å¼•ã£ã‹ã‹ã‚‹ãƒ–ãƒ­ãƒƒã‚¯ãŒã‚ã‚‹ã‹ã©ã†ã‹
+		// ˆø‚Á‚©‚©‚éƒuƒƒbƒN‚ª‚ ‚é‚©‚Ç‚¤‚©
 		for (size_t i = 0; i < dontMoveBlocksPos.size(); i++)
 		{
 			space = player->position.x - dontMoveBlocksPos[i];
@@ -763,13 +766,13 @@ int Stage::Clip3d(ClipBlock* clip)
 
 	if (clip->ReferencePoint1 < 0 || clip->ReferencePoint2 < 0)
 	{
-		// æŒŸã‚€ãƒ–ãƒ­ãƒƒã‚¯ãŒç„¡ã‘ã‚Œã°ãƒªã‚¿ãƒ¼ãƒ³
+		// ‹²‚ŞƒuƒƒbƒN‚ª–³‚¯‚ê‚ÎƒŠƒ^[ƒ“
 		return EoF;
 	}
 
 	if (stage.blocks[clip->ReferencePoint1].number == stage.blocks[clip->ReferencePoint2].number)
 	{
-		// åŒã˜å¡Šã®ä¸­ã®ãƒ–ãƒ­ãƒƒã‚¯ã®å ´åˆãƒªã‚¿ãƒ¼ãƒ³
+		// “¯‚¶‰ò‚Ì’†‚ÌƒuƒƒbƒN‚Ìê‡ƒŠƒ^[ƒ“
 		return EoF;
 	}
 
