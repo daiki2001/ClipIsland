@@ -37,6 +37,72 @@ NY_Camera::NY_Camera(XMFLOAT3 eye_, XMFLOAT3 target_, XMFLOAT3 up_)
 	_camRocal.r[2].m128_f32[3] = 1;
 
 	_camRocal.r[3].m128_f32[3] = 0;
+
+	UpdateViewMat();
+}
+
+void NY_Camera::SetProjecion()
+{
+	//プロジェクション行列生成
+	_matProjection = XMMatrixPerspectiveFovLH(
+		XMConvertToRadians(60.0f),
+		(float)Raki_WinAPI::window_width / (float)Raki_WinAPI::window_height,
+		0.1f, 1000.0f
+	);
+}
+
+void NY_Camera::SetViewStatusEyeTargetUp(XMFLOAT3 &eye, XMFLOAT3 &target, XMFLOAT3 &up)
+{
+	//パラメータ設定
+	_eye	= eye;
+	_target = target;
+	_up		= up;
+
+	//更新
+	UpdateViewMat();
+}
+
+void NY_Camera::SetViewStatusEye(XMFLOAT3 &eye)
+{
+	//パラメータ設定
+	_eye = eye;
+
+	//更新
+	UpdateViewMat();
+}
+
+void NY_Camera::SetViewStatusTarget(XMFLOAT3 &target)
+{
+	_target = target;
+
+	UpdateViewMat();
+}
+
+void NY_Camera::SetViewStatusUp(XMFLOAT3 &up) 
+{
+	_up = up;
+
+	UpdateViewMat();
+}
+
+XMMATRIX NY_Camera::GetMatrixView()
+{
+	return _matView;
+}
+
+XMMATRIX NY_Camera::GetMatrixViewProjection()
+{
+	return _matViewProj;
+}
+
+XMMATRIX NY_Camera::GetMatrixBillBoardAll()
+{
+	return _matBillBoard;
+}
+
+XMMATRIX NY_Camera::GetMatrixProjection()
+{
+	return _matProjection;
 }
 
 //void NY_Camera::UpdateFollowing(XMMATRIX followTarget)//引数は追従したいオブジェクトのワールド変換行列

@@ -28,7 +28,7 @@ public:
 	}
 
 	//初期化
-	void Init(NY_Camera *cam);
+	void Init();
 
 	//更新
 	void Update();
@@ -41,7 +41,7 @@ public:
 	/// <param name="spawnPos">出現中心点</param>
 	/// <param name="max">出現範囲、正の方向</param>
 	/// <param name="min">出現範囲、負の方向</param>
-	void SpawnMoveStandbyParticle(RVector3 spawnPos, RVector3 max, RVector3 min, float s_scale = 0.1f, float e_scale = 0.01f);
+	void SpawnMoveStandbyParticle(RVector3 spawnPos, RVector3 max, RVector3 min, float s_scale = 3, float e_scale = 3);
 
 	//描画
 	void Draw();

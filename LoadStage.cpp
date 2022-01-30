@@ -5,16 +5,13 @@
 
 #define EoF (-1) // Error of function
 
-const float LoadStage::blockSize = 20.0f;
-
 LoadStage::LoadStage() :
 	debugBox{},
 	graph(0),
-	collision{},
 	startPosNumber(-1)
 {
 	graph = TexManager::LoadTexture("./Resources/test.jpeg");
-	debugBox.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, graph);
+	debugBox.CreateBoxModel(BlockData::blockSize / 2.0f, 1.0f, 1.0f, graph);
 }
 
 LoadStage::~LoadStage()
@@ -58,7 +55,7 @@ int LoadStage::Load(const char* filePath)
 		isBlock = false;
 		number = 0;
 
-		for (size_t i = 0; i < 4; i++)
+		for (size_t i = 0; i < sizeof(blockData) / sizeof(blockData[0]); i++)
 		{
 			blockData[i] = 0;
 		}
@@ -155,38 +152,40 @@ int LoadStage::Load(const char* filePath)
 		{
 			if (blockData[3] >= 0)
 			{
-				blockPos.push_back(XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]));
-				blockType.push_back(blockData[3]);
-				blockNumber.push_back(blockData[4]);
-				collision.push_back(Collision(
+				blocks.push_back(BlockData::Data());
+				blocks[blocks.size() - 1].pos = XMFLOAT3((float)blockData[0], (float)blockData[1], (float)blockData[2]);
+				blocks[blocks.size() - 1].type = blockData[3];
+				blocks[blocks.size() - 1].InitType = blockData[3];
+				blocks[blocks.size() - 1].number = blockData[4];
+				blocks[blocks.size() - 1].collision = Collision(
 					{ -blockSize / 2.0f, -blockSize / 2.0f, -blockSize / 2.0f },
 					{ blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f },
-					RVector3(0.0f, 0.0f, 0.0f)));
+					RVector3(0.0f, 0.0f, 0.0f));
 				debugBoxObj.push_back(CreateObject3d(&debugBox));
-				debugBoxObj[debugBoxObj.size() - 1]->position = blockPos[blockPos.size() - 1];
+				debugBoxObj[debugBoxObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
 			}
 
 			if (blockData[3] == BlockData::BlockType::START)
 			{
-				startPosNumber = (int)blockType.size() - 1;
+				startPosNumber = (int)blocks.size() - 1;
 			}
 		}
 	}
 
 	for (size_t i = 0; i < debugBoxObj.size(); i++)
 	{
-		if (blockType[i] >= blockColors.size())
+		if (blocks[i].type >= blockColors.size())
 		{
 			continue;
 		}
 
-		if (blockType[i] <= BlockType::NONE)
+		if (blocks[i].type <= BlockType::NONE)
 		{
 			continue;
 		}
 		else
 		{
-			number = blockType[i];
+			number = blocks[i].type;
 		}
 
 		debugBoxObj[i]->color = blockColors[number];
@@ -199,9 +198,9 @@ void LoadStage::Draw()
 {
 	using namespace BlockData;
 
-	for (size_t i = 0; i < blockPos.size(); i++)
+	for (size_t i = 0; i < blocks.size(); i++)
 	{
-		switch (blockType[i])
+		switch (blocks[i].type)
 		{
 		case BlockType::BLOCK:
 			DrawObject3d(debugBoxObj[i]);
@@ -210,6 +209,18 @@ void LoadStage::Draw()
 			DrawObject3d(debugBoxObj[i]);
 			break;
 		case BlockType::GOAL:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::SWITCH:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::DOOR:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::WARP_BLOCK:
+			DrawObject3d(debugBoxObj[i]);
+			break;
+		case BlockType::WARP_BLOCK_SET:
 			DrawObject3d(debugBoxObj[i]);
 			break;
 		default:
@@ -227,9 +238,9 @@ void LoadStage::Reset()
 			continue;
 		}
 
-		debugBoxObj[i]->position.x = blockPos[i].x;
-		debugBoxObj[i]->position.y = blockPos[i].y;
-		debugBoxObj[i]->position.z = blockPos[i].z;
+		debugBoxObj[i]->position.x = blocks[i].pos.x;
+		debugBoxObj[i]->position.y = blocks[i].pos.y;
+		debugBoxObj[i]->position.z = blocks[i].pos.z;
 	}
 }
 
@@ -243,15 +254,16 @@ void LoadStage::StageClear()
 		}
 
 		DeleteObject3d(debugBoxObj[i]);
-		debugBoxObj[i] = nullptr;
+		//debugBoxObj[i] = nullptr;
 	}
 
-	blockPos.clear();
-	blockType.clear();
-	blockNumber.clear();
+	blocks.clear();
 	blockColors.clear();
 	debugBoxObj.clear();
-	collision.clear();
+
+	blocks.shrink_to_fit();
+	blockColors.shrink_to_fit();
+	debugBoxObj.shrink_to_fit();
 
 	startPosNumber = -1;
 }
@@ -270,4 +282,26 @@ XMFLOAT3 LoadStage::GetStartPlayerPos()
 	}
 
 	return debugBoxObj[num]->position;
+}
+
+void LoadStage::GetBlocksTypeAll(BlockData::BlockType blockType, int blocksArray[], size_t arraySize)
+{
+	for (size_t i = 0; i < arraySize; i++)
+	{
+		blocksArray[i] = -1;
+	}
+
+	for (int i = 0, j = 0; i < blocks.size(); i++)
+	{
+		if (j >= arraySize)
+		{
+			break;
+		}
+
+		if (blocks[i].type == blockType)
+		{
+			blocksArray[j] = i;
+			j++;
+		}
+	}
 }
