@@ -1,5 +1,6 @@
 #include "Stage.h"
 #include <vector>
+#include "StageMoveParticle.h"
 
 #define EoF (-1) // Error of function
 
@@ -37,7 +38,7 @@ void Stage::Update()
 
 			if (stage.warpBlock[j]->GetObjectPos() == stage.blocks[i].pos)
 			{
-				stage.warpBlock[j]->blockNumber = i;
+				stage.warpBlock[j]->blockNumber = (int)i;
 
 				if (k % 2 == 1)
 				{
@@ -171,6 +172,24 @@ int Stage::Clip(bool flag)
 		}
 	}
 
+	if (clip.isClip)
+	{
+		for (size_t i = 0; i < stage.blocks.size(); i++)
+		{
+			if (stage.blocks[i].number != clip.blockNumber1 &&
+				stage.blocks[i].number != clip.blockNumber2)
+			{
+				continue;
+			}
+
+			StageMoveParticle::Get()->SpawnMoveStandbyParticle(
+				stage.blocks[i].pos,
+				RVector3(+blockSize / 2.0f, +blockSize / 2.0f, +blockSize / 2.0f),
+				RVector3(-blockSize / 2.0f, -blockSize / 2.0f, -blockSize / 2.0f)
+			);
+		}
+	}
+
 	return 0;
 }
 
@@ -275,11 +294,11 @@ void Stage::GetClipBlocksReferencePoint(RVector3 *pos1, RVector3 *pos2)
 	*pos2 = stage.blocks[clipBlock.top().ReferencePoint2].pos;
 }
 
-void Stage::GetClipBlocksALL(int blocksArray[], const size_t &arraySize)
+bool Stage::GetClipBlocksALL(int blocksArray[], const size_t &arraySize)
 {
-	if (clipBlock.top().isClip == false)
+	if (clipBlock.empty())
 	{
-		return;
+		return false;
 	}
 
 	for (size_t i = 0; i < arraySize; i++)
@@ -301,6 +320,8 @@ void Stage::GetClipBlocksALL(int blocksArray[], const size_t &arraySize)
 			j++;
 		}
 	}
+
+	return clipBlock.top().isClip;
 }
 
 int Stage::Clip2d(ClipBlock *clip)
@@ -618,7 +639,7 @@ int Stage::Clip2d(ClipBlock *clip)
 
 			if (tmp[i].type == BlockType::WARP_OPEN_BLOCK)
 			{
-				warpBlockNumber.push_back(i);
+				warpBlockNumber.push_back((int)i);
 				isWarp = true;
 				continue;
 			}
@@ -643,13 +664,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint1 == -1)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp1->twinBlockNumber].pos.x - tmp[i].pos.x) > clip->vec1[clip->vec1.size() - 1].x)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
@@ -661,13 +682,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint1 == -1)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp1->twinBlockNumber].pos.x - tmp[i].pos.x) < clip->vec1[clip->vec1.size() - 1].x)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
@@ -679,13 +700,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint1 == -1)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp1->twinBlockNumber].pos.y - tmp[i].pos.y) > clip->vec1[clip->vec1.size() - 1].y)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
@@ -697,13 +718,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint1 == -1)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp1->twinBlockNumber].pos.y - tmp[i].pos.y) < clip->vec1[clip->vec1.size() - 1].y)
 					{
-						clip->ReferencePoint1 = i;
+						clip->ReferencePoint1 = (int)i;
 						clip->vec1[clip->vec1.size() - 1] = tmp[warp1->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec1[clip->vec1.size() - 1].z = 0.0f;
 					}
@@ -730,7 +751,7 @@ int Stage::Clip2d(ClipBlock *clip)
 
 			if (tmp[i].type == BlockType::WARP_OPEN_BLOCK)
 			{
-				warpBlockNumber.push_back(i);
+				warpBlockNumber.push_back((int)i);
 				isWarp = true;
 				continue;
 			}
@@ -755,13 +776,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint2 == -1)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp2->twinBlockNumber].pos.x - tmp[i].pos.x) > clip->vec2[clip->vec2.size() - 1].x)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
@@ -773,13 +794,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint2 == -1)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp2->twinBlockNumber].pos.x - tmp[i].pos.x) < clip->vec2[clip->vec2.size() - 1].x)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
@@ -791,13 +812,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint2 == -1)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp2->twinBlockNumber].pos.y - tmp[i].pos.y) > clip->vec2[clip->vec2.size() - 1].y)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
@@ -809,13 +830,13 @@ int Stage::Clip2d(ClipBlock *clip)
 				{
 					if (clip->ReferencePoint2 == -1)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
 					else if ((tmp[warp2->twinBlockNumber].pos.y - tmp[i].pos.y) < clip->vec2[clip->vec2.size() - 1].y)
 					{
-						clip->ReferencePoint2 = i;
+						clip->ReferencePoint2 = (int)i;
 						clip->vec2[clip->vec2.size() - 1] = tmp[warp2->twinBlockNumber].pos - tmp[i].pos;
 						clip->vec2[clip->vec2.size() - 1].z = 0.0f;
 					}
