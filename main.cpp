@@ -14,6 +14,9 @@
 
 #include "Collision.h"
 
+#include "StageMoveParticle.h"
+#include "SeaParticle.h"
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace GameCommonData;
@@ -23,38 +26,38 @@ using namespace GameCommonData::BlockData;
 
 enum Scene
 {
-	TITLE,
-	SELECT,
-	GAME_MAIN,
-	GAME_OVER,
-	GAME_CLEAR
+    TITLE,
+    SELECT,
+    GAME_MAIN,
+    GAME_OVER,
+    GAME_CLEAR
 };
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-	Raki_WinAPI* rakiWinApp;
-	rakiWinApp = new Raki_WinAPI;
-	rakiWinApp->CreateGameWindow();
+    Raki_WinAPI* rakiWinApp;
+    rakiWinApp = new Raki_WinAPI;
+    rakiWinApp->CreateGameWindow();
 
-	Raki_DX12B::Get()->Initialize(rakiWinApp);
+    Raki_DX12B::Get()->Initialize(rakiWinApp);
 
-	myImgui::InitializeImGui(Raki_DX12B::Get()->GetDevice(), Raki_WinAPI::GetHWND());
+    myImgui::InitializeImGui(Raki_DX12B::Get()->GetDevice(), Raki_WinAPI::GetHWND());
 
-	//オブジェクト管理
-	NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
-	SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(), rakiWinApp->window_width, rakiWinApp->window_height);
-	TexManager::InitTexManager();
+    //オブジェクト管理
+    NY_Object3DManager::Get()->CreateObject3DManager(Raki_DX12B::Get()->GetDevice(), rakiWinApp->window_width, rakiWinApp->window_height);
+    SpriteManager::Get()->CreateSpriteManager(Raki_DX12B::Get()->GetDevice(), Raki_DX12B::Get()->GetGCommandList(), rakiWinApp->window_width, rakiWinApp->window_height);
+    TexManager::InitTexManager();
 
-	//カメラ
-	NY_Camera* cam = camera;
-	RVector3 eye = { 0.0f, 0.0f, -200.0f };
-	RVector3 target = { 0.0f, 0.0f, 0.0f };
-	RVector3 up = { 0.0f, 1.0f, 0.0f };
-	cam->SetViewStatusEyeTargetUp(eye, target, up);
+    //カメラ
+    NY_Camera* cam = camera;
+    RVector3 eye = { 0.0f, 0.0f, -200.0f };
+    RVector3 target = { 0.0f, 0.0f, 0.0f };
+    RVector3 up = { 0.0f, 1.0f, 0.0f };
+    cam->SetViewStatusEyeTargetUp(eye, target, up);
 
-	//音
-	Audio::Init();
+    //音
+    Audio::Init();
 
 #pragma endregion GameValue
 
@@ -126,6 +129,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     /*シーン遷移*/
     Scene scene = Scene::TITLE;
+
+    /*パーティクル初期化*/
+    StageMoveParticle::Get()->Init();
+    SeaParticle::Get()->Init();
+
+    /*パーティクル用変数*/
+    int clipBlockPos[128] = { 0 };
+    for (size_t i = 0; i < sizeof(clipBlockPos) / sizeof(clipBlockPos[0]); i++)
+    {
+        clipBlockPos[i] = -1;
+    }
 
     bool nFlag = false;
     bool actFlag = false;
@@ -255,6 +269,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 stageData.Update();
             }
 
+            // パーティクルの更新
+            StageMoveParticle::Get()->Update();
+            SeaParticle::Get()->Update();
+
             {
                 nFlag = false;
                 actFlag = false;
@@ -358,10 +376,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 background.Draw();
             }
 
-            // オブジェクト描画
             NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
             if (isTutorial == false)
             {
+                // パーティクル描画
+                StageMoveParticle::Get()->Draw();
+                SeaParticle::Get()->Draw();
+
+                // オブジェクト描画
                 player.Draw();
                 stageData.Draw();
             }
