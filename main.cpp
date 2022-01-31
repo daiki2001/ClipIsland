@@ -85,8 +85,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         TexManager::LoadTexture("./Resources/stage5.png"),
         TexManager::LoadTexture("./Resources/stage6.png"),
     };
-    Sprite stage[sizeof(stageGraph) / sizeof(stageGraph[0])];
-    for (size_t i = 0; i < sizeof(stageGraph) / sizeof(stageGraph[0]); i++)
+    const size_t stageCount = sizeof(stageGraph) / sizeof(stageGraph[0]);
+    Sprite stage[stageCount];
+    for (size_t i = 0; i < stageCount; i++)
     {
         stage[i].CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, stageGraph[i], false);
         stage[i].spdata.position.x = (float)Raki_WinAPI::window_width / 2.0f;
@@ -119,6 +120,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     }
     int tutorialCount = 0;
     bool isTutorial = true;
+
+    /*ステージクリア*/
+    bool stageClearFlag[stageCount];
+    size_t clearCount = 0;
+    for (size_t i = 0; i < stageCount; i++)
+    {
+        stageClearFlag[i] = false;
+    }
 
     /*プレイヤー*/
     Player player;
@@ -184,11 +193,27 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             }
             if (Input::isKeyTrigger(DIK_D))
             {
-                stageNumber++;
+                static const size_t openStageCount = 3;
 
-                if (stageNumber >= sizeof(stageGraph) / sizeof(stageGraph[0]))
+                if (stageNumber < openStageCount + clearCount - 1)
                 {
-                    stageNumber = sizeof(stageGraph) / sizeof(stageGraph[0]) - 1;
+                    stageNumber++;
+                }
+                /*else
+                {
+                    for (size_t i = 0; i < openStageCount; i++)
+                    {
+                        if (stageClearFlag[stageNumber - i])
+                        {
+                            stageNumber++;
+                            break;
+                        }
+                    }
+                }*/
+
+                if (stageNumber >= stageCount)
+                {
+                    stageNumber = stageCount - 1;
                 }
             }
 
@@ -249,8 +274,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             {
                 stageData.Select("test1.boxmap", true);
             }
-#endif
-
+#endif //_DEBUG
             if (isTutorial)
             {
                 player.playerOldPos = player.position;
@@ -345,16 +369,23 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     {
                         stageData.StepBack();
                     }
-
+#if _DEBUG
                     if (Input::isKeyTrigger(DIK_E))
                     {
                         stageData.Change();
                     }
+#endif //_DEBUG
                 }
 
                 if (player.goalFlag)
                 {
                     scene = Scene::GAME_CLEAR;
+
+                    if (stageClearFlag[stageNumber] == false)
+                    {
+                        stageClearFlag[stageNumber] = true;
+                        clearCount++;
+                    }
 
                     player.goalFlag = false;
                 }
