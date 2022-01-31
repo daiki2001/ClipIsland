@@ -18,7 +18,7 @@ StageMoveParticle::~StageMoveParticle()
 	}
 }
 
-void StageMoveParticle::Init(NY_Camera *cam)
+void StageMoveParticle::Init()
 {
 	//カメラを取り込み、エミッター生成
 	pManager = ParticleManager::Create();
@@ -47,11 +47,11 @@ void StageMoveParticle::SpawnMoveStandbyParticle(RVector3 spawnPos, RVector3 max
 		NY_random::floatrand_sl(maxZ, minZ));
 
 	//速度、加速度を設定
-	RVector3 velocity(NY_random::floatrand_sl(0.5, -0.5), 0, 0.5);
-	RVector3 accel(NY_random::floatrand_sl(0.01, -0.01), 0, -0.01);
+	RVector3 velocity( NY_random::floatrand_sl(0.5, -0.5), 0.5, 0);
+	RVector3 accel( NY_random::floatrand_sl(0.02, -0.02), -0.02, 0);
 
 	//生成
-	pManager->Add(60, spawnPosition, velocity, accel, s_scale, e_scale);
+	pManager->Add(30, spawnPosition, velocity, accel, s_scale, e_scale, XMFLOAT4(1, 1, 1, 1), XMFLOAT4(1, 1, 1, 1));
 
 }
 

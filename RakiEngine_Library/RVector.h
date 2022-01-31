@@ -3,14 +3,14 @@
 
 using namespace DirectX;
 
-//XMFLOAT3‚ğ‰‰ZqƒI[ƒo[ƒ[ƒh‚³‚¹‚½RVector3Œ^
+//XMFLOAT3ã‚’æ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã•ã›ãŸRVector3å‹
 class RVector3 : public XMFLOAT3
 {
 public:
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	RVector3(float x, float y, float z) : XMFLOAT3(x, y, z) {};
 	RVector3() :XMFLOAT3(0, 0, 0) {};
-	RVector3(XMFLOAT3 v) : XMFLOAT3(v) {}
+	RVector3(const XMFLOAT3& v) : XMFLOAT3(v) {}
 
 	RVector3 operator+(const RVector3 &other)const { return RVector3(x + other.x, y + other.y, z + other.z); }
 	RVector3 operator-(const RVector3 &other)const { return RVector3(x - other.x, y - other.y, z - other.z); }
@@ -20,6 +20,21 @@ public:
 	RVector3 &operator-=(const RVector3 &other) { this->x -= other.x; this->y -= other.y; this->z -= other.z; return *this; }
 	RVector3 &operator*=(const RVector3 &other) { this->x *= other.x; this->y *= other.y; this->z *= other.z; return *this; }
 	RVector3 &operator/=(const RVector3 &other) { this->x /= other.x; this->y /= other.y; this->z /= other.z; return *this; }
+
+	RVector3 operator+(const XMFLOAT3 &other) const { return RVector3(x + other.x, y + other.y, z + other.z); }
+	RVector3 operator-(const XMFLOAT3 &other) const { return RVector3(x - other.x, y - other.y, z - other.z); }
+	RVector3 operator*(const XMFLOAT3 &other) const { return RVector3(x * other.x, y * other.y, z * other.z); }
+	RVector3 operator/(const XMFLOAT3 &other) const { return RVector3(x / other.x, y / other.y, z / other.z); }
+	RVector3 &operator+=(const XMFLOAT3 &other) { this->x += other.x; this->y += other.y; this->z += other.z; return *this; }
+	RVector3 &operator-=(const XMFLOAT3 &other) { this->x -= other.x; this->y -= other.y; this->z -= other.z; return *this; }
+	RVector3 &operator*=(const XMFLOAT3 &other) { this->x *= other.x; this->y *= other.y; this->z *= other.z; return *this; }
+	RVector3 &operator/=(const XMFLOAT3 &other) { this->x /= other.x; this->y /= other.y; this->z /= other.z; return *this; }
+
+	RVector3 operator=(const XMFLOAT3 &other) {
+		RVector3 result = RVector3(other.x, other.y, other.z);
+		return result;
+	}
+	
 
 	bool operator==(const RVector3 &other) { return this->x == other.x && this->y == other.y && this->z == other.z; }
 	bool operator!=(const RVector3 &other) { return !(*this == other); }
@@ -36,6 +51,9 @@ public:
 	void zero() { x = 0, y = 0, z = 0; }
 
 	RVector3 operator-() const { return RVector3(-x, -y, -z); }
+
+	//XMFLOAT3 operator=(const RVector3 &other) { return XMFLOAT3(other.x, other.y, other.z); }
+	//RVector3 operator=(const XMFLOAT3 &other) { return RVector3(other.x, other.y, other.z); }
 };
 
 inline float dot(const RVector3 &a, const RVector3 &b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
@@ -46,33 +64,77 @@ inline float distance(const RVector3 &v1,const RVector3 &v2){return sqrtf(pow(v1
 inline RVector3 operator*(const float &sum, const RVector3 &sum2) { return RVector3(sum2.x * sum, sum2.y * sum, sum2.z * sum); }
 inline RVector3 operator/(const float &sum, const RVector3 &sum2) { return RVector3(sum2.x / sum, sum2.y / sum, sum2.z / sum); }
 
-//RVector3Œ^‚ğg—p‚µ‚½Õ“Ë”»’èƒvƒŠƒ~ƒeƒBƒu
+//ä¿ç®¡
+inline const RVector3 lerp(const RVector3 &s, const RVector3 &e, const float t) {
+	RVector3 start = s;
+	RVector3 end = e;
+	return start * (1.0f - t) + end * t;
+}
+
+
+//RVector3ã‚’ä½¿ç”¨ã—ãŸã€3æ¬¡å…ƒç·šå½¢è£œé–“
+namespace Rv3Ease {
+
+	/// <summary>
+	/// ç·šå½¢è£œé–“ï¼ˆå¼•æ•°ã¯åŸºæœ¬å…¨éƒ¨ã“ã®å½¢ï¼‰
+	/// </summary>
+	/// <param name="s">é–‹å§‹ç‚¹</param>
+	/// <param name="e">çµ‚äº†ç‚¹</param>
+	/// <param name="t">é€²è¡Œæ™‚é–“ï¼ˆ1.0 ~ 0.0ï¼‰ã®ç¯„å›²</param>
+	/// <returns>RVector3å‹ã§tã®ã¨ãã®åº§æ¨™ã‚’è¿”ã™</returns>
+	const RVector3 lerp(const RVector3 &s, const RVector3 &e, const float t);
+
+	const RVector3 InQuad(const RVector3 &s, const RVector3 &e, const float t);
+
+	const RVector3 OutQuad(const RVector3 &s, const RVector3 &e, const float t);
+
+	const RVector3 InOutQuad(const RVector3 &s, const RVector3 &e, const float t);
+
+}
+
+
+//RVector3å‹ã‚’ä½¿ç”¨ã—ãŸè¡çªåˆ¤å®šãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–
 namespace RV3Colider {
 
-	///²•ÀsƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX AABB
+	///è»¸ä¸¦è¡Œãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ AABB
 	struct Rv3AABB {
 
-		RVector3 min;	//”»’èƒTƒCƒY
-		RVector3 max;	//”»’èƒTƒCƒY
-		RVector3 oldPos;//1F‘O‚ÌÀ•W
+		RVector3 min;	//åˆ¤å®šã‚µã‚¤ã‚º
+		RVector3 max;	//åˆ¤å®šã‚µã‚¤ã‚º
+		RVector3 oldPos;//1Få‰ã®åº§æ¨™
 
-		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^AƒfƒXƒgƒ‰ƒNƒ^
+		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		Rv3AABB()	= default;
 		~Rv3AABB()	= default;
 
-		//’lw’èƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		/// <summary>
+		/// AABBãƒ‡ãƒ¼ã‚¿ã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		/// </summary>
+		/// <param name="min">ä¸­å¿ƒç‚¹ã‹ã‚‰ã®è·é›¢A</param>
+		/// <param name="max">ä¸­å¿ƒç‚¹ã‹ã‚‰ã®è·é›¢B</param>
+		/// <param name="pos">åˆ¤å®šã®ä¸­å¿ƒç‚¹</param>
 		Rv3AABB(RVector3 min, RVector3 max, RVector3 pos) {
-			this->min = min;
-			this->max = max;
+			this->min = pos + min;
+			this->max = pos + max;
 			this->oldPos = pos;
 		}
 
+		/// <summary>
+		/// AABBãƒ‡ãƒ¼ã‚¿è¨­å®š
+		/// </summary>
+		/// <param name="pos">åˆ¤å®šã®ä¸­å¿ƒç‚¹</param>
+		/// <param name="min">ä¸­å¿ƒç‚¹ã‹ã‚‰ã®è·é›¢A</param>
+		/// <param name="max">ä¸­å¿ƒç‚¹ã‹ã‚‰ã®è·é›¢B</param>
 		inline void Set(RVector3 pos, RVector3 min, RVector3 max) {
-			this->min = min;
-			this->max = max;
+			this->min = pos + min;
+			this->max = pos + max;
 			this->oldPos = pos;
 		}
 
+		/// <summary>
+		/// AABBã®ãƒ‡ãƒ¼ã‚¿æ›´æ–°
+		/// </summary>
+		/// <param name="actpos">ãã®æ™‚ç‚¹ã§ã®AABBã®ä¸­å¿ƒåº§æ¨™ï¼ˆRVector3ï¼‰</param>
 		inline void Update(RVector3 actpos) {
 			RVector3 diff = actpos - oldPos;
 			min += diff;
@@ -82,35 +144,35 @@ namespace RV3Colider {
 	};
 
 	/// <summary>
-	/// AABB“¯m‚Ì”»’è
+	/// AABBåŒå£«ã®åˆ¤å®š
 	/// </summary>
-	/// <param name="box1">ƒ{ƒbƒNƒX1</param>
-	/// <param name="box2">ƒ{ƒbƒNƒX2</param>
-	/// <returns>Õ“Ë”»’è</returns>
+	/// <param name="box1">ãƒœãƒƒã‚¯ã‚¹1</param>
+	/// <param name="box2">ãƒœãƒƒã‚¯ã‚¹2</param>
+	/// <returns>è¡çªåˆ¤å®š</returns>
 	inline bool ColisionAABB(const Rv3AABB &box1, const Rv3AABB &box2) {
-		//”ñÕ“Ë
+		//éè¡çª
 		if (box1.min.x > box2.max.x) { return false; }
 		if (box1.max.x < box2.min.x) { return false; }
 		if (box1.min.y > box2.max.y) { return false; }
 		if (box1.max.y < box2.min.y) { return false; }
 		if (box1.min.z > box2.max.z) { return false; }
 		if (box1.max.z < box2.min.z) { return false; }
-		//Õ“Ë
+		//è¡çª
 		return true;
 	}
 
-	//‹…
+	//çƒ
 	struct Sphere {
-		//’†SÀ•W
+		//ä¸­å¿ƒåº§æ¨™
 		RVector3 center;
-		//”¼Œa
+		//åŠå¾„
 		float rad;
-		//ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		//ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		Sphere() {
 			center = RVector3(0, 0, 0);
 			rad = 0;
 		}
-		//’lw’èƒRƒ“ƒXƒgƒ‰ƒNƒ^
+		//å€¤æŒ‡å®šã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 		Sphere(RVector3 pos, float r) {
 			center = pos;
 			rad = r;
@@ -118,32 +180,32 @@ namespace RV3Colider {
 	};
 
 	/// <summary>
-	/// ‹…“¯m‚Ì”»’è
+	/// çƒåŒå£«ã®åˆ¤å®š
 	/// </summary>
-	/// <param name="a">‹…1</param>
-	/// <param name="b">‹…2</param>
-	/// <returns>Õ“Ë”»’è</returns>
+	/// <param name="a">çƒ1</param>
+	/// <param name="b">çƒ2</param>
+	/// <returns>è¡çªåˆ¤å®š</returns>
 	inline bool Colision2Sphere(Sphere a, Sphere b) {
 		if (a.rad + b.rad < distance(a.center, b.center)) {
 			return false;
 		}
-		//Õ“Ë
+		//è¡çª
 		return true;
 	}
 
-	//•½–Ê
+	//å¹³é¢
 	struct Plane
 	{
-		//–@üƒxƒNƒgƒ‹
+		//æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
 		RVector3 normal;
-		//Œ´“_‚©‚ç‚Ì‹——£
+		//åŸç‚¹ã‹ã‚‰ã®è·é›¢
 		float distance;
-		//ƒfƒtƒHƒ‹ƒg
+		//ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
 		Plane() {
 			normal.zero();
 			distance = 0;
 		}
-		//’lw’è
+		//å€¤æŒ‡å®š
 		Plane(RVector3 n, float d) {
 			normal = n;
 			distance = d;
@@ -151,19 +213,76 @@ namespace RV3Colider {
 	};
 
 	/// <summary>
-	/// ‹…‚Æ•½–Ê‚ÌÕ“Ë”»’è
+	/// çƒã¨å¹³é¢ã®è¡çªåˆ¤å®š
 	/// </summary>
-	/// <param name="sphere">‹…‘ÌƒvƒŠƒ~ƒeƒBƒu</param>
-	/// <param name="plane">•½–ÊƒvƒŠƒ~ƒeƒBƒu</param>
-	/// <param name="coliPos">Õ“Ë“_‚ğ•Ô‚·•Ï”</param>
-	/// <returns>Õ“Ë”»’è</returns>
+	/// <param name="sphere">çƒä½“ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–</param>
+	/// <param name="plane">å¹³é¢ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–</param>
+	/// <param name="coliPos">è¡çªç‚¹ã‚’è¿”ã™å¤‰æ•°</param>
+	/// <returns>è¡çªåˆ¤å®š</returns>
 	bool ColisionSphereToPlane(const Sphere &sphere, const Plane &plane, RVector3 *coliPos = nullptr);
 
-	//OŠpŒ`
+	struct Ray {
+		RVector3 start;
+		RVector3 dir;
+	};
+
+	inline RVector3 CalcScreen2World(const XMFLOAT2 &scrPos, float fz,float window_w,float window_h,const XMMATRIX &prj,const XMMATRIX &view) {
+		XMVECTOR pos;
+		//å°„å½±å¤‰æ›è¡Œåˆ—ã¨ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¡Œåˆ—ã®é€†è¡Œåˆ—ã‚’æ ¼ç´ã™ã‚‹å¤‰æ•°
+		XMMATRIX InvPrj, InvVP,InvV;
+		//å„è¡Œåˆ—ã®é€†è¡Œåˆ—ã‚’å‡ºã™
+		InvPrj = XMMatrixInverse(nullptr, prj);
+		//ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¡Œåˆ—ã¯ã‚‚ã¨ã¯ãªã„ï¼Ÿã®ã§ã“ã“ã§å®šç¾©ã—ã¦é€†è¡Œåˆ—ã‚’å‡ºã™
+		InvVP = XMMatrixIdentity();
+		InvVP.r[0].m128_f32[0] = window_w / 2.0f;
+		InvVP.r[1].m128_f32[1] = -window_h / 2.0f;
+		InvVP.r[3].m128_f32[0] = window_w / 2.0f;
+		InvVP.r[3].m128_f32[1] = window_h / 2.0f;
+		InvVP = XMMatrixInverse(nullptr, InvVP);
+
+		InvV = XMMatrixInverse(nullptr, view);
+
+		XMMATRIX inverce = InvVP * InvPrj * InvV;
+		XMVECTOR scr = { scrPos.x,scrPos.y,fz };
+
+		pos = XMVector3TransformCoord(scr, inverce);
+
+		RVector3 returnpos = { pos.m128_f32[0],pos.m128_f32[1],pos.m128_f32[2] };
+		return returnpos;
+	}
+
+	inline Ray CalcScreen2WorldRay(XMFLOAT2 &scrPos, float window_w, float window_h, XMMATRIX &prj,XMMATRIX &view) {
+
+		Ray result;
+		result.start = CalcScreen2World(scrPos, 0, window_w, window_h, prj, view);
+		result.dir = CalcScreen2World(scrPos, 1, window_w, window_h, prj, view);
+		return result;
+	}
+
+	inline bool ColisionRay2Plane(const Ray &ray, const Plane &plane, float *distance = nullptr, RVector3 *inter = nullptr) {
+		const float epsilon = 1.0e-5f;
+		RVector3 n = ray.dir;
+		n.norm();
+		RVector3 pn = plane.normal;
+		pn.norm();
+		float d1 = dot(pn, n);
+		if (d1 > -epsilon) { return false; }
+		float d2 = dot(pn, ray.start);
+		float dist = d2 - plane.distance;
+		float t = dist / -d1;
+		if (t < 0) { return false; }
+		if (distance) { *distance = t; }
+		if (inter) {
+			*inter = ray.start + t * n;
+		}
+		return true;
+	}
+
+	//ä¸‰è§’å½¢
 	struct Triangle {
-		//’¸“_À•W
+		//é ‚ç‚¹åº§æ¨™
 		RVector3 p0, p1, p2;
-		//–@ü
+		//æ³•ç·š
 		RVector3 normal;
 
 	};

@@ -154,9 +154,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="GameCommonData.cpp" />
     <ClCompile Include="LoadStage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SeaParticle.cpp" />
     <ClCompile Include="Stage.cpp" />
     <ClCompile Include="StageMoveParticle.cpp" />
     <ClCompile Include="Warp.cpp" />
@@ -164,8 +166,10 @@
   <ItemGroup>
     <ClInclude Include="BlockData.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="GameCommonData.h" />
     <ClInclude Include="LoadStage.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SeaParticle.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="StageMoveParticle.h" />
     <ClInclude Include="Warp.h" />

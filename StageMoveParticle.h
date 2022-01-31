@@ -28,7 +28,7 @@ public:
 	}
 
 	//‰Šú‰»
-	void Init(NY_Camera *cam);
+	void Init();
 
 	//XV
 	void Update();

@@ -376,7 +376,6 @@ void Raki_DX12B::EndDraw()
 	commandAllocator->Reset(); // キューをクリア
 	commandList->Reset(commandAllocator.Get(), nullptr);	// 再びコマンドリストを貯める準備
 
-
 }
 
 void Raki_DX12B::ClearRenderTarget()
