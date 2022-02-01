@@ -1,0 +1,8 @@
+block.wav ブロックが何かに当たった時の音
+buttunSE.wav ボタンブロックにプレイヤーが乗った時
+ClearSE.wav ゴールブロックにプレイヤーが乗った時
+DecisionSE.wav 決定音→タイトルspase時、セレクトでステージ決定時、ステージクリアで次のステージに進むまたはセレクトの戻る時
+walkSE.wav プレイヤー移動時、セレクト画面のプレイヤー移動時
+GameBack.wav プレイ画面のBGM
+TitleAndSelectBack タイトルとシーンセレクト時のBGM タイトルからシーンセレクトは音を流したままでお願いします。
+
