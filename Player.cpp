@@ -4,6 +4,8 @@
 
 Player::Player() :
 	position(0.0f, 0.0f, 0.0f),
+	startPos(0.0f, 0.0f, 0.0f),
+	endPos(0.0f, 0.0f, 0.0f),
 	forwardVec(1.0f, 0.0f, 0.0f),
 	playerRot(-90, 0, 0),
 	model{},
@@ -18,17 +20,14 @@ Player::Player() :
 	object->rotation = RVector3(-90, 0, 0);
 	object->color = { 1, 1, 1, 1 };
 	goalFlag = false;
+	moveFlag = false;
+	timeRate = 0;
 }
 
 //時間計測に必要なデータ
-float startCount = 0;
-float Count = 0;
-float nowCount = 0;
-float elapsedCount = 0;
+const float maxFrame = 15;
+float nowFrame = 100;
 
-float maxTime = 5.0f;			//全体時間[s]
-float timeRate = 0;					//何％ 時間進んだか(率)
-float GetNowHiPerformanceCount = 0.0f;
 
 Player::~Player()
 {
@@ -44,33 +43,70 @@ void Player::Update()
 	using namespace GameCommonData::BlockData;
 
 	playerOldPos = position;
+	if (moveFlag == false)
+	{
+		if (Input::isKeyTrigger(DIK_W))
+		{
+			moveFlag = true;
+			nowFrame = 0;
 
-	startCount += 1;
+			playerRot = RVector3(-90, 0, 0);
+			forwardVec = { 0.0f, 1.0f, 0.0f };
 
-	if (Input::isKeyTrigger(DIK_W))
-	{
-		forwardVec = { 0.0f, 1.0f, 0.0f };
-		position += forwardVec * blockSize * 1.0f;
-		playerRot = RVector3(-90, 0, 0);
+
+			startPos = playerOldPos;
+			endPos = playerOldPos + forwardVec * blockSize;
+
+		}
+		else if (Input::isKeyTrigger(DIK_A))
+		{
+			moveFlag = true;
+			nowFrame = 0;
+
+			forwardVec = { -1.0f, 0.0f, 0.0f };
+
+			playerRot = RVector3(-180, 90, 270);
+			startPos = playerOldPos;
+			endPos = playerOldPos + forwardVec * blockSize;
+		}
+		else if (Input::isKeyTrigger(DIK_S))
+		{
+			moveFlag = true;
+			nowFrame = 0;
+
+			forwardVec = { 0.0f, -1.0f, 0.0f };
+
+			playerRot = RVector3(-270, 90, 270);
+			startPos = playerOldPos;
+			endPos = playerOldPos + forwardVec * blockSize;
+		}
+		else if (Input::isKeyTrigger(DIK_D))
+		{
+			moveFlag = true;
+			nowFrame = 0;
+
+			forwardVec = { 1.0f, 0.0f, 0.0f };
+
+			playerRot = RVector3(-180, -90, 90);
+			startPos = playerOldPos;
+			endPos = playerOldPos + forwardVec * blockSize;
+		}
+
 	}
-	else if (Input::isKeyTrigger(DIK_A))
+
+	if (nowFrame < maxFrame)
 	{
-		forwardVec = { -1.0f, 0.0f, 0.0f };
-		position += forwardVec * blockSize * 1.0f;
-		playerRot = RVector3(-180, 90, 270);
+		nowFrame++;
 	}
-	else if (Input::isKeyTrigger(DIK_S))
+	else
 	{
-		forwardVec = { 0.0f, -1.0f, 0.0f };
-		position += forwardVec * blockSize * 1.0f;
-		playerRot = RVector3(-270, 90, 270);
+		startPos = position;
+		moveFlag = false;
 	}
-	else if (Input::isKeyTrigger(DIK_D))
-	{
-		forwardVec = { 1.0f, 0.0f, 0.0f };
-		position += forwardVec * blockSize * 1.0f;
-		playerRot = RVector3(-180, -90, 90);
-	}
+
+	timeRate = nowFrame / maxFrame;
+
+	position = Rv3Ease::lerp(startPos, endPos, timeRate);
 
 	playerCollision.Update(position);
 
@@ -82,7 +118,6 @@ void Player::Update()
 
 void Player::Draw()
 {
-
 	DrawObject3d(object);
 }
 
@@ -98,15 +133,14 @@ void Player::Reset()
 	Player::playerRot = RVector3(-90, 0, 0);
 	Player::playerCollision = Collision({ -5, -5, -5 }, { 5,5,5 }, position);
 	Player::playerOldPos = RVector3(0.0f, 0.0f, 0.0f);
+	Player::startPos = RVector3(0.0f, 0.0f, 0.0f);
+	Player::endPos = Player::position;
 	object->position = RVector3(0.0f, 0.0f, 0.0f);
 	object->scale = { 10.0f, 10.0f, 10.0f };
 	object->rotation = RVector3(-90, 0, 0);
 	object->color = { 1, 1, 1, 1 };
 	goalFlag = false;
+	moveFlag = false;
+	timeRate = 0.0f;
 }
 
- //const RVector3 
-// (const RVector3 &start, const RVector3 &end, const float t)
-//{
-////	return start * (1.0f - t) + end * t;
-//}

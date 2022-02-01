@@ -199,17 +199,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 {
                     stageNumber++;
                 }
-                /*else
-                {
-                    for (size_t i = 0; i < openStageCount; i++)
-                    {
-                        if (stageClearFlag[stageNumber - i])
-                        {
-                            stageNumber++;
-                            break;
-                        }
-                    }
-                }*/
 
                 if (stageNumber >= stageCount)
                 {
@@ -227,31 +216,24 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     stageData.Select("map001.boxmap", true);
                     player.position = { 0.0f, 0.0f, 0.0f };
                     stageData.Select("map1.boxmap", true);
-                    //player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 1:
                     stageData.Select("map2.boxmap", true);
-                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 2:
                     stageData.Select("map3.boxmap", true);
-                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 3:
                     stageData.Select("map4.boxmap", true);
-                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 case 4:
                     stageData.Select("map5.boxmap", true);
-                    //player.position = { 0.0f, 0.0f, 0.0f };
                     break;
                 case 5:
                     stageData.Select("map6.boxmap", true);
-                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 default:
                     stageData.Select("map1.boxmap", true);
-                    //player.position = { 0.0f, -40.0f, 0.0f };
                     break;
                 }
             }
@@ -309,7 +291,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 actFlag = true;
                 if (player.position == stageData.stage.blocks[i].pos)
                 {
-                    nFlag = true;
+                    //nFlag = true;
                     actFlag = false;
                     break;
                 }
@@ -337,22 +319,25 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
                 if (AB == true)
                 {
-                   nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK || stageData.stage.blocks[i].type == BlockType::DOOR || nFlag == false;
+                   nFlag = stageData.stage.blocks[i].type == BlockType::DONT_MOVE_BLOCK || stageData.stage.blocks[i].type == BlockType::DOOR /*|| nFlag == false*/;
                    actnFlag = false;
                    break;
                 }
+
             }
 
                 if (nFlag == true)
                 {
-                    player.position = player.playerOldPos;
-                    player.object->position = player.position;
+                   //player.object->position = player.playerOldPos +player.offsetPos;
+                   player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
+                   player.position = player.startPos;
                 }
-
+                 
                 if (actFlag == true && actnFlag == true)
                 {
-                    player.position = player.playerOldPos;
-                    player.object->position = player.position;
+                   //player.object->position = player.playerOldPos + player.offsetPos;
+                   player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
+                   player.position = player.startPos;
                 }
 
                 if (isTutorial == false)

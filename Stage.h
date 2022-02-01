@@ -22,6 +22,8 @@ public: // サブクラス
 		vector<int> gateNumber2 = {};
 		/*プレイヤーの座標*/
 		RVector3 playerPos = {};
+		RVector3 playerStartPos = {};
+		RVector3 playerEndPos = {};
 		/*挟めるブロックがあるかどうかのフラグ*/
 		bool isClip = false;
 		//
