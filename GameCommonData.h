@@ -29,6 +29,7 @@ public: // 静的メンバ変数
 	static NY_Model3D switchOnModel; //起動したスイッチのモデル
 	static NY_Model3D switchOffModel; //起動してないスイッチのモデル
 	static NY_Model3D doorModel; //スイッチで消えるブロックのモデル
+	static NY_Model3D RectModel; //長方形ブロック等のモデル
 
 	static UINT debugBoxGraph;       //仮描画用の箱のテクスチャ
 	static NY_Model3D debugBoxModel; //仮描画用の箱のモデル

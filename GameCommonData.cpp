@@ -15,6 +15,7 @@ NY_Model3D StageBlockModels::goalModel = {};
 NY_Model3D StageBlockModels::switchOnModel = {};
 NY_Model3D StageBlockModels::switchOffModel = {};
 NY_Model3D StageBlockModels::doorModel = {};
+NY_Model3D StageBlockModels::RectModel = {};
 
 UINT StageBlockModels::debugBoxGraph = 0;
 NY_Model3D StageBlockModels::debugBoxModel = {};
@@ -29,6 +30,7 @@ void StageBlockModels::StaticInitiizer()
 	switchOnModel.LoadObjModel("underButtonOn");
 	switchOffModel.LoadObjModel("underButtonOff");
 	doorModel.LoadObjModel("underWood");
+	RectModel.LoadObjModel("underRectangle");
 
 	debugBoxGraph = TexManager::LoadTexture("./Resources/test.jpeg");
 	debugBoxModel.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, debugBoxGraph);

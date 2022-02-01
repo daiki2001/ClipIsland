@@ -48,7 +48,7 @@ UINT TexManager::LoadTexture(const char *filename)
 
     // WICテクスチャのロード
     result = LoadFromWICFile(FileName,
-        WIC_FLAGS_NONE,
+        WIC_FLAGS_IGNORE_SRGB,
         &textureData[useTexIndexNum].metaData,
         textureData[useTexIndexNum].scratchImg);
     textureData[useTexIndexNum].img = textureData[useTexIndexNum].scratchImg.GetImage(0, 0, 0);
