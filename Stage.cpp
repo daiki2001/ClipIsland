@@ -76,6 +76,8 @@ int Stage::Select(const char *filePath, const bool &flag2d)
 	int result = stage.Load(filePath);
 
 	player->position = stage.GetStartPlayerPos();
+	player->startPos = stage.GetStartPlayerPos();
+	player->endPos = stage.GetStartPlayerPos();
 
 	return result;
 }
@@ -133,6 +135,8 @@ int Stage::Clip(bool flag)
 	if (moveFlag[blockType[0]].second == true && moveFlag[blockType[1]].second == true)
 	{
 		clip.playerPos = player->position;
+		clip.playerStartPos = player->startPos;
+		clip.playerEndPos = player->endPos;
 		clip.isClip = true;
 
 		if (flag)
@@ -226,6 +230,8 @@ int Stage::StepBack()
 	}
 
 	player->position = clipBlock.top().playerPos;
+	player->startPos = clipBlock.top().playerStartPos;
+	player->endPos = clipBlock.top().playerEndPos;
 
 	clipBlock.pop();
 
@@ -249,6 +255,8 @@ void Stage::Reset()
 		}
 
 		player->position = stage.GetStartPlayerPos();
+		player->startPos = stage.GetStartPlayerPos();
+		player->endPos = stage.GetStartPlayerPos();
 	}
 }
 
