@@ -94,7 +94,7 @@ void Player::PushBack()
 void Player::Reset()
 {
 	Player::position = RVector3(0.0f, 0.0f, 0.0f);
-	Player::forwardVec = RVector3(1.0f, 0.0f, 0.0f);
+	Player::forwardVec = RVector3(0.0f, 1.0f, 0.0f);
 	Player::playerRot = RVector3(-90, 0, 0);
 	Player::playerCollision = Collision({ -5, -5, -5 }, { 5,5,5 }, position);
 	Player::playerOldPos = RVector3(0.0f, 0.0f, 0.0f);

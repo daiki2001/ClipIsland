@@ -10,7 +10,6 @@ Stage::Stage(Player *player) :
 	flag2d(false)
 {
 }
-int DoorChange[50];
 
 Stage::~Stage()
 {
@@ -207,6 +206,7 @@ int Stage::StepBack()
 		{
 			stage.blocks[i].type = stage.blocks[i].InitType;
 			stage.blocks[i].pos.z = clipBlock.top().backPosZ;
+			stage.ChangeSwitchModel(&GameCommonData::StageBlockModels::switchOffModel);
 		}
 
 		if (clipBlock.top().isVani == false)
@@ -256,6 +256,7 @@ void Stage::Change()
 {
 	using namespace GameCommonData::BlockData;
 
+	int DoorChange[50];
 	ClipBlock swi = {};
 	bool isFlag = false;
 
