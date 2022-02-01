@@ -6,16 +6,34 @@
 
 namespace GameCommonData
 {
-UINT CommonData::boxGraph = 0;
-NY_Model3D CommonData::boxModel = {};
+const RVector3 StageBlockModels::modelRot = { -270.0f, 90.0f, 270.0f };
+const float StageBlockModels::modelScale = 20.0f;
 
-void CommonData::StaticInitiizer()
+NY_Model3D StageBlockModels::moveModel = {};
+NY_Model3D StageBlockModels::stayModel = {};
+NY_Model3D StageBlockModels::goalModel = {};
+NY_Model3D StageBlockModels::switchOnModel = {};
+NY_Model3D StageBlockModels::switchOffModel = {};
+NY_Model3D StageBlockModels::doorModel = {};
+
+UINT StageBlockModels::debugBoxGraph = 0;
+NY_Model3D StageBlockModels::debugBoxModel = {};
+
+void StageBlockModels::StaticInitiizer()
 {
 	using namespace GameCommonData::BlockData;
 
-	boxGraph = TexManager::LoadTexture("./Resources/test.jpeg");
-	boxModel.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, boxGraph);
+	moveModel.LoadObjModel("underMove");
+	stayModel.LoadObjModel("underStay");
+	goalModel.LoadObjModel("underGoal");
+	switchOnModel.LoadObjModel("underButtonOn");
+	switchOffModel.LoadObjModel("underButtonOff");
+	doorModel.LoadObjModel("underWood");
+
+	debugBoxGraph = TexManager::LoadTexture("./Resources/test.jpeg");
+	debugBoxModel.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, debugBoxGraph);
 }
+
 RVector3 ScreenToWorld(const XMFLOAT2& screen)
 {
 	RVector3 returnPos = RVector3(screen.x, screen.y, 0.0f);
