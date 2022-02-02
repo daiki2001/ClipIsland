@@ -157,6 +157,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     }
     int clearSelect = 0;
 
+    /*ステージクリア*/
+    Sprite mpSprite;
+    mpSprite.CreateSprite({ 1280.0f, 720.0f }, { 0.0f, 0.0f }, 0, false, nullptr);
+
     /*プレイヤー*/
     Player player;
 
@@ -300,61 +304,61 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                    stageData.Select("1.boxmap", true);
+                    stageData.Select("stage1.boxmap", true);
                     break;
                 case 1:
-                    stageData.Select("2.boxmap", true);
+                    stageData.Select("stage2.boxmap", true);
                     break;
                 case 2:
-                    stageData.Select("3.boxmap", true);
+                    stageData.Select("stage3.boxmap", true);
                     break;
                 case 3:
-                    stageData.Select("4.boxmap", true);
+                    stageData.Select("stage4.boxmap", true);
                     break;
                 case 4:
-                    stageData.Select("5.boxmap", true);
+                    stageData.Select("stage5.boxmap", true);
                     break;
                 case 5:
-                    stageData.Select("6.boxmap", true);
+                    stageData.Select("stage6.boxmap", true);
                     break;
                 case 6:
-                    stageData.Select("7.boxmap", true);
+                    stageData.Select("stage7.boxmap", true);
                     break;
                 case 7:
-                    stageData.Select("8.boxmap", true);
+                    stageData.Select("stage8.boxmap", true);
                     break;
                 case 8:
-                    stageData.Select("9.boxmap", true);
+                    stageData.Select("stage9.boxmap", true);
                     break;
                 case 9:
-                    stageData.Select("10.boxmap", true);
+                    stageData.Select("stage10.boxmap", true);
                     break;
                 case 10:
-                    stageData.Select("11.boxmap", true);
+                    stageData.Select("stage11.boxmap", true);
                     break;
                 case 11:
-                    stageData.Select("12.boxmap", true);
+                    stageData.Select("stage12.boxmap", true);
                     break;
                 case 12:
-                    stageData.Select("13.boxmap", true);
+                    stageData.Select("stage13.boxmap", true);
                     break;
                 case 13:
-                    stageData.Select("14.boxmap", true);
+                    stageData.Select("stage14.boxmap", true);
                     break;
                 case 14:
-                    stageData.Select("15.boxmap", true);
+                    stageData.Select("stage15.boxmap", true);
                     break;
                 case 15:
-                    stageData.Select("16.boxmap", true);
+                    stageData.Select("stage16.boxmap", true);
                     break;
                 case 16:
-                    stageData.Select("17.boxmap", true);
+                    stageData.Select("stage17.boxmap", true);
                     break;
                 case 17:
-                    stageData.Select("18.boxmap", true);
+                    stageData.Select("stage18.boxmap", true);
                     break;
                 default:
-                    stageData.Select("18.boxmap", true);
+                    stageData.Select("stage18.boxmap", true);
                     break;
                 }
             }
