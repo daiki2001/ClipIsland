@@ -4,6 +4,7 @@
 #include "RVector.h"
 #include <vector>
 #include <stack>
+#include "Audio.h"
 
 class Stage
 {
@@ -72,6 +73,11 @@ private:
 
 public: // ƒƒ“ƒo•Ï”
 	LoadStage stage;
+	SoundData clipSE;
+	SoundData bottunSE;
+	SoundData blockSE;
+	SoundData stepBackSE;
+	SoundData resetSE;
 private:
 	Player* player;
 	stack<ClipBlock> clipBlock;

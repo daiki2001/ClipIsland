@@ -59,6 +59,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     //音
     Audio::Init();
 
+    SoundData titleAndSelectBGM;
+    SoundData gameBGM;
+    SoundData decisionSE;
+    SoundData noDecisionSE;
+    SoundData clearSE;
+
+    titleAndSelectBGM = Audio::LoadSound_wav("./Resources/Sound/TitleAndSelectBack.wav");
+    gameBGM = Audio::LoadSound_wav("./Resources/Sound/GameBack.wav");
+    decisionSE = Audio::LoadSound_wav("./Resources/Sound/DecisionSE.wav");
+    noDecisionSE = Audio::LoadSound_wav("./Resources/Sound/no.wav");
+    clearSE = Audio::LoadSound_wav("./Resources/Sound/ClearSE.wav");
+
 #pragma endregion GameValue
 
     FPS::Get()->Start();
@@ -170,6 +182,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     bool actFlag = false;
     bool actnFlag = false;
     bool doorFlag = false;
+    bool soundFlag = false;
 
     while (true)  // ゲームループ
     {
@@ -182,8 +195,16 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         switch (scene)
         {
         case TITLE:
+            if (soundFlag == false)
+            {
+                Audio::PlayLoadedSound(titleAndSelectBGM);
+            }
+            soundFlag = true;
+
             if (Input::isKeyTrigger(DIK_SPACE))
             {
+                Audio::PlayLoadedSound(decisionSE);
+                soundFlag = false;
                 scene = Scene::SELECT;
             }
 
@@ -214,6 +235,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (stageNumber < openStageCount + clearCount - 1)
                 {
                     stageNumber++;
+                    Audio::PlayLoadedSound(noDecisionSE);
+                }
+                else
+                {
+                    Audio::PlayLoadedSound(decisionSE);
                 }
 
                 if (stageNumber >= stageCount)
@@ -228,6 +254,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (stageNumber < 0)
                 {
                     stageNumber = 0;
+                    Audio::PlayLoadedSound(noDecisionSE);
+                }
+                else
+                {
+                    Audio::PlayLoadedSound(decisionSE);
                 }
             }
             if (Input::isKeyTrigger(DIK_D))
@@ -237,6 +268,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (stageNumber < openStageCount + clearCount - 1)
                 {
                     stageNumber++;
+
+                    Audio::PlayLoadedSound(decisionSE);
+                }
+                else
+                {
+                    Audio::PlayLoadedSound(noDecisionSE);
                 }
 
                 if (stageNumber >= stageCount)
@@ -247,6 +284,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
             if (Input::isKeyTrigger(DIK_SPACE))
             {
+                Audio::StopLoadedSound(titleAndSelectBGM);
+                Audio::PlayLoadedSound(gameBGM);
+
+                player.Tposition = RVector3(0.0f, 0.0f, 0.0f);
+
                 isLoad = true;
             }
 
@@ -258,9 +300,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                    stageData.Select("map00011.boxmap", true);
-                    player.position = { 0.0f, -20.0f, 0.0f };
-                    stageData.Select("map00011.boxmap", true);
+                   // stageData.Select("map00011.boxmap", true);
+                   // player.position = { 0.0f, -20.0f, 0.0f };
+                    stageData.Select("3.boxmap", true);
                     break;
                 case 1:
                     stageData.Select("map2.boxmap", true);
@@ -317,7 +359,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             if (isTutorial)
             {
                 player.playerOldPos = player.position;
-                player.playerCollision.Update(player.position);
+                player.playerCollision.Update(player.Tposition);
                 stageData.Update();
 
                 if (Input::isKeyTrigger(DIK_SPACE))
@@ -387,15 +429,27 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (nFlag == true)
                 {
                    //player.object->position = player.playerOldPos +player.offsetPos;
-                   player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
+                   //player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
+                   player.object->position = player.startPos + player.offsetPos;
                    player.position = player.startPos;
+                   player.playerFlag = false;
+                }
+                else
+                {
+                    player.playerFlag = true;
                 }
                  
                 if (actFlag == true && actnFlag == true)
                 {
                    //player.object->position = player.playerOldPos + player.offsetPos;
-                   player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
+                  // player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
+                    player.object->position = player.startPos + player.offsetPos;
                    player.position = player.startPos;
+                   player.playerFlag = false;
+                }
+                else
+                {
+                    player.playerFlag = true;
                 }
 
                 if (isTutorial == false)
@@ -422,6 +476,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
                 if (player.goalFlag)
                 {
+                    Audio::PlayLoadedSound(clearSE);
+                    Audio::StopLoadedSound(gameBGM);
+                    Audio::PlayLoadedSound(titleAndSelectBGM);
+
                     scene = Scene::GAME_CLEAR;
 
                     if (stageClearFlag[stageNumber] == false)
