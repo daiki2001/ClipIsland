@@ -51,8 +51,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     //カメラ
     NY_Camera* cam = camera;
-    RVector3 eye = { 0.0f, 0.0f, -200.0f };
-    RVector3 target = { 0.0f, 0.0f, 0.0f };
+    RVector3 eye = { 50.0f, 0.0f, -200.0f };
+    RVector3 target = { 50.0f, 0.0f, 0.0f };
     RVector3 up = { 0.0f, 1.0f, 0.0f };
     cam->SetViewStatusEyeTargetUp(eye, target, up);
 

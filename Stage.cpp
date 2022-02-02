@@ -4,10 +4,16 @@
 
 #define EoF (-1) // Error of function
 
+const size_t Stage::maxFlame = 15;
+
 Stage::Stage(Player *player) :
 	stage{},
 	player(player),
-	flag2d(false)
+	flag2d(false),
+	easeNumber{},
+	easeStartPos{},
+	nowFlame(0),
+	isEasing(false)
 {
 }
 
@@ -49,6 +55,50 @@ void Stage::Update()
 			k++;
 		}
 	}
+
+	if (isEasing)
+	{
+		float rate = (float)nowFlame / maxFlame;
+
+		if (rate > 1.0f)
+		{
+			isEasing = false;
+
+			easeNumber.clear();
+			easeStartPos.clear();
+
+			easeNumber.shrink_to_fit();
+			easeStartPos.shrink_to_fit();
+		}
+
+		for (size_t i = 0; i < easeNumber.size(); i++)
+		{
+			if (stage.blocks[easeNumber[i]].number == clipBlock.top().blockNumber1)
+			{
+				if (clipBlock.top().vec1[0] == RVector3(0.0f, 0.0f, 0.0f))
+				{
+					continue;
+				}
+				stage.blocks[easeNumber[i]].pos = Rv3Ease::OutQuad(
+					easeStartPos[i],
+					easeStartPos[i] + clipBlock.top().vec1[0],
+					rate);
+			}
+			else if (stage.blocks[easeNumber[i]].number == clipBlock.top().blockNumber2)
+			{
+				if (clipBlock.top().vec2[0] == RVector3(0.0f, 0.0f, 0.0f))
+				{
+					continue;
+				}
+				stage.blocks[easeNumber[i]].pos = Rv3Ease::OutQuad(
+					easeStartPos[i],
+					easeStartPos[i] + clipBlock.top().vec2[0],
+					rate);
+			}
+		}
+
+		nowFlame++;
+	}
 }
 
 void Stage::Draw()
@@ -86,7 +136,6 @@ int Stage::Clip(bool flag)
 	using namespace GameCommonData::BlockData;
 
 	ClipBlock clip = {};
-	//ClipBlock swi = {};
 
 	int isReturn = 0;
 
@@ -146,31 +195,16 @@ int Stage::Clip(bool flag)
 
 	if (flag)
 	{
+		nowFlame = 0;
+		isEasing = true;
+
 		for (size_t i = 0; i < stage.blocks.size(); i++)
 		{
-			for (size_t j = 0; j < clipBlock.top().vec1.size(); j++)
+			if (stage.blocks[i].number == clipBlock.top().blockNumber1 ||
+				stage.blocks[i].number == clipBlock.top().blockNumber2)
 			{
-				if (stage.blocks[i].number == clipBlock.top().blockNumber1)
-				{
-					if (j > 0)
-					{
-						auto& gate = clip.gateNumber1[j - 1];
-						stage.blocks[i].pos = stage.blocks[gate].pos;
-					}
-					stage.blocks[i].pos += clipBlock.top().vec1[j];
-				}
-			}
-			for (size_t j = 0; j < clipBlock.top().vec2.size(); j++)
-			{
-				if (stage.blocks[i].number == clipBlock.top().blockNumber2)
-				{
-					if (j > 0)
-					{
-						auto& gate = clip.gateNumber2[j - 1];
-						stage.blocks[i].pos = stage.blocks[gate].pos;
-					}
-					stage.blocks[i].pos += clipBlock.top().vec2[j];
-				}
+				easeNumber.push_back(i);
+				easeStartPos.push_back(stage.blocks[i].pos);
 			}
 		}
 	}

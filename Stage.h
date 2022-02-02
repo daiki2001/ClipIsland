@@ -35,6 +35,9 @@ public: // サブクラス
 private: // エイリアス
 	template<class T> using stack = std::stack<T>;
 
+public: // 定数
+	static const size_t maxFlame;
+
 public: // メンバ関数
 	Stage() = delete;
 	Stage(Player* player);
@@ -67,10 +70,15 @@ private:
 	// ブロックを挟む(3d版)
 	int Clip3d(ClipBlock* clip);
 
-private: // メンバ変数
+public: // メンバ変数
+	LoadStage stage;
+private:
 	Player* player;
 	stack<ClipBlock> clipBlock;
 	bool flag2d;
-public:
-	LoadStage stage;
+
+	vector<int> easeNumber;
+	vector<RVector3> easeStartPos;
+	size_t nowFlame;
+	bool isEasing;
 };
