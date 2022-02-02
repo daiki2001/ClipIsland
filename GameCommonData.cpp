@@ -17,8 +17,8 @@ NY_Model3D StageBlockModels::switchOffModel = {};
 NY_Model3D StageBlockModels::doorModel = {};
 NY_Model3D StageBlockModels::RectModel = {};
 
-UINT StageBlockModels::debugBoxGraph = 0;
-NY_Model3D StageBlockModels::debugBoxModel = {};
+UINT StageBlockModels::simpleBlockGraph = 0;
+NY_Model3D StageBlockModels::simpleBlockModel = {};
 
 void StageBlockModels::StaticInitiizer()
 {
@@ -32,8 +32,8 @@ void StageBlockModels::StaticInitiizer()
 	doorModel.LoadObjModel("underWood");
 	RectModel.LoadObjModel("underRectangle");
 
-	debugBoxGraph = TexManager::LoadTexture("./Resources/test.jpeg");
-	debugBoxModel.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, debugBoxGraph);
+	simpleBlockGraph = TexManager::LoadTexture("./Resources/test.jpeg");
+	simpleBlockModel.CreateBoxModel(blockSize / 2.0f, 1.0f, 1.0f, simpleBlockGraph);
 }
 
 RVector3 ScreenToWorld(const XMFLOAT2& screen)

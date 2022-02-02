@@ -8,6 +8,7 @@
 LoadStage::LoadStage() :
 	blocks{},
 	blockColors{},
+	multipleBlockNumber{},
 	moveBlockObj{},
 	moveBlockNumber{},
 	stayBlockObj{},
@@ -239,18 +240,14 @@ int LoadStage::Load(const char* filePath)
 				switch (blocks[blocks.size() - 1].type)
 				{
 				case BlockType::BLOCK:
-					moveBlockObj.push_back(CreateObject3d(&StageBlockModels::moveModel));
+					moveBlockObj.push_back(CreateObject3d(&StageBlockModels::simpleBlockModel));
 					moveBlockNumber.push_back((int)blocks.size() - 1);
 					moveBlockObj[moveBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
-					moveBlockObj[moveBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
-					moveBlockObj[moveBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
 					break;
 				case BlockType::DONT_MOVE_BLOCK:
-					stayBlockObj.push_back(CreateObject3d(&StageBlockModels::stayModel));
+					stayBlockObj.push_back(CreateObject3d(&StageBlockModels::simpleBlockModel));
 					stayBlockNumber.push_back((int)blocks.size() - 1);
 					stayBlockObj[stayBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
-					stayBlockObj[stayBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
-					stayBlockObj[stayBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
 					break;
 				case BlockType::GOAL:
 					goalBlockObj.push_back(CreateObject3d(&StageBlockModels::goalModel));
@@ -270,11 +267,9 @@ int LoadStage::Load(const char* filePath)
 					switchBlockObj[switchBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
 					break;
 				case BlockType::DOOR:
-					doorBlockObj.push_back(CreateObject3d(&StageBlockModels::doorModel));
+					doorBlockObj.push_back(CreateObject3d(&StageBlockModels::simpleBlockModel));
 					doorBlockNumber.push_back((int)blocks.size() - 1);
 					doorBlockObj[doorBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
-					doorBlockObj[doorBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
-					doorBlockObj[doorBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
 					break;
 				case BlockType::WARP_CLOSE_BLOCK:
 				case BlockType::WARP_OPEN_BLOCK:
@@ -312,11 +307,11 @@ int LoadStage::Load(const char* filePath)
 		switch (number)
 		{
 		case BlockType::BLOCK:
-			moveBlockObj[moveBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			moveBlockObj[moveBlockCount]->color = blockColors[number];
 			moveBlockCount++;
 			break;
 		case BlockType::DONT_MOVE_BLOCK:
-			stayBlockObj[stayBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			stayBlockObj[stayBlockCount]->color = blockColors[number];
 			stayBlockCount++;
 			break;
 		case BlockType::GOAL:
@@ -328,7 +323,7 @@ int LoadStage::Load(const char* filePath)
 			switchBlockCount++;
 			break;
 		case BlockType::DOOR:
-			doorBlockObj[doorBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			doorBlockObj[doorBlockCount]->color = blockColors[number];
 			doorBlockCount++;
 			break;
 		case BlockType::WARP_CLOSE_BLOCK:
@@ -341,6 +336,50 @@ int LoadStage::Load(const char* filePath)
 			break;
 		default:
 			break;
+		}
+	}
+
+	blockSortIsNumber(0, (int)blocks.size() - 1);
+
+	int num = INT_MIN;
+	static bool isHit = false;
+	for (size_t i = 0; i < blocks.size(); i++)
+	{
+		if (num == blocks[i].number)
+		{
+			isHit = false;
+			for (size_t j = 0; j < multipleBlockNumber.size(); j++)
+			{
+				if (num == multipleBlockNumber[j])
+				{
+					isHit = true;
+					break;
+				}
+			}
+			if (isHit == false)
+			{
+				multipleBlockNumber.push_back(num);
+			}
+		}
+		else
+		{
+			num = blocks[i].number;
+		}
+	}
+
+	for (size_t i = 0; i < multipleBlockNumber.size(); i++)
+	{
+		moveBlockCount = 0;
+		for (size_t j = 0; j < blocks.size(); j++)
+		{
+			if (blocks[j].type == BlockType::BLOCK)
+			{
+				if (blocks[j].number == multipleBlockNumber[i])
+				{
+					moveBlockObj[moveBlockCount]->color = blockColors[BlockType::START];
+				}
+				moveBlockCount++;
+			}
 		}
 	}
 
@@ -699,4 +738,32 @@ void LoadStage::GetBlocksTypeAll(BlockType blockType, int blocksArray[], size_t 
 			j++;
 		}
 	}
+}
+
+void LoadStage::blockSortIsNumber(int start, int end)
+{
+	int x = start;
+
+	if (start < end)
+	{
+		x = PartitionIsBlockNumber(start, end);
+		blockSortIsNumber(start, x - 1);
+		blockSortIsNumber(x + 1, end);
+	}
+}
+
+int LoadStage::PartitionIsBlockNumber(int p, int r)
+{
+	for (size_t i = p; i < r; i++)
+	{
+		if (blocks[i].number <= blocks[r].number)
+		{
+			GameCommonData::Swap(blocks[p], blocks[i]);
+			p++;
+		}
+	}
+
+	GameCommonData::Swap(blocks[r], blocks[p]);
+
+	return p;
 }
