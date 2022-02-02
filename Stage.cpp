@@ -15,6 +15,11 @@ Stage::Stage(Player *player) :
 	nowFlame(0),
 	isEasing(false)
 {
+	clipSE=Audio::LoadSound_wav("./Resources/Sound/sand.wav");
+	bottunSE = Audio::LoadSound_wav("./Resources/Sound/bottunSE.wav");
+	blockSE = Audio::LoadSound_wav("./Resources/Sound/blockSE.wav");
+	stepBackSE = Audio::LoadSound_wav("./Resources/Sound/RandB.wav");
+	resetSE = Audio::LoadSound_wav("./Resources/Sound/RandB.wav");
 }
 
 Stage::~Stage()
@@ -189,6 +194,8 @@ int Stage::Clip(bool flag)
 
 		if (flag)
 		{
+			Audio::PlayLoadedSound(clipSE);
+			Audio::PlayLoadedSound(blockSE);
 			clipBlock.push(clip);
 		}
 	}
@@ -267,29 +274,33 @@ int Stage::StepBack()
 	}
 	clipBlock.pop();
 
+	Audio::PlayLoadedSound(stepBackSE);
+
 	return 0;
 
 }
 
 void Stage::Reset()
 {
+	
+	stage.Reset();
+
+	while (clipBlock.empty() == false)
 	{
-		stage.Reset();
-
-		while (clipBlock.empty() == false)
-		{
-			clipBlock.pop();
-		}
-
-		for (size_t i = 0; i < stage.blocks.size(); i++)
-		{
-			stage.blocks[i].type = stage.blocks[i].InitType;
-		}
-
-		player->position = stage.GetStartPlayerPos();
-		player->startPos = stage.GetStartPlayerPos();
-		player->endPos = stage.GetStartPlayerPos();
+		clipBlock.pop();
 	}
+
+	for (size_t i = 0; i < stage.blocks.size(); i++)
+	{
+		stage.blocks[i].type = stage.blocks[i].InitType;
+	}
+
+	player->position = stage.GetStartPlayerPos();
+	player->startPos = stage.GetStartPlayerPos();
+	player->endPos = stage.GetStartPlayerPos();
+
+	Audio::PlayLoadedSound(resetSE);
+	
 }
 
 void Stage::Change()
@@ -318,6 +329,8 @@ void Stage::Change()
 		swi.playerPos = player->position;
 		swi.playerStartPos = player->startPos;
 		swi.playerEndPos = player->endPos;
+
+		Audio::PlayLoadedSound(bottunSE);
 
 		clipBlock.push(swi);
 	}

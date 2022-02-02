@@ -2,6 +2,7 @@
 #include "RVector.h"
 #include "NY_Object3DMgr.h"
 #include "Collision.h"
+#include "Audio.h"
 
 class Player
 {
@@ -32,10 +33,15 @@ public:
 
 	float timeRate;
 
+	RVector3 Tposition;
+	bool playerFlag;
+
 	Collision playerCollision;
 
 	const RVector3 offsetPos = RVector3(0, 0, -20); //描画ずれを補正するために加算する
 	Object3d *object; //プレイヤーのオブジェクト
+
+	SoundData walkSE;
 private:
 	NY_Model3D model; //プレイヤーのモデル
 };

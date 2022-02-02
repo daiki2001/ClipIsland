@@ -11,7 +11,8 @@ Player::Player() :
 	model{},
 	object(nullptr),
 	playerCollision(RVector3(-5, -5, -5) + position, RVector3(5, 5, 5) + position, position),
-	playerOldPos(0.0f, 0.0f, 0.0f)
+	playerOldPos(0.0f, 0.0f, 0.0f),
+	Tposition(0.0f, 0.0f, 0.0f)
 {
 	model.LoadObjModel("player");
 	object = CreateObject3d(&model);
@@ -21,7 +22,9 @@ Player::Player() :
 	object->color = { 1, 1, 1, 1 };
 	goalFlag = false;
 	moveFlag = false;
+	playerFlag = true;
 	timeRate = 0;
+	walkSE=Audio::LoadSound_wav("./Resources/Sound/walkSE.wav");
 }
 
 //時間計測に必要なデータ
@@ -57,6 +60,10 @@ void Player::Update()
 			startPos = playerOldPos;
 			endPos = playerOldPos + forwardVec * blockSize;
 
+			Tposition = endPos;
+
+			Audio::PlayLoadedSound(walkSE);
+
 		}
 		else if (Input::isKeyTrigger(DIK_A))
 		{
@@ -68,6 +75,10 @@ void Player::Update()
 			playerRot = RVector3(-180, 90, 270);
 			startPos = playerOldPos;
 			endPos = playerOldPos + forwardVec * blockSize;
+
+			Tposition = endPos;
+
+			Audio::PlayLoadedSound(walkSE);
 		}
 		else if (Input::isKeyTrigger(DIK_S))
 		{
@@ -79,6 +90,10 @@ void Player::Update()
 			playerRot = RVector3(-270, 90, 270);
 			startPos = playerOldPos;
 			endPos = playerOldPos + forwardVec * blockSize;
+
+			Tposition = endPos;
+
+			Audio::PlayLoadedSound(walkSE);
 		}
 		else if (Input::isKeyTrigger(DIK_D))
 		{
@@ -90,6 +105,10 @@ void Player::Update()
 			playerRot = RVector3(-180, -90, 90);
 			startPos = playerOldPos;
 			endPos = playerOldPos + forwardVec * blockSize;
+
+			Tposition = endPos;
+
+			Audio::PlayLoadedSound(walkSE);
 		}
 
 	}
@@ -105,14 +124,33 @@ void Player::Update()
 	}
 
 	timeRate = nowFrame / maxFrame;
+
 	if (moveFlag == true)
 	{
 		position = Rv3Ease::lerp(startPos, endPos, timeRate);
-	}
-	playerCollision.Update(position);
+	} 
 
-	object->position = position;
-	object->rotation = playerRot;
+	playerCollision.Update(Tposition);
+
+	if (playerFlag == true)
+	{
+		object->position = position;
+		object->rotation = playerRot;
+	}
+	else
+	{
+		position = startPos;
+		object->position = startPos;
+		object->rotation = playerRot;
+	}
+
+	//if (moveFlag == true)
+	//{
+	//	position = Rv3Ease::lerp(startPos, endPos, timeRate);
+	//}
+
+	//object->position = position;
+	//object->rotation = playerRot;
 
 	object->position += offsetPos;
 }
@@ -136,6 +174,7 @@ void Player::Reset()
 	Player::playerOldPos = RVector3(0.0f, 0.0f, 0.0f);
 	Player::startPos = RVector3(0.0f, 0.0f, 0.0f);
 	Player::endPos = Player::position;
+	Player::Tposition = Player::position;
 	object->position = RVector3(0.0f, 0.0f, 0.0f);
 	object->scale = { 10.0f, 10.0f, 10.0f };
 	object->rotation = RVector3(-90, 0, 0);
