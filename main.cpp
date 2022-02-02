@@ -79,8 +79,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     /*背景*/
     UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.jpg");
+    UINT flontgroundGraph = TexManager::LoadTexture("./Resources/background.png");
     Sprite background;
+    Sprite flontground;
     background.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true, nullptr);
+    flontground.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true, nullptr);
 
     /*カーソル*/
     UINT cursorGraph = TexManager::LoadTexture("./Resources/cursor.png");
@@ -93,7 +96,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     title.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, titleGraph, true, nullptr);
 
     /*ステージセレクト*/
-    UINT selectGraph = TexManager::LoadTexture("./Resources/STAGESELECT.png");
+    UINT selectGraph = TexManager::LoadTexture("./Resources/STAGESELECT.jpg");
     Sprite select;
     select.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, selectGraph, true, nullptr);
     const int selectMap[] = {
@@ -137,13 +140,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     /*チュートリアル*/
     UINT tutorialGraph[] =
     {
-        TexManager::LoadTexture("./Resources/Tutorial1.png"),
-        TexManager::LoadTexture("./Resources/Tutorial2.png"),
+        TexManager::LoadTexture("./Resources/Rule.jpg"),
     };
     Sprite tutorial[sizeof(tutorialGraph) / sizeof(tutorialGraph[0])];
     for (size_t i = 0; i < sizeof(tutorialGraph) / sizeof(tutorialGraph[0]); i++)
     {
-        tutorial[i].CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, tutorialGraph[i], true, nullptr);
+        tutorial[i].CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, tutorialGraph[i], false, nullptr);
     }
     int tutorialCount = 0;
     bool isTutorial = true;
@@ -548,11 +550,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 SeaParticle::Get()->Draw();
             }
 
-            RAKI_DX12B_GET->StartDrawBackbuffer();
+            Raki_DX12B::Get()->StartDrawBackbuffer();
 
             // 前景描画
             mpSprite.DrawMPRender();
             SpriteManager::Get()->SetCommonBeginDraw();
+            flontground.Draw();
 
             // 描画終了
             Raki_DX12B::Get()->CloseDraw();
