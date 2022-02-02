@@ -43,9 +43,16 @@ public: // メンバ関数
 	// ブロックの情報を種類を指定して全て取得
 	void GetBlocksTypeAll(BlockType blockType, int blocksArray[], size_t arraySize);
 
+	// ブロックを塊ごとでソートする関数
+	void blockSortIsNumber(int start, int end);
+private:
+	// パーテーションを行う関数
+	int PartitionIsBlockNumber(int p, int r);
+
 public: // メンバ変数
-	vector<Data> blocks;          //ブロックの情報
-	vector<XMFLOAT4> blockColors; //ブロックの色
+	vector<Data> blocks;             //ブロックの情報
+	vector<XMFLOAT4> blockColors;    //ブロックの色
+	vector<int> multipleBlockNumber; //ブロックが複数個有るやつの番号
 
 	vector<Warp*> warpBlock; //ワープブロックの情報
 	size_t openGateCount;

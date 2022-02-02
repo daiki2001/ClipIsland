@@ -7,8 +7,8 @@
 const size_t Stage::maxFlame = 15;
 
 Stage::Stage(Player *player) :
-	stage{},
 	player(player),
+	stage{},
 	flag2d(false),
 	easeNumber{},
 	easeStartPos{},
