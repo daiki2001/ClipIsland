@@ -63,7 +63,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     FPS::Get()->Start();
 
-    GameCommonData::CommonData::StaticInitiizer();
+    GameCommonData::StageBlockModels::StaticInitiizer();
 
     /*背景*/
     UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.png");
@@ -310,6 +310,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 if (stageData.stage.blocks[i].type == BlockType::SWITCH && AB == true)
                 {
                     stageData.Change();
+                    stageData.stage.ChangeSwitchModel(&StageBlockModels::switchOnModel);
                 }
 
                 if (stageData.stage.blocks[i].type == BlockType::NONE)

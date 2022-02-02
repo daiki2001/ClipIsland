@@ -46,7 +46,7 @@ void Warp::CreateObj(const RVector3& pos)
 		object = nullptr;
 	}
 
-	this->object = CreateObject3d(&GameCommonData::CommonData::boxModel);
+	this->object = CreateObject3d(&GameCommonData::StageBlockModels::debugBoxModel);
 	this->object->position = pos;
 	this->object->color = closeColor;
 	this->isOpen = false;
