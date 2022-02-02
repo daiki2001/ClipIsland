@@ -51,8 +51,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
     //カメラ
     NY_Camera* cam = camera;
-    RVector3 eye = { 50.0f, 0.0f, -200.0f };
-    RVector3 target = { 50.0f, 0.0f, 0.0f };
+    RVector3 eye = { 0.0f, 0.0f, -250.0f };
+    RVector3 target = { 0.0f, 0.0f, 0.0f };
     RVector3 up = { 0.0f, 1.0f, 0.0f };
     cam->SetViewStatusEyeTargetUp(eye, target, up);
 
@@ -78,7 +78,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     GameCommonData::StageBlockModels::StaticInitiizer();
 
     /*背景*/
-    UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.png");
+    UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.jpg");
     Sprite background;
     background.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true, nullptr);
 
@@ -300,39 +300,61 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                   // stageData.Select("map00011.boxmap", true);
-                   // player.position = { 0.0f, -20.0f, 0.0f };
-                    stageData.Select("3.boxmap", true);
+                    stageData.Select("1.boxmap", true);
                     break;
                 case 1:
-                    stageData.Select("map2.boxmap", true);
+                    stageData.Select("2.boxmap", true);
                     break;
                 case 2:
-                    stageData.Select("map3.boxmap", true);
+                    stageData.Select("3.boxmap", true);
                     break;
                 case 3:
-                    stageData.Select("map4.boxmap", true);
+                    stageData.Select("4.boxmap", true);
                     break;
                 case 4:
-                    stageData.Select("map5.boxmap", true);
+                    stageData.Select("5.boxmap", true);
                     break;
                 case 5:
-                    stageData.Select("map6.boxmap", true);
+                    stageData.Select("6.boxmap", true);
                     break;
                 case 6:
+                    stageData.Select("7.boxmap", true);
+                    break;
                 case 7:
+                    stageData.Select("8.boxmap", true);
+                    break;
                 case 8:
+                    stageData.Select("9.boxmap", true);
+                    break;
                 case 9:
+                    stageData.Select("10.boxmap", true);
+                    break;
                 case 10:
+                    stageData.Select("11.boxmap", true);
+                    break;
                 case 11:
+                    stageData.Select("12.boxmap", true);
+                    break;
                 case 12:
+                    stageData.Select("13.boxmap", true);
+                    break;
                 case 13:
+                    stageData.Select("14.boxmap", true);
+                    break;
                 case 14:
+                    stageData.Select("15.boxmap", true);
+                    break;
                 case 15:
+                    stageData.Select("16.boxmap", true);
+                    break;
                 case 16:
+                    stageData.Select("17.boxmap", true);
+                    break;
                 case 17:
+                    stageData.Select("18.boxmap", true);
+                    break;
                 default:
-                    stageData.Select("map1.boxmap", true);
+                    stageData.Select("18.boxmap", true);
                     break;
                 }
             }
