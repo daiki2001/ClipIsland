@@ -946,57 +946,59 @@ int Stage::Clip2d(ClipBlock *clip)
 				keepVec = clip->vec1[l];
 				keepVec = keepVec.norm();
 
-				for (size_t j = 1; keepVec * (const float)j != clip->vec1[l]; j++)
-				{
-					for (size_t k = 0; k < stage.blocks.size(); k++)
+				if (isEasing != true) {
+					for (size_t j = 1; keepVec * (const float)j != clip->vec1[l]; j++)
 					{
-						if (stage.blocks[k].number == stage.blocks[i].number)
+						for (size_t k = 0; k < stage.blocks.size(); k++)
 						{
-							continue;
-						}
-
-						if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
-						{
-							continue;
-						}
-
-						if (tmp[k].pos == tmp[i].pos ||
-							tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
-						{
-							continue;
-						}
-
-						if (clip->vec1[l].x != 0.0f)
-						{
-							if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y)
+							if (stage.blocks[k].number == stage.blocks[i].number)
 							{
 								continue;
 							}
-							if ((tmp[k].pos.x - tmp[i].pos.x) > clip->vec1[l].x)
-							{
-								isEnd = true;
-								clip->vec1[l] = tmp[k].pos - tmp[i].pos;
-								break;
-							}
-						}
-						if (clip->vec1[l].y != 0.0f)
-						{
-							if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y)
+
+							if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 							{
 								continue;
 							}
-							if ((tmp[k].pos.y - tmp[i].pos.y) > clip->vec1[l].y)
+
+							if (tmp[k].pos == tmp[i].pos ||
+								tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 							{
-								isEnd = true;
-								clip->vec1[l] = tmp[k].pos - tmp[i].pos;
-								break;
+								continue;
+							}
+
+							if (clip->vec1[l].x != 0.0f)
+							{
+								if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y)
+								{
+									continue;
+								}
+								if ((tmp[k].pos.x - tmp[i].pos.x) > clip->vec1[l].x)
+								{
+									isEnd = true;
+									clip->vec1[l] = tmp[k].pos - tmp[i].pos;
+									break;
+								}
+							}
+							if (clip->vec1[l].y != 0.0f)
+							{
+								if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y)
+								{
+									continue;
+								}
+								if ((tmp[k].pos.y - tmp[i].pos.y) > clip->vec1[l].y)
+								{
+									isEnd = true;
+									clip->vec1[l] = tmp[k].pos - tmp[i].pos;
+									break;
+								}
 							}
 						}
-					}
-					if (isEnd)
-					{
-						isEnd = false;
-						break;
+						if (isEnd)
+						{
+							isEnd = false;
+							break;
+						}
 					}
 				}
 			}
@@ -1013,57 +1015,59 @@ int Stage::Clip2d(ClipBlock *clip)
 				keepVec = clip->vec2[l];
 				keepVec = keepVec.norm();
 		
-				for (size_t j = 1; keepVec * blockSize * (const float)j != clip->vec2[l]; j++)
-				{
-					for (size_t k = 0; k < stage.blocks.size(); k++)
+				if (isEasing != true) {
+					for (size_t j = 1; keepVec * blockSize * (const float)j != clip->vec2[l]; j++)
 					{
-						if (stage.blocks[k].number == stage.blocks[i].number)
+						for (size_t k = 0; k < stage.blocks.size(); k++)
 						{
-							continue;
-						}
-
-						if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
-						{
-							continue;
-						}
-
-						if (tmp[k].pos == tmp[i].pos ||
-							tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
-						{
-							continue;
-						}
-
-						if (clip->vec2[l].x != 0.0f)
-						{
-							if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y)
+							if (stage.blocks[k].number == stage.blocks[i].number)
 							{
 								continue;
 							}
-							if ((tmp[k].pos.x - tmp[i].pos.x) < clip->vec2[l].x)
-							{
-								isEnd = true;
-								clip->vec2[l] = tmp[k].pos - tmp[i].pos;
-								break;
-							}
-						}
-						if (clip->vec2[l].y != 0.0f)
-						{
-							if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y)
+
+							if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 							{
 								continue;
 							}
-							if ((tmp[k].pos.y - tmp[i].pos.y) < clip->vec2[l].y)
+
+							if (tmp[k].pos == tmp[i].pos ||
+								tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 							{
-								isEnd = true;
-								clip->vec2[l] = tmp[k].pos - tmp[i].pos;
-								break;
+								continue;
+							}
+
+							if (clip->vec2[l].x != 0.0f)
+							{
+								if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y)
+								{
+									continue;
+								}
+								if ((tmp[k].pos.x - tmp[i].pos.x) < clip->vec2[l].x)
+								{
+									isEnd = true;
+									clip->vec2[l] = tmp[k].pos - tmp[i].pos;
+									break;
+								}
+							}
+							if (clip->vec2[l].y != 0.0f)
+							{
+								if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y)
+								{
+									continue;
+								}
+								if ((tmp[k].pos.y - tmp[i].pos.y) < clip->vec2[l].y)
+								{
+									isEnd = true;
+									clip->vec2[l] = tmp[k].pos - tmp[i].pos;
+									break;
+								}
 							}
 						}
-					}
-					if (isEnd)
-					{
-						isEnd = false;
-						break;
+						if (isEnd)
+						{
+							isEnd = false;
+							break;
+						}
 					}
 				}
 			}
@@ -1301,57 +1305,59 @@ int Stage::Clip3d(ClipBlock *clip)
 			keepVec = clip->vec1[clip->vec1.size() - 1];
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * (const float)j != clip->vec1[clip->vec1.size() - 1]; j++)
-			{
-				for (size_t k = 0; k < stage.blocks.size(); k++)
+			if (isEasing != true) {
+				for (size_t j = 1; keepVec * (const float)j != clip->vec1[clip->vec1.size() - 1]; j++)
 				{
-					if (stage.blocks[k].number == stage.blocks[i].number)
+					for (size_t k = 0; k < stage.blocks.size(); k++)
 					{
-						continue;
-					}
-
-					if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
-					{
-						continue;
-					}
-
-					if (tmp[k].pos == tmp[i].pos ||
-						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
-					{
-						continue;
-					}
-
-					if (clip->vec1[clip->vec1.size() - 1].x != 0.0f)
-					{
-						if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.y != tmp[i].pos.y)
+						if (stage.blocks[k].number == stage.blocks[i].number)
 						{
 							continue;
 						}
-						if ((tmp[k].pos.x - tmp[i].pos.x) > clip->vec1[clip->vec1.size() - 1].x)
-						{
-							isEnd = true;
-							clip->vec1[clip->vec1.size() - 1] = tmp[k].pos - tmp[i].pos;
-							break;
-						}
-					}
-					if (clip->vec1[clip->vec1.size() - 1].z != 0.0f)
-					{
-						if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.y == tmp[i].pos.y)
+
+						if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 						{
 							continue;
 						}
-						if ((tmp[k].pos.z - tmp[i].pos.z) > clip->vec1[clip->vec1.size() - 1].z)
+
+						if (tmp[k].pos == tmp[i].pos ||
+							tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 						{
-							isEnd = true;
-							clip->vec1[clip->vec1.size() - 1] = tmp[k].pos - tmp[i].pos;
-							break;
+							continue;
+						}
+
+						if (clip->vec1[clip->vec1.size() - 1].x != 0.0f)
+						{
+							if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.y != tmp[i].pos.y)
+							{
+								continue;
+							}
+							if ((tmp[k].pos.x - tmp[i].pos.x) > clip->vec1[clip->vec1.size() - 1].x)
+							{
+								isEnd = true;
+								clip->vec1[clip->vec1.size() - 1] = tmp[k].pos - tmp[i].pos;
+								break;
+							}
+						}
+						if (clip->vec1[clip->vec1.size() - 1].z != 0.0f)
+						{
+							if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.y == tmp[i].pos.y)
+							{
+								continue;
+							}
+							if ((tmp[k].pos.z - tmp[i].pos.z) > clip->vec1[clip->vec1.size() - 1].z)
+							{
+								isEnd = true;
+								clip->vec1[clip->vec1.size() - 1] = tmp[k].pos - tmp[i].pos;
+								break;
+							}
 						}
 					}
-				}
-				if (isEnd)
-				{
-					isEnd = false;
-					break;
+					if (isEnd)
+					{
+						isEnd = false;
+						break;
+					}
 				}
 			}
 		}
@@ -1365,57 +1371,59 @@ int Stage::Clip3d(ClipBlock *clip)
 			keepVec = clip->vec2[clip->vec2.size() - 1];
 			keepVec = keepVec.norm();
 
-			for (size_t j = 1; keepVec * (const float)j != clip->vec2[clip->vec2.size() - 1]; j++)
-			{
-				for (size_t k = 0; k < stage.blocks.size(); k++)
+			if (isEasing != true) {
+				for (size_t j = 1; keepVec * (const float)j != clip->vec2[clip->vec2.size() - 1]; j++)
 				{
-					if (stage.blocks[k].number == stage.blocks[i].number)
+					for (size_t k = 0; k < stage.blocks.size(); k++)
 					{
-						continue;
-					}
-
-					if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
-					{
-						continue;
-					}
-
-					if (tmp[k].pos == tmp[i].pos ||
-						tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
-					{
-						continue;
-					}
-
-					if (clip->vec2[clip->vec2.size() - 1].x != 0.0f)
-					{
-						if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.z != tmp[i].pos.z)
+						if (stage.blocks[k].number == stage.blocks[i].number)
 						{
 							continue;
 						}
-						if ((tmp[k].pos.x - tmp[i].pos.x) < clip->vec2[clip->vec2.size() - 1].x)
-						{
-							isEnd = true;
-							clip->vec2[clip->vec2.size() - 1] = tmp[k].pos - tmp[i].pos;
-							break;
-						}
-					}
-					if (clip->vec2[clip->vec2.size() - 1].z != 0.0f)
-					{
-						if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y || tmp[k].pos.z == tmp[i].pos.z)
+
+						if (stage.blocks[k].type < 0 || caughtFlag[stage.blocks[k].type].second == false)
 						{
 							continue;
 						}
-						if ((tmp[k].pos.z - tmp[i].pos.z) < clip->vec2[clip->vec2.size() - 1].z)
+
+						if (tmp[k].pos == tmp[i].pos ||
+							tmp[k].pos != tmp[i].pos + keepVec * blockSize * (const float)j)
 						{
-							isEnd = true;
-							clip->vec2[clip->vec2.size() - 1] = tmp[k].pos - tmp[i].pos;
-							break;
+							continue;
+						}
+
+						if (clip->vec2[clip->vec2.size() - 1].x != 0.0f)
+						{
+							if (tmp[k].pos.x == tmp[i].pos.x || tmp[k].pos.y != tmp[i].pos.y || tmp[k].pos.z != tmp[i].pos.z)
+							{
+								continue;
+							}
+							if ((tmp[k].pos.x - tmp[i].pos.x) < clip->vec2[clip->vec2.size() - 1].x)
+							{
+								isEnd = true;
+								clip->vec2[clip->vec2.size() - 1] = tmp[k].pos - tmp[i].pos;
+								break;
+							}
+						}
+						if (clip->vec2[clip->vec2.size() - 1].z != 0.0f)
+						{
+							if (tmp[k].pos.x != tmp[i].pos.x || tmp[k].pos.y == tmp[i].pos.y || tmp[k].pos.z == tmp[i].pos.z)
+							{
+								continue;
+							}
+							if ((tmp[k].pos.z - tmp[i].pos.z) < clip->vec2[clip->vec2.size() - 1].z)
+							{
+								isEnd = true;
+								clip->vec2[clip->vec2.size() - 1] = tmp[k].pos - tmp[i].pos;
+								break;
+							}
 						}
 					}
-				}
-				if (isEnd)
-				{
-					isEnd = false;
-					break;
+					if (isEnd)
+					{
+						isEnd = false;
+						break;
+					}
 				}
 			}
 		}
