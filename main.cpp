@@ -70,12 +70,26 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     Sprite background;
     background.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true);
 
+    /*カーソル*/
+    UINT cursorGraph = TexManager::LoadTexture("./Resources/cursor.png");
+    Sprite cursor;
+    cursor.CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, cursorGraph, false);
+
     /*タイトル*/
     UINT titleGraph = TexManager::LoadTexture("./Resources/Title.png");
     Sprite title;
     title.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, titleGraph, true);
 
     /*ステージセレクト*/
+    UINT selectGraph = TexManager::LoadTexture("./Resources/STAGESELECT.png");
+    Sprite select;
+    select.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, selectGraph, true);
+    const int selectMap[] = {
+        2,3,
+        1,4,
+        0,5,
+    };
+    const size_t stageMax = sizeof(selectMap) / sizeof(selectMap[0]) * 3;
     UINT stageGraph[] =
     {
         TexManager::LoadTexture("./Resources/stage1.png"),
@@ -106,6 +120,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     arrowR.spdata.position.x = Raki_WinAPI::window_width - 200.0f;
     arrowR.spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
     arrowR.UpdateSprite();
+    bool isLoad = false;
 
     /*チュートリアル*/
     UINT tutorialGraph[] =
@@ -128,6 +143,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     {
         stageClearFlag[i] = false;
     }
+    int clearSelect = 0;
 
     /*プレイヤー*/
     Player player;
@@ -182,6 +198,29 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             Raki_DX12B::Get()->EndDraw();
             break;
         case SELECT:
+            if (Input::isKeyTrigger(DIK_W))
+            {
+                stageNumber--;
+
+                if (stageNumber < 0)
+                {
+                    stageNumber = 0;
+                }
+            }
+            if (Input::isKeyTrigger(DIK_S))
+            {
+                static const size_t openStageCount = 3;
+
+                if (stageNumber < openStageCount + clearCount - 1)
+                {
+                    stageNumber++;
+                }
+
+                if (stageNumber >= stageCount)
+                {
+                    stageNumber = stageCount - 1;
+                }
+            }
             if (Input::isKeyTrigger(DIK_A))
             {
                 stageNumber--;
@@ -208,7 +247,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
             if (Input::isKeyTrigger(DIK_SPACE))
             {
+                isLoad = true;
+            }
+
+            if (isLoad)
+            {
                 scene = Scene::GAME_MAIN;
+                isLoad = false;
 
                 switch (stageNumber)
                 {
@@ -232,6 +277,18 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 case 5:
                     stageData.Select("map6.boxmap", true);
                     break;
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
                 default:
                     stageData.Select("map1.boxmap", true);
                     break;
@@ -373,6 +430,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                         clearCount++;
                     }
 
+                    clearSelect = 0;
                     player.goalFlag = false;
                 }
             }
@@ -396,13 +454,13 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             NY_Object3DManager::Get()->SetCommonBeginDrawObject3D();
             if (isTutorial == false)
             {
-                // パーティクル描画
-                StageMoveParticle::Get()->Draw();
-                SeaParticle::Get()->Draw();
-
                 // オブジェクト描画
                 player.Draw();
                 stageData.Draw();
+
+                // パーティクル描画
+                StageMoveParticle::Get()->Draw();
+                SeaParticle::Get()->Draw();
             }
 
             // 前景描画
@@ -415,8 +473,86 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             scene = Scene::SELECT;
             break;
         case GAME_CLEAR:
-            scene = Scene::SELECT;
+        {
+            stage[0].spdata.position = {
+                (float)Raki_WinAPI::window_width / 2.0f - 150.0f,
+                (float)Raki_WinAPI::window_height / 2.0f, 0.0f };
+            stage[1].spdata.position = {
+                (float)Raki_WinAPI::window_width / 2.0f + 150.0f,
+                (float)Raki_WinAPI::window_height / 2.0f, 0.0f };
+
+            if ((stageNumber + 1) >= stageMax)
+            {
+                clearSelect = 1;
+            }
+
+            if (Input::isKeyTrigger(DIK_A))
+            {
+                clearSelect--;
+
+                if (clearSelect < 0)
+                {
+                    clearSelect = 0;
+                }
+                if ((stageNumber + 1) >= stageMax && clearSelect < 1)
+                {
+                    clearSelect = 1;
+                }
+            }
+            if (Input::isKeyTrigger(DIK_D))
+            {
+                clearSelect++;
+
+                if (clearSelect > 1)
+                {
+                    clearSelect = 1;
+                }
+            }
+
+            cursor.spdata.position = {
+                (float)Raki_WinAPI::window_width / 2.0f - 150.0f + 300.0f * clearSelect,
+                (float)Raki_WinAPI::window_height / 2.0f, 0.0f };
+
+            if (Input::isKeyTrigger(DIK_SPACE))
+            {
+                if (clearSelect == 0)
+                {
+                    scene = Scene::SELECT;
+                    isLoad = true;
+                    stageNumber++;
+                }
+                else if (clearSelect == 1)
+                {
+                    scene = Scene::SELECT;
+
+                    stage[0].spdata.position = {
+                        (float)Raki_WinAPI::window_width / 2.0f,
+                        (float)Raki_WinAPI::window_height / 2.0f, 0.0f };
+                    stage[1].spdata.position = {
+                        (float)Raki_WinAPI::window_width / 2.0f,
+                        (float)Raki_WinAPI::window_height / 2.0f, 0.0f };
+
+                }
+            }
+
+            stage[0].UpdateSprite();
+            stage[1].UpdateSprite();
+            cursor.UpdateSprite();
+
+            // 描画開始
+            Raki_DX12B::Get()->StartDraw();
+
+            // スプライト描画
+            SpriteManager::Get()->SetCommonBeginDraw();
+            stage[0].Draw();
+            stage[1].Draw();
+            cursor.Draw();
+
+            // 描画終了
+            Raki_DX12B::Get()->EndDraw();
+
             break;
+        }
         default:
             break;
         }
