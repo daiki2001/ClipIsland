@@ -210,6 +210,7 @@ int Stage::StepBack()
 		{
 			stage.blocks[i].type = stage.blocks[i].InitType;
 			stage.blocks[i].pos.z = clipBlock.top().backPosZ;
+			player->position = clipBlock.top().vaniPos;
 			stage.ChangeSwitchModel(&GameCommonData::StageBlockModels::switchOffModel);
 		}
 
@@ -226,13 +227,10 @@ int Stage::StepBack()
 					stage.blocks[i].pos -= clipBlock.top().vec2[j];
 				}
 			}
+			player->endPos = clipBlock.top().playerEndPos;
+			player->position = clipBlock.top().playerPos;
 		}
 	}
-
-	player->position = clipBlock.top().playerPos;
-	player->startPos = clipBlock.top().playerStartPos;
-	player->endPos = clipBlock.top().playerEndPos;
-
 	clipBlock.pop();
 
 	return 0;
@@ -282,6 +280,10 @@ void Stage::Change()
 	{
 		swi.isVani = true;
 		swi.backPosZ = 0;
+		swi.vaniPos = player->startPos;
+		swi.playerPos = player->position;
+		swi.playerStartPos = player->startPos;
+		swi.playerEndPos = player->endPos;
 
 		clipBlock.push(swi);
 	}
