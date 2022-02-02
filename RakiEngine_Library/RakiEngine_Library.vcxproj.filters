@@ -259,6 +259,9 @@
     <FxCompile Include="Shaders\mpPixelShader.hlsl">
       <Filter>リソース ファイル\mpShaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\mpEffectPixelShader.hlsl">
+      <Filter>リソース ファイル\Sprite</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\OBJShaderHeader.hlsli">

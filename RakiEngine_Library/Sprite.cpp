@@ -3,13 +3,15 @@
 
 #include "TexManager.h"
 
+#include "Raki_DX12B.h"
+
 void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool adjustResourceFlag, uvAnimData *animData)
 {
 	HRESULT result;
 
     if (animData != nullptr) {
         this->animData = animData;
-        //é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
+        //’¸“_ƒf[ƒ^
         SpriteVertex vertices[] = {
             {{0.0f,0.0f,0.0f},this->animData->GetOffset().offsetLT},
             {{0.0f,0.0f,0.0f},this->animData->GetOffset().offsetRT},
@@ -23,9 +25,9 @@ void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool 
         spdata.vertices[3] = vertices[3];
     }
     else {
-        //å¼•æ•°ãŒãƒŒãƒ«ãªã‚‰ãƒŒãƒ«ã‚’ç›´æ¥å…¥ã‚Œã‚‹
+        //ˆø”‚ªƒkƒ‹‚È‚çƒkƒ‹‚ğ’¼Ú“ü‚ê‚é
         this->animData = nullptr;
-        //é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿
+        //’¸“_ƒf[ƒ^
         SpriteVertex vertices[] = {
             {{0.0f,0.0f,0.0f},{0.0f,0.0f}},
             {{0.0f,0.0f,0.0f},{1.0f,0.0f}},
@@ -39,57 +41,57 @@ void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool 
         spdata.vertices[3] = vertices[3];
     }
 
-    //ãƒªã‚½ãƒ¼ã‚¹IDè¨­å®š
+    //ƒŠƒ\[ƒXIDİ’è
     spdata.texNumber = resourceID;
 
-    //ã‚¢ãƒ³ã‚«ãƒ¼ãƒã‚¤ãƒ³ãƒˆã®ã‚³ãƒ”ãƒ¼
+    //ƒAƒ“ƒJ[ƒ|ƒCƒ“ƒg‚ÌƒRƒs[
     spdata.anchorPoint = anchor;
 
 
 
-	//é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿å…¨ä½“ã®ã‚µã‚¤ã‚º = é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ä¸€ã¤åˆ†ã®ã‚µã‚¤ã‚º * é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿ã®è¦ç´ æ•°
+	//’¸“_ƒf[ƒ^‘S‘Ì‚ÌƒTƒCƒY = ’¸“_ƒf[ƒ^ˆê‚Â•ª‚ÌƒTƒCƒY * ’¸“_ƒf[ƒ^‚Ì—v‘f”
 	UINT sizeVB = static_cast<UINT>(sizeof(SpriteVertex) * _countof(spdata.vertices));
 
-	//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
-    D3D12_HEAP_PROPERTIES heapprop{}; //ãƒ’ãƒ¼ãƒ—è¨­å®š
-    heapprop.Type = D3D12_HEAP_TYPE_UPLOAD; //GPUã¸ã®è»¢é€ç”¨
-    D3D12_RESOURCE_DESC resdesc{}; //ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
+	//’¸“_ƒoƒbƒtƒ@¶¬
+    D3D12_HEAP_PROPERTIES heapprop{}; //ƒq[ƒvİ’è
+    heapprop.Type = D3D12_HEAP_TYPE_UPLOAD; //GPU‚Ö‚Ì“]‘——p
+    D3D12_RESOURCE_DESC resdesc{}; //ƒŠƒ\[ƒXİ’è
     resdesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-    resdesc.Width = sizeVB; //é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿å…¨ä½“ã®ã‚µã‚¤ã‚º
+    resdesc.Width = sizeVB; //’¸“_ƒf[ƒ^‘S‘Ì‚ÌƒTƒCƒY
     resdesc.Height = 1;
     resdesc.DepthOrArraySize = 1;
     resdesc.MipLevels = 1;
     resdesc.SampleDesc.Count = 1;
     resdesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-    //é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
+    //’¸“_ƒoƒbƒtƒ@‚Ì¶¬
     result = SpriteManager::Get()->dev->CreateCommittedResource(
-        &heapprop, //ãƒ’ãƒ¼ãƒ—è¨­å®š
+        &heapprop, //ƒq[ƒvİ’è
         D3D12_HEAP_FLAG_NONE,
-        &resdesc, //ãƒªã‚½ãƒ¼ã‚¹è¨­å®š
+        &resdesc, //ƒŠƒ\[ƒXİ’è
         D3D12_RESOURCE_STATE_GENERIC_READ,
         nullptr,
         IID_PPV_ARGS(&spdata.vertBuff));
 
-    //-----é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒ‡ãƒ¼ã‚¿è»¢é€-----//
+    //-----’¸“_ƒoƒbƒtƒ@‚Ö‚Ìƒf[ƒ^“]‘—-----//
     SpriteVertex *vertMap = nullptr;
     result = spdata.vertBuff->Map(0, nullptr, (void **)&vertMap);
-    //å…¨é ‚ç‚¹ã«å¯¾ã—ã¦
+    //‘S’¸“_‚É‘Î‚µ‚Ä
     for (int i = 0; i < _countof(spdata.vertices); i++)
     {
-        vertMap[i] = spdata.vertices[i];//åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼
+        vertMap[i] = spdata.vertices[i];//À•W‚ğƒRƒs[
     }
-    //ãƒãƒƒãƒ—ã‚’è§£é™¤
+    //ƒ}ƒbƒv‚ğ‰ğœ
     spdata.vertBuff->Unmap(0, nullptr);
 
-    //é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ“ãƒ¥ãƒ¼ç”Ÿæˆ
+    //’¸“_ƒoƒbƒtƒ@ƒrƒ…[¶¬
     spdata.vbView.BufferLocation = spdata.vertBuff->GetGPUVirtualAddress();
     spdata.vbView.SizeInBytes = sizeof(spdata.vertices);
     spdata.vbView.StrideInBytes = sizeof(SpriteVertex);
 
     auto HEAP_PROP = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
     auto RESDESC = CD3DX12_RESOURCE_DESC::Buffer((sizeof(SpConstBufferData) + 0xff) & ~0xff);
-    //å®šæ•°ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
+    //’è”ƒoƒbƒtƒ@¶¬
     result = SpriteManager::Get()->dev->CreateCommittedResource(
         &HEAP_PROP,
         D3D12_HEAP_FLAG_NONE,
@@ -98,25 +100,25 @@ void Sprite::CreateSprite(XMFLOAT2 size, XMFLOAT2 anchor, UINT resourceID, bool 
         IID_PPV_ARGS(&spdata.constBuff)
     );
 
-    //å®šæ•°ãƒãƒƒãƒ•ã‚¡ãƒ‡ãƒ¼ã‚¿è»¢é€
+    //’è”ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
     SpConstBufferData *constMap = nullptr;
     result = spdata.constBuff->Map(0, nullptr, (void **)&constMap);
-    constMap->color = XMFLOAT4(1, 1, 1, 1);//è‰²æŒ‡å®š
-    //å¹³è¡ŒæŠ•å½±è¡Œåˆ—
+    constMap->color = XMFLOAT4(1, 1, 1, 1);//Fw’è
+    //•½s“Š‰es—ñ
     constMap->mat = XMMatrixOrthographicOffCenterLH(0.0f, SpriteManager::Get()->window_width, SpriteManager::Get()->window_height, 0.0f, 0.0f, 1.0f);
     spdata.constBuff->Unmap(0, nullptr);
 
-    //ãƒªã‚½ãƒ¼ã‚¹ã«åˆã‚ã›ã¦èª¿æ•´ã™ã‚‹å ´åˆ
+    //ƒŠƒ\[ƒX‚É‡‚í‚¹‚Ä’²®‚·‚éê‡
     if (adjustResourceFlag == true)
     {
-        //ãƒ†ã‚¯ã‚¹ãƒãƒ£æƒ…å ±å–å¾—
+        //ƒeƒNƒXƒ`ƒƒî•ñæ“¾
         D3D12_RESOURCE_DESC resDesc = TexManager::textureData[resourceID].texBuff->GetDesc();
-        //ãƒªã‚½ãƒ¼ã‚¹ã«åˆã‚ã›ã¦ã‚µã‚¤ã‚ºèª¿æ•´
+        //ƒŠƒ\[ƒX‚É‡‚í‚¹‚ÄƒTƒCƒY’²®
         spdata.size = { (float)resDesc.Width,(float)resDesc.Height };
     }
-    else//ã—ãªã„å ´åˆ
+    else//‚µ‚È‚¢ê‡
     {
-        spdata.size = size;//å¼•æ•°ã®ã‚µã‚¤ã‚ºã«è¨­å®š
+        spdata.size = size;//ˆø”‚ÌƒTƒCƒY‚Éİ’è
     }
 
     ResizeSprite(spdata.size);
@@ -129,7 +131,7 @@ void Sprite::ResizeSprite(XMFLOAT2 newsize)
 
     spdata.size = newsize;
 
-    //ã‚¢ãƒ³ã‚«ãƒ¼ãƒã‚¤ãƒ³ãƒˆã«åˆã‚ã›ãŸè¨­å®š
+    //ƒAƒ“ƒJ[ƒ|ƒCƒ“ƒg‚É‡‚í‚¹‚½İ’è
     float left   = (0.0f - spdata.anchorPoint.x) * spdata.size.x;
     float right  = (1.0f - spdata.anchorPoint.x) * spdata.size.x;
     float top    = (0.0f - spdata.anchorPoint.y) * spdata.size.y;
@@ -140,33 +142,32 @@ void Sprite::ResizeSprite(XMFLOAT2 newsize)
     spdata.vertices[2].pos = { left  ,bottom,0.0f };
     spdata.vertices[3].pos = { right ,bottom,0.0f };
 
-    //é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è»¢é€
+    //’¸“_ƒoƒbƒtƒ@“]‘—
     SpriteVertex *vertMap = nullptr;
     result = spdata.vertBuff->Map(0, nullptr, (void **)&vertMap);
-    //å…¨é ‚ç‚¹ã«å¯¾ã—ã¦
+    //‘S’¸“_‚É‘Î‚µ‚Ä
     memcpy(vertMap, spdata.vertices, sizeof(spdata.vertices));
-    //ãƒãƒƒãƒ—ã‚’è§£é™¤
+    //ƒ}ƒbƒv‚ğ‰ğœ
     spdata.vertBuff->Unmap(0, nullptr);
 
 }
 
 void Sprite::UpdateSprite()
 {
-    //ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³æ›´æ–°
+    //ƒAƒjƒ[ƒVƒ‡ƒ“XV
     if (animData != nullptr) {
-        spdata.vertices[0].uv = animData->GetOffset().offsetLB; //å·¦ä¸Š
-        spdata.vertices[1].uv = animData->GetOffset().offsetRB; //å·¦ä¸Š
-        spdata.vertices[2].uv = animData->GetOffset().offsetLT; //å·¦ä¸Š
-        spdata.vertices[3].uv = animData->GetOffset().offsetRT; //å·¦ä¸Š
-        //é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ãƒ‡ãƒ¼ã‚¿è»¢é€
+        spdata.vertices[0].uv = animData->GetOffset().offsetLB; //¶ã
+        spdata.vertices[1].uv = animData->GetOffset().offsetRB; //¶ã
+        spdata.vertices[2].uv = animData->GetOffset().offsetLT; //¶ã
+        spdata.vertices[3].uv = animData->GetOffset().offsetRT; //¶ã
+        //’¸“_ƒoƒbƒtƒ@ƒf[ƒ^“]‘—
         SpriteVertex *vertMap = nullptr;
         auto result = spdata.vertBuff->Map(0, nullptr, (void **)&vertMap);
-        //å…¨é ‚ç‚¹ã«å¯¾ã—ã¦
+        //‘S’¸“_‚É‘Î‚µ‚Ä
         memcpy(vertMap, spdata.vertices, sizeof(spdata.vertices));
-        //ãƒãƒƒãƒ—ã‚’è§£é™¤
+        //ƒ}ƒbƒv‚ğ‰ğœ
         spdata.vertBuff->Unmap(0, nullptr);
     }
-
 
     spdata.matWorld = XMMatrixIdentity();
 
@@ -174,25 +175,41 @@ void Sprite::UpdateSprite()
 
     spdata.matWorld *= XMMatrixTranslation(spdata.position.x, spdata.position.y, spdata.position.z);
 
-    //å®šæ•°ãƒãƒƒãƒ•ã‚¡è»¢é€
+    //’è”ƒoƒbƒtƒ@“]‘—
     SpConstBufferData *constMap = nullptr;
     HRESULT result = spdata.constBuff->Map(0, nullptr, (void **)&constMap);
     constMap->mat = spdata.matWorld * SpriteManager::Get()->matProjection;
+    constMap->color = spdata.color;
     spdata.constBuff->Unmap(0, nullptr);
 
 }
 
 void Sprite::Draw()
 {
-    //é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚»ãƒƒãƒˆ
+    //’¸“_ƒoƒbƒtƒ@ƒZƒbƒg
     SpriteManager::Get()->cmd->IASetVertexBuffers(0, 1, &spdata.vbView);
-    //å®šæ•°ãƒãƒƒãƒ•ã‚¡ã‚»ãƒƒãƒˆ
+    //’è”ƒoƒbƒtƒ@ƒZƒbƒg
     SpriteManager::Get()->cmd->SetGraphicsRootConstantBufferView(0, spdata.constBuff->GetGPUVirtualAddress());
-    //ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
+    //ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[‚ğƒZƒbƒg
     SpriteManager::Get()->cmd->SetGraphicsRootDescriptorTable(1,
         CD3DX12_GPU_DESCRIPTOR_HANDLE(TexManager::texDsvHeap->GetGPUDescriptorHandleForHeapStart(),
         spdata.texNumber, SpriteManager::Get()->dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
-    //æç”»
+    //•`‰æ
     SpriteManager::Get()->cmd->DrawInstanced(4, 1, 0, 0);
 
+}
+
+void Sprite::DrawMPRender()
+{
+    SpriteManager::Get()->SetCommonBeginDrawmpResource();
+    //’¸“_ƒoƒbƒtƒ@ƒZƒbƒg
+    SpriteManager::Get()->cmd->IASetVertexBuffers(0, 1, &spdata.vbView);
+    //’è”ƒoƒbƒtƒ@ƒZƒbƒg
+    SpriteManager::Get()->cmd->SetGraphicsRootConstantBufferView(0, spdata.constBuff->GetGPUVirtualAddress());
+    //ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[‚ğƒZƒbƒg
+    SpriteManager::Get()->cmd->SetGraphicsRootDescriptorTable(1,
+        CD3DX12_GPU_DESCRIPTOR_HANDLE(RAKI_DX12B_GET->GetMuliPassSrvDescHeap()->GetGPUDescriptorHandleForHeapStart(),
+            0, RAKI_DX12B_DEV->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV)));
+    //•`‰æ
+    SpriteManager::Get()->cmd->DrawInstanced(4, 1, 0, 0);
 }

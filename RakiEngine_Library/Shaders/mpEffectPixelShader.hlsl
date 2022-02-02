@@ -1,10 +1,7 @@
-#include "mpShaderHeader.hlsli"
+#include "Sprite.hlsli"
 
-float4 main(Output input) : SV_TARGET
+float4 main(VSOutput input) : SV_TARGET
 {
-    //return tex.Sample(smp, input.uv);
-    
-    
     //簡単なぼかし処理のやり方
     float w, h, levels;
     //この関数でテクスチャのサイズ情報が取れる

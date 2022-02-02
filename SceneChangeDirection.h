@@ -7,7 +7,8 @@ class SceneChangeDirection final
 {
 private:
 	//挟むテクスチャ
-	UINT tex;
+	UINT tex1;
+	UINT tex2;
 	//挟むスプライト
 	Sprite press1, press2;
 	//挟み開始点、終了点
