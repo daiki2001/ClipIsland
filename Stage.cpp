@@ -20,6 +20,8 @@ Stage::Stage(Player *player) :
 	blockSE = Audio::LoadSound_wav("./Resources/Sound/blockSE.wav");
 	stepBackSE = Audio::LoadSound_wav("./Resources/Sound/RandB.wav");
 	resetSE = Audio::LoadSound_wav("./Resources/Sound/RandB.wav");
+	backFlag = false;
+	clipFlag = false;
 }
 
 Stage::~Stage()
@@ -60,50 +62,54 @@ void Stage::Update()
 			k++;
 		}
 	}
-
-	if (isEasing)
-	{
-		float rate = (float)nowFlame / maxFlame;
-
-		if (rate > 1.0f)
+		if (isEasing)
 		{
-			isEasing = false;
+			clipFlag = true;
+			player->easeFlag = true;
 
-			easeNumber.clear();
-			easeStartPos.clear();
+			float rate = (float)nowFlame / maxFlame;
 
-			easeNumber.shrink_to_fit();
-			easeStartPos.shrink_to_fit();
-		}
-
-		for (size_t i = 0; i < easeNumber.size(); i++)
-		{
-			if (stage.blocks[easeNumber[i]].number == clipBlock.top().blockNumber1)
+			if (rate > 1.0f)
 			{
-				if (clipBlock.top().vec1[0] == RVector3(0.0f, 0.0f, 0.0f))
-				{
-					continue;
-				}
-				stage.blocks[easeNumber[i]].pos = Rv3Ease::OutQuad(
-					easeStartPos[i],
-					easeStartPos[i] + clipBlock.top().vec1[0],
-					rate);
-			}
-			else if (stage.blocks[easeNumber[i]].number == clipBlock.top().blockNumber2)
-			{
-				if (clipBlock.top().vec2[0] == RVector3(0.0f, 0.0f, 0.0f))
-				{
-					continue;
-				}
-				stage.blocks[easeNumber[i]].pos = Rv3Ease::OutQuad(
-					easeStartPos[i],
-					easeStartPos[i] + clipBlock.top().vec2[0],
-					rate);
-			}
-		}
+				isEasing = false;
+				clipFlag = false;
 
-		nowFlame++;
-	}
+				easeNumber.clear();
+				easeStartPos.clear();
+
+				easeNumber.shrink_to_fit();
+				easeStartPos.shrink_to_fit();
+
+				player->easeFlag = false;
+			}
+
+			for (size_t i = 0; i < easeNumber.size(); i++)
+			{
+				if (stage.blocks[easeNumber[i]].number == clipBlock.top().blockNumber1)
+				{
+					if (clipBlock.top().vec1[0] == RVector3(0.0f, 0.0f, 0.0f))
+					{
+						continue;
+					}
+					stage.blocks[easeNumber[i]].pos = Rv3Ease::OutQuad(
+						easeStartPos[i],
+						easeStartPos[i] + clipBlock.top().vec1[0],
+						rate);
+				}
+				else if (stage.blocks[easeNumber[i]].number == clipBlock.top().blockNumber2)
+				{
+					if (clipBlock.top().vec2[0] == RVector3(0.0f, 0.0f, 0.0f))
+					{
+						continue;
+					}
+					stage.blocks[easeNumber[i]].pos = Rv3Ease::OutQuad(
+						easeStartPos[i],
+						easeStartPos[i] + clipBlock.top().vec2[0],
+						rate);
+				}
+			}
+			nowFlame++;
+		}
 }
 
 void Stage::Draw()
@@ -228,8 +234,8 @@ int Stage::Clip(bool flag)
 
 			StageMoveParticle::Get()->SpawnMoveStandbyParticle(
 				stage.blocks[i].pos,
-				RVector3(+blockSize / 2.0f, +blockSize / 2.0f, +blockSize / 2.0f),
-				RVector3(-blockSize / 2.0f, -blockSize / 2.0f, -blockSize / 2.0f)
+				RVector3(+blockSize / 6.0f, +blockSize / 6.0f, +blockSize / 6.0f),
+				RVector3(-blockSize / 6.0f, -blockSize / 6.0f, -blockSize / 6.0f)
 			);
 		}
 	}
@@ -239,45 +245,51 @@ int Stage::Clip(bool flag)
 
 int Stage::StepBack()
 {
-	if (clipBlock.empty())
-	{
-		return EoF;
-	}
-
-	for (size_t i = 0; i < stage.blocks.size(); i++)
-	{
-
-		if (clipBlock.top().isVani == true)
+		if (clipBlock.empty())
 		{
-			stage.blocks[i].type = stage.blocks[i].InitType;
-			stage.blocks[i].pos.z = clipBlock.top().backPosZ;
-			player->position = clipBlock.top().vaniPos;
-			stage.ChangeSwitchModel(&GameCommonData::StageBlockModels::switchOffModel);
+			return EoF;
 		}
 
-		if (clipBlock.top().isVani == false)
+		player->stepbackFlag = true;
+
+		for (size_t i = 0; i < stage.blocks.size(); i++)
 		{
-			for (size_t j = 0; j < clipBlock.top().vec1.size(); j++)
+			if (clipBlock.top().isVani == true)
 			{
-				if (stage.blocks[i].number == clipBlock.top().blockNumber1)
-				{
-					stage.blocks[i].pos -= clipBlock.top().vec1[j];
-				}
-				if (stage.blocks[i].number == clipBlock.top().blockNumber2)
-				{
-					stage.blocks[i].pos -= clipBlock.top().vec2[j];
-				}
+				stage.blocks[i].type = stage.blocks[i].InitType;
+				stage.blocks[i].pos.z = clipBlock.top().backPosZ;
+				player->position = clipBlock.top().vaniPos;
+				// Tpositionも追加しないとバグる
+				player->Tposition = clipBlock.top().vaniPos;
+				stage.ChangeSwitchModel(&GameCommonData::StageBlockModels::switchOffModel);
 			}
-			player->endPos = clipBlock.top().playerEndPos;
-			player->position = clipBlock.top().playerPos;
+
+			if (clipBlock.top().isVani == false)
+			{
+				for (size_t j = 0; j < clipBlock.top().vec1.size(); j++)
+				{
+					if (stage.blocks[i].number == clipBlock.top().blockNumber1)
+					{
+						stage.blocks[i].pos -= clipBlock.top().vec1[j];
+					}
+					if (stage.blocks[i].number == clipBlock.top().blockNumber2)
+					{
+						stage.blocks[i].pos -= clipBlock.top().vec2[j];
+					}
+				}
+				player->endPos = clipBlock.top().playerEndPos;
+				player->position = clipBlock.top().playerPos;
+				player->Tposition = clipBlock.top().playerPos;//いらないかも
+			}
 		}
-	}
-	clipBlock.pop();
+		clipBlock.pop();
 
-	Audio::PlayLoadedSound(stepBackSE);
+		player->stepbackFlag = false;
 
+		Audio::PlayLoadedSound(stepBackSE);
+		backFlag = false;
+	//}
 	return 0;
-
 }
 
 void Stage::Reset()
@@ -298,6 +310,7 @@ void Stage::Reset()
 	player->position = stage.GetStartPlayerPos();
 	player->startPos = stage.GetStartPlayerPos();
 	player->endPos = stage.GetStartPlayerPos();
+	player->Tposition = stage.GetStartPlayerPos();
 
 	Audio::PlayLoadedSound(resetSE);
 	
@@ -1087,7 +1100,6 @@ int Stage::Clip2d(ClipBlock *clip)
 	{
 		isWarp = false;
 	}
-
 	return 0;
 }
 

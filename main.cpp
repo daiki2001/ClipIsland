@@ -478,9 +478,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     player.playerFlag = true;
                 }
 
-                if (isTutorial == false)
+                if (isTutorial == false && player.moveFlag == false)
                 {
-                    stageData.Clip(Input::isKeyTrigger(DIK_SPACE));
+                    stageData.Clip(Input::isKeyTrigger(DIK_SPACE) && stageData.clipFlag == false && stageData.backFlag == false);
 
                     if (Input::isKeyTrigger(DIK_R))
                     {
@@ -488,8 +488,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                         stageData.Reset();
                     }
 
-                    if (Input::isKeyTrigger(DIK_B))
+                    if (Input::isKeyTrigger(DIK_B) == true && stageData.backFlag == false && stageData.clipFlag == false)
                     {
+                        stageData.backFlag = true;
                         stageData.StepBack();
                     }
 #if _DEBUG

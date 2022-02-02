@@ -44,14 +44,14 @@ void StageMoveParticle::SpawnMoveStandbyParticle(RVector3 spawnPos, RVector3 max
 
 	RVector3 spawnPosition(NY_random::floatrand_sl(maxX, minX),
 		NY_random::floatrand_sl(maxY, minY),
-		NY_random::floatrand_sl(maxZ, minZ));
+		NY_random::floatrand_sl(maxZ, minZ) - 30);
 
 	//‘¬“xA‰Á‘¬“x‚ðÝ’è
 	RVector3 velocity( NY_random::floatrand_sl(0.5, -0.5), 0.5, 0);
 	RVector3 accel( NY_random::floatrand_sl(0.02, -0.02), -0.02, 0);
 
 	//¶¬
-	pManager->Add(30, spawnPosition, velocity, accel, s_scale, e_scale, XMFLOAT4(1, 1, 1, 1), XMFLOAT4(1, 1, 1, 1));
+	pManager->Add(30, spawnPosition, velocity, accel, s_scale, e_scale, XMFLOAT4(1, 1, 1, 1), XMFLOAT4(0.5, 0.5, 0.5, 0.5));
 
 }
 

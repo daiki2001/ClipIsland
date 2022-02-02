@@ -5,6 +5,8 @@
 #include <vector>
 #include <stack>
 #include "Audio.h"
+#include "Player.h"
+#include "Raki_Input.h"
 
 class Stage
 {
@@ -78,6 +80,9 @@ public: // ƒƒ“ƒo•Ï”
 	SoundData blockSE;
 	SoundData stepBackSE;
 	SoundData resetSE;
+
+	bool backFlag;
+	bool clipFlag;
 private:
 	Player* player;
 	stack<ClipBlock> clipBlock;
