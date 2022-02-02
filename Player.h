@@ -35,6 +35,8 @@ public:
 
 	RVector3 Tposition;
 	bool playerFlag;
+	bool easeFlag;	//“®‚¢‚Ä‚½‚çtrue
+	bool stepbackFlag;	//“®‚¢‚Ä‚½‚çtrue
 
 	Collision playerCollision;
 

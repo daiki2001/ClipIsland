@@ -23,12 +23,14 @@ Player::Player() :
 	goalFlag = false;
 	moveFlag = false;
 	playerFlag = true;
+	easeFlag = false;
+	stepbackFlag = false;
 	timeRate = 0;
 	walkSE=Audio::LoadSound_wav("./Resources/Sound/walkSE.wav");
 }
 
 //時間計測に必要なデータ
-const float maxFrame = 15;
+const float maxFrame = 10;
 float nowFrame = 100;
 
 
@@ -46,7 +48,7 @@ void Player::Update()
 	using namespace GameCommonData::BlockData;
 
 	playerOldPos = position;
-	if (moveFlag == false)
+	if (moveFlag == false && easeFlag == false && stepbackFlag == false);
 	{
 		if (Input::isKeyTrigger(DIK_W))
 		{
