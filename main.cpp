@@ -523,7 +523,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             NY_Object3DManager::Get()->UpdateAllObjects();
 
             // 描画開始
-            Raki_DX12B::Get()->StartDraw();
+            Raki_DX12B::Get()->StartDrawRenderTarget();
 
             // 背景描画
             SpriteManager::Get()->SetCommonBeginDraw();
@@ -548,11 +548,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 SeaParticle::Get()->Draw();
             }
 
+            RAKI_DX12B_GET->StartDrawBackbuffer();
+
             // 前景描画
+            mpSprite.DrawMPRender();
             SpriteManager::Get()->SetCommonBeginDraw();
 
             // 描画終了
-            Raki_DX12B::Get()->EndDraw();
+            Raki_DX12B::Get()->CloseDraw();
             break;
         case GAME_OVER:
             scene = Scene::SELECT;
