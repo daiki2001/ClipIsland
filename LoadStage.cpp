@@ -8,6 +8,16 @@
 LoadStage::LoadStage() :
 	blocks{},
 	blockColors{},
+	moveBlockObj{},
+	moveBlockNumber{},
+	stayBlockObj{},
+	stayBlockNumber{},
+	goalBlockObj{},
+	goalBlockNumber{},
+	switchBlockObj{},
+	switchBlockNumber{},
+	doorBlockObj{},
+	doorBlockNumber{},
 	debugBoxObj{},
 	debugBoxNumber{},
 	warpBlock{},
@@ -18,17 +28,56 @@ LoadStage::LoadStage() :
 
 LoadStage::~LoadStage()
 {
-	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	for (size_t i = 0; i < moveBlockObj.size(); i++)
 	{
-		if (debugBoxObj[i] == nullptr)
+		if (moveBlockObj[i] == nullptr)
 		{
 			continue;
 		}
 
-		DeleteObject3d(debugBoxObj[i]);
-		debugBoxObj[i] = nullptr;
+		DeleteObject3d(moveBlockObj[i]);
+		moveBlockObj[i] = nullptr;
 	}
+	for (size_t i = 0; i < stayBlockObj.size(); i++)
+	{
+		if (stayBlockObj[i] == nullptr)
+		{
+			continue;
+		}
 
+		DeleteObject3d(stayBlockObj[i]);
+		stayBlockObj[i] = nullptr;
+	}
+	for (size_t i = 0; i < goalBlockObj.size(); i++)
+	{
+		if (goalBlockObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(goalBlockObj[i]);
+		goalBlockObj[i] = nullptr;
+	}
+	for (size_t i = 0; i < switchBlockObj.size(); i++)
+	{
+		if (switchBlockObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(switchBlockObj[i]);
+		switchBlockObj[i] = nullptr;
+	}
+	for (size_t i = 0; i < doorBlockObj.size(); i++)
+	{
+		if (doorBlockObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(doorBlockObj[i]);
+		doorBlockObj[i] = nullptr;
+	}
 	for (size_t i = 0; i < warpBlock.size(); i++)
 	{
 		if (warpBlock[i] == nullptr)
@@ -39,10 +88,21 @@ LoadStage::~LoadStage()
 		delete warpBlock[i];
 		warpBlock[i] = nullptr;
 	}
+	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	{
+		if (debugBoxObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(debugBoxObj[i]);
+		debugBoxObj[i] = nullptr;
+	}
 }
 
 int LoadStage::Load(const char* filePath)
 {
+	using namespace GameCommonData;
 	using namespace GameCommonData::BlockData;
 
 	if (filePath == nullptr) { return EoF; }
@@ -176,45 +236,70 @@ int LoadStage::Load(const char* filePath)
 					{ blockSize / 2.0f, blockSize / 2.0f, blockSize / 2.0f },
 					RVector3(0.0f, 0.0f, 0.0f));
 
-				if (blocks[blocks.size() - 1].type == BlockType::WARP_CLOSE_BLOCK ||
-					blocks[blocks.size() - 1].type == BlockType::WARP_OPEN_BLOCK)
+				switch (blocks[blocks.size() - 1].type)
 				{
+				case BlockType::BLOCK:
+					moveBlockObj.push_back(CreateObject3d(&StageBlockModels::moveModel));
+					moveBlockNumber.push_back((int)blocks.size() - 1);
+					moveBlockObj[moveBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
+					moveBlockObj[moveBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
+					moveBlockObj[moveBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
+					break;
+				case BlockType::DONT_MOVE_BLOCK:
+					stayBlockObj.push_back(CreateObject3d(&StageBlockModels::stayModel));
+					stayBlockNumber.push_back((int)blocks.size() - 1);
+					stayBlockObj[stayBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
+					stayBlockObj[stayBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
+					stayBlockObj[stayBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
+					break;
+				case BlockType::GOAL:
+					goalBlockObj.push_back(CreateObject3d(&StageBlockModels::goalModel));
+					goalBlockNumber.push_back((int)blocks.size() - 1);
+					goalBlockObj[goalBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
+					goalBlockObj[goalBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
+					goalBlockObj[goalBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
+					break;
+				case BlockType::START:
+					startPosNumber = (int)blocks.size() - 1;
+					break;
+				case BlockType::SWITCH:
+					switchBlockObj.push_back(CreateObject3d(&StageBlockModels::switchOffModel));
+					switchBlockNumber.push_back((int)blocks.size() - 1);
+					switchBlockObj[switchBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
+					switchBlockObj[switchBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
+					switchBlockObj[switchBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
+					break;
+				case BlockType::DOOR:
+					doorBlockObj.push_back(CreateObject3d(&StageBlockModels::doorModel));
+					doorBlockNumber.push_back((int)blocks.size() - 1);
+					doorBlockObj[doorBlockObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
+					doorBlockObj[doorBlockObj.size() - 1]->rotation = StageBlockModels::modelRot;
+					doorBlockObj[doorBlockObj.size() - 1]->scale = ScaleXYZ(StageBlockModels::modelScale);
+					break;
+				case BlockType::WARP_CLOSE_BLOCK:
+				case BlockType::WARP_OPEN_BLOCK:
 					warpBlock.push_back(new Warp());
 					warpBlock[warpBlock.size() - 1]->blockNumber = (int)blocks.size() - 1;
 					warpBlock[warpBlock.size() - 1]->CreateObj(blocks[blocks.size() - 1].pos);
 					warpBlock[warpBlock.size() - 1]->isOpen = blocks[blocks.size() - 1].type == BlockType::WARP_OPEN_BLOCK;
+					break;
+				default:
+					break;
 				}
-				else
-				{
-					debugBoxObj.push_back(CreateObject3d(&CommonData::boxModel));
-					debugBoxNumber.push_back((int)blocks.size() - 1);
-					debugBoxObj[debugBoxObj.size() - 1]->position = blocks[blocks.size() - 1].pos;
-				}
-			}
-
-			if (blockData[3] == BlockType::START)
-			{
-				startPosNumber = (int)blocks.size() - 1;
 			}
 		}
 	}
 
+	size_t moveBlockCount = 0;
+	size_t stayBlockCount = 0;
+	size_t goalBlockCount = 0;
+	size_t switchBlockCount = 0;
+	size_t doorBlockCount = 0;
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
 
-	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	for (size_t i = 0; i < blocks.size(); i++)
 	{
-		if (blocks[i].type >= blockColors.size())
-		{
-			if (blocks[i].type == BlockType::START)
-			{
-				debugBoxObj[debugBlockCount]->color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-				debugBlockCount++;
-			}
-
-			continue;
-		}
-
 		if (blocks[i].type <= BlockType::NONE)
 		{
 			continue;
@@ -224,25 +309,38 @@ int LoadStage::Load(const char* filePath)
 			number = blocks[i].type;
 		}
 
-		if (blocks[i].type == BlockType::START)
+		switch (number)
 		{
-			debugBoxObj[debugBlockCount]->color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
-			debugBlockCount++;
-		}
-		else if (number == BlockType::WARP_CLOSE_BLOCK)
-		{
+		case BlockType::BLOCK:
+			moveBlockObj[moveBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			moveBlockCount++;
+			break;
+		case BlockType::DONT_MOVE_BLOCK:
+			stayBlockObj[stayBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			stayBlockCount++;
+			break;
+		case BlockType::GOAL:
+			goalBlockObj[goalBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			goalBlockCount++;
+			break;
+		case BlockType::SWITCH:
+			switchBlockObj[switchBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			switchBlockCount++;
+			break;
+		case BlockType::DOOR:
+			doorBlockObj[doorBlockCount]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+			doorBlockCount++;
+			break;
+		case BlockType::WARP_CLOSE_BLOCK:
 			warpBlock[warpBlockCount]->SetWarpCloseColor(blockColors[number]);
 			warpBlockCount++;
-		}
-		else if (number == BlockType::WARP_OPEN_BLOCK)
-		{
+			break;
+		case BlockType::WARP_OPEN_BLOCK:
 			warpBlock[warpBlockCount]->SetWarpOpenColor(blockColors[number]);
 			warpBlockCount++;
-		}
-		else
-		{
-			debugBoxObj[debugBlockCount]->color = blockColors[number];
-			debugBlockCount++;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -251,11 +349,46 @@ int LoadStage::Load(const char* filePath)
 
 void LoadStage::Update()
 {
+	size_t moveBlockCount = 0;
+	size_t stayBlockCount = 0;
+	size_t goalBlockCount = 0;
+	size_t switchBlockCount = 0;
+	size_t doorBlockCount = 0;
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
 
 	for (size_t i = 0; i < blocks.size(); i++)
 	{
+		if (moveBlockCount < moveBlockObj.size() &&
+			i == moveBlockNumber[moveBlockCount])
+		{
+			moveBlockObj[moveBlockCount]->position = blocks[i].pos;
+			moveBlockCount++;
+		}
+		if (stayBlockCount < stayBlockObj.size() &&
+			i == stayBlockNumber[stayBlockCount])
+		{
+			stayBlockObj[stayBlockCount]->position = blocks[i].pos;
+			stayBlockCount++;
+		}
+		if (goalBlockCount < goalBlockObj.size() &&
+			i == goalBlockNumber[goalBlockCount])
+		{
+			goalBlockObj[goalBlockCount]->position = blocks[i].pos;
+			goalBlockCount++;
+		}
+		if (switchBlockCount < switchBlockObj.size() &&
+			i == switchBlockNumber[switchBlockCount])
+		{
+			switchBlockObj[switchBlockCount]->position = blocks[i].pos;
+			switchBlockCount++;
+		}
+		if (doorBlockCount < doorBlockObj.size() &&
+			i == doorBlockNumber[doorBlockCount])
+		{
+			doorBlockObj[doorBlockCount]->position = blocks[i].pos;
+			doorBlockCount++;
+		}
 		if (warpBlockCount < warpBlock.size() &&
 			i == warpBlock[warpBlockCount]->blockNumber)
 		{
@@ -275,6 +408,11 @@ void LoadStage::Draw()
 {
 	using namespace GameCommonData::BlockData;
 
+	size_t moveBlockCount = 0;
+	size_t stayBlockCount = 0;
+	size_t goalBlockCount = 0;
+	size_t switchBlockCount = 0;
+	size_t doorBlockCount = 0;
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
 
@@ -283,24 +421,24 @@ void LoadStage::Draw()
 		switch (blocks[i].type)
 		{
 		case BlockType::BLOCK:
-			DrawObject3d(debugBoxObj[debugBlockCount]);
-			debugBlockCount++;
+			DrawObject3d(moveBlockObj[moveBlockCount]);
+			moveBlockCount++;
 			break;
 		case BlockType::DONT_MOVE_BLOCK:
-			DrawObject3d(debugBoxObj[debugBlockCount]);
-			debugBlockCount++;
+			DrawObject3d(stayBlockObj[stayBlockCount]);
+			stayBlockCount++;
 			break;
 		case BlockType::GOAL:
-			DrawObject3d(debugBoxObj[debugBlockCount]);
-			debugBlockCount++;
+			DrawObject3d(goalBlockObj[goalBlockCount]);
+			goalBlockCount++;
 			break;
 		case BlockType::SWITCH:
-			DrawObject3d(debugBoxObj[debugBlockCount]);
-			debugBlockCount++;
+			DrawObject3d(switchBlockObj[switchBlockCount]);
+			switchBlockCount++;
 			break;
 		case BlockType::DOOR:
-			DrawObject3d(debugBoxObj[debugBlockCount]);
-			debugBlockCount++;
+			DrawObject3d(doorBlockObj[doorBlockCount]);
+			doorBlockCount++;
 			break;
 		case BlockType::WARP_CLOSE_BLOCK:
 		case BlockType::WARP_OPEN_BLOCK:
@@ -308,7 +446,6 @@ void LoadStage::Draw()
 			warpBlockCount++;
 			break;
 		default:
-			debugBlockCount++;
 			break;
 		}
 	}
@@ -318,6 +455,10 @@ void LoadStage::Reset()
 {
 	openGateCount = 0;
 
+	size_t moveBlockCount = 0;
+	size_t stayBlockCount = 0;
+	size_t goalBlockCount = 0;
+	size_t doorBlockCount = 0;
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
 
@@ -326,6 +467,50 @@ void LoadStage::Reset()
 		blocks[i].pos = blocks[i].resetPos;
 		blocks[i].type = blocks[i].InitType;
 
+		if (moveBlockCount < moveBlockNumber.size() &&
+			i == moveBlockNumber[moveBlockCount])
+		{
+			if (moveBlockObj[moveBlockCount] == nullptr)
+			{
+				continue;
+			}
+
+			moveBlockObj[moveBlockCount]->position = blocks[i].resetPos;
+			moveBlockCount++;
+		}
+		if (stayBlockCount < stayBlockNumber.size() &&
+			i == stayBlockNumber[stayBlockCount])
+		{
+			if (stayBlockObj[stayBlockCount] == nullptr)
+			{
+				continue;
+			}
+
+			stayBlockObj[stayBlockCount]->position = blocks[i].resetPos;
+			stayBlockCount++;
+		}
+		if (goalBlockCount < goalBlockNumber.size() &&
+			i == goalBlockNumber[goalBlockCount])
+		{
+			if (goalBlockObj[goalBlockCount] == nullptr)
+			{
+				continue;
+			}
+
+			goalBlockObj[goalBlockCount]->position = blocks[i].resetPos;
+			goalBlockCount++;
+		}
+		if (doorBlockCount < doorBlockNumber.size() &&
+			i == doorBlockNumber[doorBlockCount])
+		{
+			if (doorBlockObj[doorBlockCount] == nullptr)
+			{
+				continue;
+			}
+
+			doorBlockObj[doorBlockCount]->position = blocks[i].resetPos;
+			doorBlockCount++;
+		}
 		if (warpBlockCount < warpBlock.size() &&
 			i == warpBlock[warpBlockCount]->blockNumber)
 		{
@@ -345,21 +530,62 @@ void LoadStage::Reset()
 			debugBlockCount++;
 		}
 	}
+
+	ChangeSwitchModel(&GameCommonData::StageBlockModels::switchOffModel);
 }
 
 void LoadStage::StageClear()
 {
-	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	for (size_t i = 0; i < moveBlockObj.size(); i++)
 	{
-		if (debugBoxObj[i] == nullptr)
+		if (moveBlockObj[i] == nullptr)
 		{
 			continue;
 		}
 
-		DeleteObject3d(debugBoxObj[i]);
-		debugBoxObj[i] = nullptr;
+		DeleteObject3d(moveBlockObj[i]);
+		moveBlockObj[i] = nullptr;
 	}
+	for (size_t i = 0; i < stayBlockObj.size(); i++)
+	{
+		if (stayBlockObj[i] == nullptr)
+		{
+			continue;
+		}
 
+		DeleteObject3d(stayBlockObj[i]);
+		stayBlockObj[i] = nullptr;
+	}
+	for (size_t i = 0; i < goalBlockObj.size(); i++)
+	{
+		if (goalBlockObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(goalBlockObj[i]);
+		goalBlockObj[i] = nullptr;
+	}
+	for (size_t i = 0; i < switchBlockObj.size(); i++)
+	{
+		if (switchBlockObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(switchBlockObj[i]);
+		switchBlockObj[i] = nullptr;
+	}
+	for (size_t i = 0; i < doorBlockObj.size(); i++)
+	{
+		if (doorBlockObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(doorBlockObj[i]);
+		doorBlockObj[i] = nullptr;
+	}
 	for (size_t i = 0; i < warpBlock.size(); i++)
 	{
 		if (warpBlock[i] == nullptr)
@@ -371,20 +597,70 @@ void LoadStage::StageClear()
 		delete warpBlock[i];
 		warpBlock[i] = nullptr;
 	}
+	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	{
+		if (debugBoxObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(debugBoxObj[i]);
+		debugBoxObj[i] = nullptr;
+	}
 
 	blocks.clear();
 	blockColors.clear();
+	moveBlockObj.clear();
+	moveBlockNumber.clear();
+	stayBlockObj.clear();
+	stayBlockNumber.clear();
+	goalBlockObj.clear();
+	goalBlockNumber.clear();
+	switchBlockObj.clear();
+	switchBlockNumber.clear();
+	doorBlockObj.clear();
+	doorBlockNumber.clear();
+	warpBlock.clear();
 	debugBoxObj.clear();
 	debugBoxNumber.clear();
-	warpBlock.clear();
 
 	blocks.shrink_to_fit();
 	blockColors.shrink_to_fit();
+	moveBlockObj.shrink_to_fit();
+	moveBlockNumber.shrink_to_fit();
+	stayBlockObj.shrink_to_fit();
+	stayBlockNumber.shrink_to_fit();
+	goalBlockObj.shrink_to_fit();
+	goalBlockNumber.shrink_to_fit();
+	switchBlockObj.shrink_to_fit();
+	switchBlockNumber.shrink_to_fit();
+	doorBlockObj.shrink_to_fit();
+	doorBlockNumber.shrink_to_fit();
+	warpBlock.shrink_to_fit();
 	debugBoxObj.shrink_to_fit();
 	debugBoxNumber.shrink_to_fit();
-	warpBlock.shrink_to_fit();
 
 	startPosNumber = -1;
+}
+
+void LoadStage::ChangeSwitchModel(NY_Model3D* modelData)
+{
+	for (size_t i = 0; i < switchBlockObj.size(); i++)
+	{
+		if (switchBlockObj[i] == nullptr)
+		{
+			continue;
+		}
+
+		DeleteObject3d(switchBlockObj[i]);
+		switchBlockObj[i] = nullptr;
+
+		switchBlockObj[i] = CreateObject3d(modelData);
+		switchBlockObj[i]->position = blocks[switchBlockNumber[i]].pos;
+		switchBlockObj[i]->rotation = StageBlockModels::modelRot;
+		switchBlockObj[i]->scale = GameCommonData::ScaleXYZ(StageBlockModels::modelScale);
+		switchBlockObj[i]->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	}
 }
 
 RVector3 LoadStage::GetStartPlayerPos()
@@ -400,7 +676,7 @@ RVector3 LoadStage::GetStartPlayerPos()
 		num = startPosNumber;
 	}
 
-	return debugBoxObj[num]->position;
+	return blocks[num].pos;
 }
 
 void LoadStage::GetBlocksTypeAll(BlockType blockType, int blocksArray[], size_t arraySize)

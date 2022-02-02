@@ -15,7 +15,7 @@ private: // エイリアス
 	template<class T> using vector = std::vector<T>;
 	using BlockType = GameCommonData::BlockData::BlockType;
 	using Data = GameCommonData::BlockData::Data;
-	using CommonData = GameCommonData::CommonData;
+	using StageBlockModels = GameCommonData::StageBlockModels;
 
 public: // メンバ関数
 	// コンストラクタ
@@ -35,6 +35,9 @@ public: // メンバ関数
 	// ステージデータの削除
 	void StageClear();
 
+	// スイッチのモデルデータの切り替え
+	void ChangeSwitchModel(NY_Model3D* modelData);
+
 	// プレイヤーのスタート位置の取得
 	RVector3 GetStartPlayerPos();
 	// ブロックの情報を種類を指定して全て取得
@@ -48,6 +51,17 @@ public: // メンバ変数
 	size_t openGateCount;
 private:
 	int startPosNumber; //開始時のプレイヤーの座標(配列の要素番号)
+
+	vector<Object3d*> moveBlockObj;   //動かせるブロックのオブジェクト
+	vector<int> moveBlockNumber;      //動かせるブロックの番号
+	vector<Object3d*> stayBlockObj;   //動かないブロックのオブジェクト
+	vector<int> stayBlockNumber;      //動かないブロックの番号
+	vector<Object3d*> goalBlockObj;   //ゴールブロックのオブジェクト
+	vector<int> goalBlockNumber;      //ゴールブロックの番号
+	vector<Object3d*> switchBlockObj; //スイッチのオブジェクト
+	vector<int> switchBlockNumber;    //スイッチの番号
+	vector<Object3d*> doorBlockObj; //スイッチで消えるブロックのオブジェクト
+	vector<int> doorBlockNumber;    //スイッチで消えるブロックの番号
 
 	vector<Object3d*> debugBoxObj; //デバッグ用のブロックのオブジェクト
 	vector<int> debugBoxNumber;    //デバッグ用のブロックの番号
