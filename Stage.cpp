@@ -923,6 +923,15 @@ int Stage::Clip2d(ClipBlock *clip)
 
 	for (size_t i = 0; i < stage.blocks.size(); i++)
 	{
+		if (stage.blocks[i].pos == RVector3(player->position.x, player->position.y, stage.blocks[i].pos.z))
+		{
+			if (stage.blocks[i].number == clip->blockNumber1 || stage.blocks[i].number == clip->blockNumber2)
+			{
+				// 同じ塊の中にプレイヤーの下にあるブロックがある場合リターン
+				return EoF;
+			}
+		}
+
 		if (i == clip->ReferencePoint1 || i == clip->ReferencePoint2)
 		{
 			continue;
