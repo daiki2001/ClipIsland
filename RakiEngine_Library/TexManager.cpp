@@ -1,5 +1,6 @@
 #include "TexManager.h"
 #include "Raki_DX12B.h"
+#include <sstream>
 
 TexManager::texture								TexManager::textureData[1024];
 Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>	TexManager::texDsvHeap;
@@ -76,6 +77,11 @@ UINT TexManager::LoadTexture(const char *filename)
         nullptr,
         IID_PPV_ARGS(&textureData[useTexIndexNum].texBuff)
     );
+    if (FAILED(result)) {
+        std::wstringstream stream;
+        stream << std::system_category().message(result).c_str() << std::endl;
+        OutputDebugString(stream.str().c_str());
+    }
 
     //テクスチャバッファへのデータ転送
     result = textureData[useTexIndexNum].texBuff->WriteToSubresource(
