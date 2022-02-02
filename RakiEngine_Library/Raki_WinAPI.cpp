@@ -2,7 +2,7 @@
 
 int Raki_WinAPI::window_width = 1280;
 int Raki_WinAPI::window_height = 720;
-wchar_t Raki_WinAPI::window_name[] = L"Clip Island";
+wchar_t Raki_WinAPI::window_name[] = L"RakiEngine_Project";
 
 HWND Raki_WinAPI::hwnd;
 WNDCLASSEX Raki_WinAPI::wndClass;

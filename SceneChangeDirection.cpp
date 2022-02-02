@@ -2,12 +2,13 @@
 
 SceneChangeDirection::SceneChangeDirection() {
 	//テクスチャ読み込み
-	tex = TexManager::LoadTexture("Resources/blackParticleTex.png");
+	tex1 = TexManager::LoadTexture("Resources/SCClip1.png");
+	tex2 = TexManager::LoadTexture("Resources/SCClip2.png");
 	//テクスチャ生成
 	XMFLOAT2 size = { 640,720 };
 	XMFLOAT2 anchor = { 0.5,0.5 };
-	press1.CreateSprite(size, anchor, tex, false, nullptr);
-	press2.CreateSprite(size, anchor, tex, false, nullptr);
+	press1.CreateSprite(size, anchor, tex1, false, nullptr);
+	press2.CreateSprite(size, anchor, tex2, false, nullptr);
 	//座標を画面外に
 	press1.spdata.position = RVector3(-1280 / 2, 720 / 2, 0);
 	press2.spdata.position = RVector3(1280 + 1280 / 2, 720 / 2, 0);

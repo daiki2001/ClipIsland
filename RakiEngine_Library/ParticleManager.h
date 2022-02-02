@@ -77,6 +77,7 @@ private:
 	// 最大生成頂点数
 	static const int MAX_VERTEX = 65536;
 
+
 public:
 	/// <summary>
 	/// パーティクルマネージャー生成
@@ -127,6 +128,7 @@ private:
 
 	HRESULT result = S_FALSE;
 
+
 private:
 
 	/// <summary>
@@ -150,3 +152,4 @@ private:
 		this->cmd = cmd;
 	}
 };
+

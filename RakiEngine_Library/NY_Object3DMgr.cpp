@@ -223,7 +223,6 @@ Pipeline3D NY_Object3DManager::Create3DPipelineState(ID3D12Device *dev)
     //テクスチャ用
     rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);//標準
 
-
     //テクスチャサンプラー設定
     D3D12_STATIC_SAMPLER_DESC samplerDesc{};
 

@@ -5,16 +5,16 @@ SamplerState smp : register(s0);
 
 float4 main(GSOutput input):SV_TARGET
 {
-    float4 texColor = float4(tex.Sample(smp, input.uv));
+	float4 texColor = float4(tex.Sample(smp, input.uv));
 
-    float3 light = normalize(float3(1, -1, 1)); //窶ｰE窶ｰﾅ溪ｰﾅ崘堙ｼ窶堋ｫﾂ�窶ｰﾂイﾂト
+    float3 light = normalize(float3(1, -1, 1)); //右下奥向きライト
     float diffuse = saturate(dot(-light, input.normal));
-
-    float3 shade_color;
-    shade_color = m_ambient;
+	
+	float3 shade_color;
+	shade_color = m_ambient;
     shade_color += m_diffuse * diffuse;
-
-    float4 texcolor = tex.Sample(smp, input.uv);
-
+	
+	float4 texcolor = tex.Sample(smp, input.uv);
+	
     return float4(texcolor.rgb * shade_color, texcolor.a * m_alpha) * color;
 }
