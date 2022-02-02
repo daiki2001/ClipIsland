@@ -14,10 +14,16 @@ void NY_Model3D::LoadObjModel(const char *modelName)
 	//objファイルオープン
 	file.open(modelpath + ".obj");
 	//オープン失敗をチェック
-	if (file.fail())
+	if (file.fail() == true)
 	{
+		std::wstringstream stream;
+		stream << "ERROR : LoadObjModel : File not found.Pleace check " << modelName << std::endl;
+		OutputDebugStringW(stream.str().c_str());
 		assert(0);
 	}
+	std::wstringstream stream;
+	stream << "LOAD SUCCESS : LoadObjModel : " << modelName << std::endl;
+	OutputDebugStringW(stream.str().c_str());
 
 	//数値格納
 	vector<XMFLOAT3> positions;
