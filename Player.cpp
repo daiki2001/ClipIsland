@@ -105,9 +105,10 @@ void Player::Update()
 	}
 
 	timeRate = nowFrame / maxFrame;
-
-	position = Rv3Ease::lerp(startPos, endPos, timeRate);
-
+	if (moveFlag == true)
+	{
+		position = Rv3Ease::lerp(startPos, endPos, timeRate);
+	}
 	playerCollision.Update(position);
 
 	object->position = position;

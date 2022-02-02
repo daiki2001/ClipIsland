@@ -24,6 +24,7 @@ public: // サブクラス
 		RVector3 playerPos = {};
 		RVector3 playerStartPos = {};
 		RVector3 playerEndPos = {};
+		RVector3 vaniPos = {};
 		/*挟めるブロックがあるかどうかのフラグ*/
 		bool isClip = false;
 		//
