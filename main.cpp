@@ -68,22 +68,22 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     /*背景*/
     UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.png");
     Sprite background;
-    background.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true);
+    background.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true, nullptr);
 
     /*カーソル*/
     UINT cursorGraph = TexManager::LoadTexture("./Resources/cursor.png");
     Sprite cursor;
-    cursor.CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, cursorGraph, false);
+    cursor.CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, cursorGraph, false, nullptr);
 
     /*タイトル*/
     UINT titleGraph = TexManager::LoadTexture("./Resources/Title.png");
     Sprite title;
-    title.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, titleGraph, true);
+    title.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, titleGraph, true, nullptr);
 
     /*ステージセレクト*/
     UINT selectGraph = TexManager::LoadTexture("./Resources/STAGESELECT.png");
     Sprite select;
-    select.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, selectGraph, true);
+    select.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, selectGraph, true, nullptr);
     const int selectMap[] = {
         2,3,
         1,4,
@@ -103,20 +103,20 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     Sprite stage[stageCount];
     for (size_t i = 0; i < stageCount; i++)
     {
-        stage[i].CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, stageGraph[i], false);
+        stage[i].CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, stageGraph[i], false, nullptr);
         stage[i].spdata.position.x = (float)Raki_WinAPI::window_width / 2.0f;
         stage[i].spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
         stage[i].UpdateSprite();
     }
     UINT arrowLGraph = TexManager::LoadTexture("./Resources/Arrow_L.png");
     Sprite arrowL;
-    arrowL.CreateSprite({ 128.0f, 128.0f }, { 0.0f, 0.5f }, arrowLGraph, false);
+    arrowL.CreateSprite({ 128.0f, 128.0f }, { 0.0f, 0.5f }, arrowLGraph, false, nullptr);
     arrowL.spdata.position.x = 200.0f;
     arrowL.spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
     arrowL.UpdateSprite();
     UINT arrowRGraph = TexManager::LoadTexture("./Resources/Arrow_R.png");
     Sprite arrowR;
-    arrowR.CreateSprite({ 128.0f, 128.0f }, { 1.0f, 0.5f }, arrowRGraph, false);
+    arrowR.CreateSprite({ 128.0f, 128.0f }, { 1.0f, 0.5f }, arrowRGraph, false, nullptr);
     arrowR.spdata.position.x = Raki_WinAPI::window_width - 200.0f;
     arrowR.spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
     arrowR.UpdateSprite();
@@ -131,7 +131,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     Sprite tutorial[sizeof(tutorialGraph) / sizeof(tutorialGraph[0])];
     for (size_t i = 0; i < sizeof(tutorialGraph) / sizeof(tutorialGraph[0]); i++)
     {
-        tutorial[i].CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, tutorialGraph[i], true);
+        tutorial[i].CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, tutorialGraph[i], true, nullptr);
     }
     int tutorialCount = 0;
     bool isTutorial = true;
@@ -481,7 +481,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 (float)Raki_WinAPI::window_width / 2.0f + 150.0f,
                 (float)Raki_WinAPI::window_height / 2.0f, 0.0f };
 
-            if ((stageNumber + 1) >= stageMax)
+            if ((stageNumber + 1Ui64) >= stageMax)
             {
                 clearSelect = 1;
             }
@@ -494,7 +494,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 {
                     clearSelect = 0;
                 }
-                if ((stageNumber + 1) >= stageMax && clearSelect < 1)
+                if ((stageNumber + 1Ui64) >= stageMax && clearSelect < 1)
                 {
                     clearSelect = 1;
                 }
