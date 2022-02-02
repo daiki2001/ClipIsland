@@ -300,9 +300,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                 switch (stageNumber)
                 {
                 case 0:
-                   // stageData.Select("map00011.boxmap", true);
-                   // player.position = { 0.0f, -20.0f, 0.0f };
-                    stageData.Select("3.boxmap", true);
+                    stageData.Select("map1.boxmap", true);
                     break;
                 case 1:
                     stageData.Select("map2.boxmap", true);
@@ -320,17 +318,41 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
                     stageData.Select("map6.boxmap", true);
                     break;
                 case 6:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 7:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 8:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 9:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 10:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 11:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 12:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 13:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 14:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 15:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 16:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 case 17:
+                    stageData.Select("map6.boxmap", true);
+                    break;
                 default:
                     stageData.Select("map1.boxmap", true);
                     break;
