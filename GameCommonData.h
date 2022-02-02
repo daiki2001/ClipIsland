@@ -31,8 +31,8 @@ public: // 静的メンバ変数
 	static NY_Model3D doorModel; //スイッチで消えるブロックのモデル
 	static NY_Model3D RectModel; //長方形ブロック等のモデル
 
-	static UINT debugBoxGraph;       //仮描画用の箱のテクスチャ
-	static NY_Model3D debugBoxModel; //仮描画用の箱のモデル
+	static UINT simpleBlockGraph;       //シンプルな箱のテクスチャ
+	static NY_Model3D simpleBlockModel; //シンプルな箱のモデル
 };
 
 // スクリーン座標→ワールド座標への変換
@@ -40,4 +40,12 @@ RVector3 ScreenToWorld(const XMFLOAT2& screen);
 
 // XYZ軸に同じ値のスケーリングをかける
 inline RVector3 ScaleXYZ(const float& scale) { return RVector3(scale, scale, scale); }
+
+// 二つの値を入れ替える
+template<class T> void Swap(T num1, T num2)
+{
+	T tmp = num1;
+	num1 = num2;
+	num2 = tmp;
+}
 } //GameCommonData
