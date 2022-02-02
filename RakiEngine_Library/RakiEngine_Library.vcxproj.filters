@@ -247,19 +247,19 @@
     <FxCompile Include="Shaders\OBJVertexShader.hlsl">
       <Filter>リソース ファイル\OBJ</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SpritePS.hlsl">
-      <Filter>リソース ファイル\Sprite</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SpriteVS.hlsl">
-      <Filter>リソース ファイル\Sprite</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\mpVertexShader.hlsl">
       <Filter>リソース ファイル\mpShaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\mpPixelShader.hlsl">
       <Filter>リソース ファイル\mpShaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\mpEffectPixelShader.hlsl">
+    <FxCompile Include="..\Resources\Shaders\SpritePS.hlsl">
+      <Filter>リソース ファイル\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shaders\SpriteVS.hlsl">
+      <Filter>リソース ファイル\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shaders\mpEffectPixelShader.hlsl">
       <Filter>リソース ファイル\Sprite</Filter>
     </FxCompile>
   </ItemGroup>
@@ -267,11 +267,11 @@
     <None Include="Shaders\OBJShaderHeader.hlsli">
       <Filter>リソース ファイル\OBJ</Filter>
     </None>
-    <None Include="Shaders\Sprite.hlsli">
-      <Filter>リソース ファイル\Sprite</Filter>
-    </None>
     <None Include="Shaders\mpShaderHeader.hlsli">
       <Filter>リソース ファイル\mpShaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\Sprite.hlsli">
+      <Filter>リソース ファイル\Sprite</Filter>
     </None>
   </ItemGroup>
 </Project>
