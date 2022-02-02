@@ -26,6 +26,11 @@ public:
 	RVector3 forwardVec; //進行方向
 	RVector3 playerRot;	 //プレイヤーの回転角
 	bool goalFlag;
+	bool moveFlag;
+	RVector3 startPos;
+	RVector3 endPos;
+
+	float timeRate;
 
 	Collision playerCollision;
 
@@ -33,6 +38,4 @@ public:
 	Object3d *object; //プレイヤーのオブジェクト
 private:
 	NY_Model3D model; //プレイヤーのモデル
-	
-
 };
