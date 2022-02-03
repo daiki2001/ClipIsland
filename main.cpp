@@ -110,18 +110,30 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	const size_t stageMax = sizeof(selectMap) / sizeof(selectMap[0]) * 3;
 	UINT stageGraph[] =
 	{
-		TexManager::LoadTexture("./Resources/stage1.png"),
-		TexManager::LoadTexture("./Resources/stage2.png"),
-		TexManager::LoadTexture("./Resources/stage3.png"),
-		TexManager::LoadTexture("./Resources/stage4.png"),
-		TexManager::LoadTexture("./Resources/stage5.png"),
-		TexManager::LoadTexture("./Resources/stage6.png"),
+		TexManager::LoadTexture("./Resources/stageNo1.png"),
+		TexManager::LoadTexture("./Resources/stageNo2.png"),
+		TexManager::LoadTexture("./Resources/stageNo3.png"),
+		TexManager::LoadTexture("./Resources/stageNo4.png"),
+		TexManager::LoadTexture("./Resources/stageNo5.png"),
+		TexManager::LoadTexture("./Resources/stageNo6.png"),
+		TexManager::LoadTexture("./Resources/stageNo7.png"),
+		TexManager::LoadTexture("./Resources/stageNo8.png"),
+		TexManager::LoadTexture("./Resources/stageNo9.png"),
+		TexManager::LoadTexture("./Resources/stageNo10.png"),
+		TexManager::LoadTexture("./Resources/stageNo11.png"),
+		TexManager::LoadTexture("./Resources/stageNo12.png"),
+		TexManager::LoadTexture("./Resources/stageNo13.png"),
+		TexManager::LoadTexture("./Resources/stageNo14.png"),
+		TexManager::LoadTexture("./Resources/stageNo15.png"),
+		TexManager::LoadTexture("./Resources/stageNo16.png"),
+		TexManager::LoadTexture("./Resources/stageNo17.png"),
+		TexManager::LoadTexture("./Resources/stageNo18.png"),
 	};
 	const size_t stageCount = sizeof(stageGraph) / sizeof(stageGraph[0]);
 	Sprite stage[stageCount];
 	for (size_t i = 0; i < stageCount; i++)
 	{
-		stage[i].CreateSprite({ 320.0f, 64.0f }, { 0.5f, 0.5f }, stageGraph[i], false, nullptr);
+		stage[i].CreateSprite({ 1280.0f, 720.0f }, { 0.5f, 0.5f }, stageGraph[i], false, nullptr);
 		stage[i].spdata.position.x = (float)Raki_WinAPI::window_width / 2.0f;
 		stage[i].spdata.position.y = (float)Raki_WinAPI::window_height / 2.0f;
 		stage[i].UpdateSprite();
@@ -151,39 +163,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 		tutorial[i].CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, tutorialGraph[i], false, nullptr);
 	}
 	int tutorialCount = 0;
-	bool isTutorial = true;
-
-	/*ステージ番号*/
-	UINT stageNoGraph[] =
-	{
-		TexManager::LoadTexture("./Resources/stageNo1.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo2.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo3.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo4.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo5.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo6.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo7.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo8.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo9.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo10.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo11.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo12.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo13.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo14.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo15.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo16.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo17.jpg"),
-		TexManager::LoadTexture("./Resources/stageNo18.jpg"),
-	};
-	Sprite stageNo[stageMax];
-	for (size_t i = 0; i < stageMax; i++)
-	{
-		stageNo[i].CreateSprite({ 200.0f, 32.0f }, { 0.5f, 0.5f }, stageNoGraph[i], false, nullptr);
-	}
+	int isTutorial = 0;
 
 	/*ステージクリア*/
 	UINT ClearGraph = TexManager::LoadTexture("./Resources/clear.png");
 	Sprite Clear;
+	Clear.CreateSprite({ 1280.0f, 720.0f }, { 0.0f, 0.0f }, ClearGraph, true, nullptr);
 	bool stageClearFlag[stageCount];
 	size_t clearCount = 0;
 	for (size_t i = 0; i < stageCount; i++)
@@ -194,7 +179,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 	/*走査線*/
 	Sprite mpSprite;
-	mpSprite.CreateSprite({ 1280.0f / 2.0f, 720.0f / 2.0f }, { 0.0f, 0.0f }, 0, false, nullptr);
+	mpSprite.CreateSprite({ 1280.0f, 720.0f }, { 0.0f, 0.0f }, 0, false, nullptr);
 
 	/*プレイヤー*/
 	Player player;
@@ -309,7 +294,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 			}
 			if (Input::isKeyTrigger(DIK_D))
 			{
-				static const size_t openStageCount = 3;
+				static const size_t openStageCount = 18;
 
 				if (stageNumber < openStageCount + clearCount - 1)
 				{
@@ -340,7 +325,15 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 			if (isLoad)
 			{
-				scene = Scene::Tutorial;
+				if (isTutorial > 0)
+				{
+					scene = GAME_MAIN;
+				}
+				else
+				{
+					scene = Scene::Tutorial;
+				}
+
 				isLoad = false;
 
 				switch (stageNumber)
@@ -405,14 +398,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 				}
 			}
 
+			if (isTutorial > 0)
+			{
+				break;
+			}
+
 			// 描画開始
 			Raki_DX12B::Get()->StartDraw();
 
 			// スプライト描画
 			SpriteManager::Get()->SetCommonBeginDraw();
 			stage[stageNumber].Draw();
-			arrowL.Draw();
-			arrowR.Draw();
+			//arrowL.Draw();
+			//arrowR.Draw();
 
 			// 描画終了
 			Raki_DX12B::Get()->EndDraw();
@@ -425,6 +423,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 			if (Input::isKeyTrigger(DIK_SPACE))
 			{
 				scene = GAME_MAIN;
+				isTutorial++;
 			}
 
 			// 描画開始
@@ -498,6 +497,35 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 				}
 
+				if (player.goalFlag)
+				{
+					if ((stageNumber + 1Ui64) >= stageMax)
+					{
+						clearSelect = 1;
+					}
+
+					if (Input::isKeyTrigger(DIK_N))
+					{
+						player.goalFlag = false;
+						stageNumber++;
+						scene = Scene::SELECT;
+
+						if (stageNumber < stageMax)
+						{
+							isLoad = true;
+						}
+					}
+					if (Input::isKeyTrigger(DIK_S))
+					{
+						player.goalFlag = false;
+						scene = Scene::SELECT;
+					}
+
+					cursor.spdata.position = {
+						(float)Raki_WinAPI::window_width / 2.0f - 150.0f + 300.0f * clearSelect,
+						(float)Raki_WinAPI::window_height / 2.0f, 0.0f };
+				}
+
 				if (nFlag == true)
 				{
 					//player.object->position = player.playerOldPos +player.offsetPos;
@@ -514,7 +542,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 				if (actFlag == true && actnFlag == true)
 				{
 					//player.object->position = player.playerOldPos + player.offsetPos;
-				   // player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
+					// player.object->position = Rv3Ease::InQuad(player.endPos, player.startPos, player.timeRate) + player.offsetPos;
 					player.object->position = player.startPos + player.offsetPos;
 					player.position = player.startPos;
 					player.playerFlag = false;
@@ -553,7 +581,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 					Audio::StopLoadedSound(gameBGM);
 					Audio::PlayLoadedSound(titleAndSelectBGM);
 
-					scene = Scene::GAME_CLEAR;
+					//scene = Scene::GAME_CLEAR;
 
 					if (stageClearFlag[stageNumber] == false)
 					{
@@ -561,8 +589,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 						clearCount++;
 					}
 
-					clearSelect = 0;
-					player.goalFlag = false;
+					//clearSelect = 0;
+					//player.goalFlag = false;
 				}
 			}
 
@@ -589,7 +617,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 			// 前景描画
 			mpSprite.DrawMPRender();
 			SpriteManager::Get()->SetCommonBeginDraw();
-			flontground.Draw();
+			if (player.goalFlag)
+			{
+				Clear.Draw();
+			}
+			//flontground.Draw();
 
 			// 描画終了
 			Raki_DX12B::Get()->CloseDraw();
@@ -660,18 +692,12 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 				}
 			}
 
-			stage[0].UpdateSprite();
-			stage[1].UpdateSprite();
-			cursor.UpdateSprite();
-
 			// 描画開始
 			Raki_DX12B::Get()->StartDraw();
 
 			// スプライト描画
 			SpriteManager::Get()->SetCommonBeginDraw();
-			stage[0].Draw();
-			stage[1].Draw();
-			cursor.Draw();
+			Clear.Draw();
 
 			// 描画終了
 			Raki_DX12B::Get()->EndDraw();

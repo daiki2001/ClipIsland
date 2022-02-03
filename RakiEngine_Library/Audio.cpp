@@ -11,7 +11,7 @@ void Audio::Init()
     //マスターボイス作成
     result = xAudio2->CreateMasteringVoice(&masterVoice);
     //ボリューム初期化(50%)
-    volume = 0.0f;
+    volume = 0.5f;
 }
 
 SoundData Audio::LoadSound_wav(const char *filename)
