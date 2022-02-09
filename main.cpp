@@ -332,7 +332,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 			{
 				if (isTutorial > 0)
 				{
-					scene = GAME_MAIN;
+					scene = Scene::GAME_MAIN;
 				}
 				else
 				{
@@ -401,11 +401,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 					stageData.Select("stage18.boxmap", true);
 					break;
 				}
-			}
-
-			if (isTutorial > 0)
-			{
-				break;
 			}
 
 			// 描画開始

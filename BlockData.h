@@ -38,8 +38,6 @@ enum BlockType
 	WARP_OPEN_BLOCK
 };
 
-
-
 const std::vector <std::pair<BlockType, bool>> moveFlag =
 {
 	{BlockType::BLOCK, true},
