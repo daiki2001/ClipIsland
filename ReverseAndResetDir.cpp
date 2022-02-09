@@ -4,7 +4,7 @@ ReverseAndResetDir::ReverseAndResetDir()
 {
 	//リソース
 	backTex = TexManager::LoadTexture("Resources/back.jpg");
-	resetTex = TexManager::LoadTexture("Resources/backSprite.png");
+	resetTex = TexManager::LoadTexture("Resources/reset.jpg");
 	backSp.CreateSprite({ 0,0 }, { 0.5,0.5 }, backTex, true, nullptr);
 	resetSp.CreateSprite({ 0,0 }, { 0.5f,0.5f }, resetTex, true, nullptr);
 	//イージング座標設定

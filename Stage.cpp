@@ -2,6 +2,8 @@
 #include <vector>
 #include "StageMoveParticle.h"
 
+#include "ReverseAndResetDir.h"
+
 #define EoF (-1) // Error of function
 
 const size_t Stage::maxFlame = 15;

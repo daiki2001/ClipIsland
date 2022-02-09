@@ -27,6 +27,8 @@ Player::Player() :
 	stepbackFlag = false;
 	timeRate = 0;
 	walkSE=Audio::LoadSound_wav("./Resources/Sound/walkSE.wav");
+
+	ReverseAndResetDir::Get()->Init();
 }
 
 //時間計測に必要なデータ

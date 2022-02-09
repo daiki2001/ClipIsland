@@ -144,9 +144,9 @@ private:
 	//オプション
 
 	//クリアカラー
-	float clearColor_r = 0.1f;
-	float clearColor_g = 0.25f;
-	float clearColor_b = 0.5f;
+	float clearColor_r = 0.6f;
+	float clearColor_g = 0.85f;
+	float clearColor_b = 0.91f;
 	float clearColor_a = 0.0f;
 
 	//imgui関連

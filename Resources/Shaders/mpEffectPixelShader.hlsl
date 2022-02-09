@@ -56,6 +56,6 @@ float4 main(VSOutput input) : SV_TARGET
     float steped = step(0.99, sinv * sinv);
     Tex.rgb -= (1 - steped) * abs(sin(input.uv.y * 50.0f + Time * 1.0)) * 0.02;
     Tex.rgb -= (1 - steped) * abs(sin(input.uv.y * 100.0f - Time * 2.0)) * 0.06;
-    Tex.rgb += steped * 0.1;
+    
     return Tex;
 }

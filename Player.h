@@ -4,6 +4,8 @@
 #include "Collision.h"
 #include "Audio.h"
 
+#include "ReverseAndResetDir.h"
+
 class Player
 {
 public:

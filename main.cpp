@@ -17,6 +17,9 @@
 #include "StageMoveParticle.h"
 #include "SeaParticle.h"
 
+#include "SceneChangeDirection.h"
+
+
 using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace GameCommonData;
@@ -57,6 +60,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	RVector3 up = { 0.0f, 1.0f, 0.0f };
 	cam->SetViewStatusEyeTargetUp(eye, target, up);
 
+	bool isadd = true;
+
 	//音
 	Audio::Init();
 
@@ -80,11 +85,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 	/*背景*/
 	UINT backgroundGraph = TexManager::LoadTexture("./Resources/background.jpg");
-	UINT flontgroundGraph = TexManager::LoadTexture("./Resources/background.png");
+	UINT flontgroundGraph = TexManager::LoadTexture("./Resources/background2.png");
 	Sprite background;
 	Sprite flontground;
 	background.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true, nullptr);
-	flontground.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, backgroundGraph, true, nullptr);
+	flontground.CreateSprite({ (float)Raki_WinAPI::window_width, (float)Raki_WinAPI::window_height }, { 0.0f, 0.0f }, flontgroundGraph, true, nullptr);
 
 	/*カーソル*/
 	UINT cursorGraph = TexManager::LoadTexture("./Resources/cursor.png");
@@ -445,6 +450,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 			player.Update();
 			stageData.Update();
 
+			ReverseAndResetDir::Get()->Update();
+
 			// パーティクルの更新
 			StageMoveParticle::Get()->Update();
 			SeaParticle::Get()->Update();
@@ -510,6 +517,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 						stageNumber++;
 						scene = Scene::SELECT;
 
+
 						if (stageNumber < stageMax)
 						{
 							isLoad = true;
@@ -517,6 +525,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 					}
 					if (Input::isKeyTrigger(DIK_S))
 					{
+
 						player.goalFlag = false;
 						scene = Scene::SELECT;
 					}
@@ -560,12 +569,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 					{
 						doorFlag = false;
 						stageData.Reset();
+						ReverseAndResetDir::Get()->Start_ResetDir();
 					}
 
 					if (Input::isKeyTrigger(DIK_B) == true && stageData.backFlag == false && stageData.clipFlag == false)
 					{
 						stageData.backFlag = true;
 						stageData.StepBack();
+						ReverseAndResetDir::Get()->Start_BackDir();
 					}
 #if _DEBUG
 					if (Input::isKeyTrigger(DIK_E))
@@ -612,16 +623,36 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 			StageMoveParticle::Get()->Draw();
 			SeaParticle::Get()->Draw();
 
+			SpriteManager::Get()->SetCommonBeginDraw();
+
+			ReverseAndResetDir::Get()->Draw();
+
 			Raki_DX12B::Get()->StartDrawBackbuffer();
 
 			// 前景描画
+			if (mpSprite.spdata.color.w < 0.0f) {
+				isadd = true;
+			}
+			else if(mpSprite.spdata.color.w > 1.0f){
+				isadd = false;
+			}
+
+			if (isadd) {
+				mpSprite.spdata.color.w += 0.001f;
+			}
+			else {
+				mpSprite.spdata.color.w -= 0.001f;
+			}
+			mpSprite.UpdateSprite();
+
 			mpSprite.DrawMPRender();
+
 			SpriteManager::Get()->SetCommonBeginDraw();
 			if (player.goalFlag)
 			{
 				Clear.Draw();
 			}
-			//flontground.Draw();
+			flontground.Draw();
 
 			// 描画終了
 			Raki_DX12B::Get()->CloseDraw();
