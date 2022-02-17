@@ -5,6 +5,8 @@
 
 #define EoF (-1) // Error of function
 
+#define StdClear(container) {container.clear(); container.shrink_to_fit();}
+
 LoadStage::LoadStage() :
 	blocks{},
 	blockColors{},
@@ -575,7 +577,8 @@ void LoadStage::Reset()
 
 void LoadStage::StageClear()
 {
-	for (size_t i = 0; i < moveBlockObj.size(); i++)
+	static size_t i = 0;
+	for (i = 0; i < moveBlockObj.size(); i++)
 	{
 		if (moveBlockObj[i] == nullptr)
 		{
@@ -585,7 +588,7 @@ void LoadStage::StageClear()
 		DeleteObject3d(moveBlockObj[i]);
 		moveBlockObj[i] = nullptr;
 	}
-	for (size_t i = 0; i < stayBlockObj.size(); i++)
+	for (i = 0; i < stayBlockObj.size(); i++)
 	{
 		if (stayBlockObj[i] == nullptr)
 		{
@@ -595,7 +598,7 @@ void LoadStage::StageClear()
 		DeleteObject3d(stayBlockObj[i]);
 		stayBlockObj[i] = nullptr;
 	}
-	for (size_t i = 0; i < goalBlockObj.size(); i++)
+	for (i = 0; i < goalBlockObj.size(); i++)
 	{
 		if (goalBlockObj[i] == nullptr)
 		{
@@ -605,7 +608,7 @@ void LoadStage::StageClear()
 		DeleteObject3d(goalBlockObj[i]);
 		goalBlockObj[i] = nullptr;
 	}
-	for (size_t i = 0; i < switchBlockObj.size(); i++)
+	for (i = 0; i < switchBlockObj.size(); i++)
 	{
 		if (switchBlockObj[i] == nullptr)
 		{
@@ -615,7 +618,7 @@ void LoadStage::StageClear()
 		DeleteObject3d(switchBlockObj[i]);
 		switchBlockObj[i] = nullptr;
 	}
-	for (size_t i = 0; i < doorBlockObj.size(); i++)
+	for (i = 0; i < doorBlockObj.size(); i++)
 	{
 		if (doorBlockObj[i] == nullptr)
 		{
@@ -625,7 +628,7 @@ void LoadStage::StageClear()
 		DeleteObject3d(doorBlockObj[i]);
 		doorBlockObj[i] = nullptr;
 	}
-	for (size_t i = 0; i < warpBlock.size(); i++)
+	for (i = 0; i < warpBlock.size(); i++)
 	{
 		if (warpBlock[i] == nullptr)
 		{
@@ -636,7 +639,7 @@ void LoadStage::StageClear()
 		delete warpBlock[i];
 		warpBlock[i] = nullptr;
 	}
-	for (size_t i = 0; i < debugBoxObj.size(); i++)
+	for (i = 0; i < debugBoxObj.size(); i++)
 	{
 		if (debugBoxObj[i] == nullptr)
 		{
@@ -647,37 +650,22 @@ void LoadStage::StageClear()
 		debugBoxObj[i] = nullptr;
 	}
 
-	blocks.clear();
-	blockColors.clear();
-	moveBlockObj.clear();
-	moveBlockNumber.clear();
-	stayBlockObj.clear();
-	stayBlockNumber.clear();
-	goalBlockObj.clear();
-	goalBlockNumber.clear();
-	switchBlockObj.clear();
-	switchBlockNumber.clear();
-	doorBlockObj.clear();
-	doorBlockNumber.clear();
-	warpBlock.clear();
-	debugBoxObj.clear();
-	debugBoxNumber.clear();
-
-	blocks.shrink_to_fit();
-	blockColors.shrink_to_fit();
-	moveBlockObj.shrink_to_fit();
-	moveBlockNumber.shrink_to_fit();
-	stayBlockObj.shrink_to_fit();
-	stayBlockNumber.shrink_to_fit();
-	goalBlockObj.shrink_to_fit();
-	goalBlockNumber.shrink_to_fit();
-	switchBlockObj.shrink_to_fit();
-	switchBlockNumber.shrink_to_fit();
-	doorBlockObj.shrink_to_fit();
-	doorBlockNumber.shrink_to_fit();
-	warpBlock.shrink_to_fit();
-	debugBoxObj.shrink_to_fit();
-	debugBoxNumber.shrink_to_fit();
+	StdClear(blocks);
+	StdClear(blockColors);
+	StdClear(moveBlockObj);
+	StdClear(moveBlockNumber);
+	StdClear(stayBlockObj);
+	StdClear(stayBlockNumber);
+	StdClear(goalBlockObj);
+	StdClear(goalBlockNumber);
+	StdClear(switchBlockObj);
+	StdClear(switchBlockNumber);
+	StdClear(doorBlockObj);
+	StdClear(doorBlockNumber);
+	StdClear(warpBlock);
+	StdClear(debugBoxObj);
+	StdClear(debugBoxNumber);
+	StdClear(multipleBlockNumber);
 
 	startPosNumber = -1;
 }

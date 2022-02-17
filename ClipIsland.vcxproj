@@ -187,6 +187,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\objFiles\player\player.mtl" />
+    <None Include="Resources\stage\stage1.boxmap" />
+    <None Include="Resources\stage\stage10.boxmap" />
+    <None Include="Resources\stage\stage11.boxmap" />
+    <None Include="Resources\stage\stage12.boxmap" />
+    <None Include="Resources\stage\stage13.boxmap" />
+    <None Include="Resources\stage\stage14.boxmap" />
+    <None Include="Resources\stage\stage15.boxmap" />
+    <None Include="Resources\stage\stage16.boxmap" />
+    <None Include="Resources\stage\stage17.boxmap" />
+    <None Include="Resources\stage\stage18.boxmap" />
+    <None Include="Resources\stage\stage2.boxmap" />
+    <None Include="Resources\stage\stage3.boxmap" />
+    <None Include="Resources\stage\stage4.boxmap" />
+    <None Include="Resources\stage\stage5.boxmap" />
+    <None Include="Resources\stage\stage6.boxmap" />
+    <None Include="Resources\stage\stage7.boxmap" />
+    <None Include="Resources\stage\stage8.boxmap" />
+    <None Include="Resources\stage\stage9.boxmap" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

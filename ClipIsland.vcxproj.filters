@@ -31,6 +31,10 @@
     <Filter Include="Player">
       <UniqueIdentifier>{213ba8cd-b827-412c-b2be-aa722522c6d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\ステージ">
+      <UniqueIdentifier>{fa6e86e9-7f83-445f-a50f-13df15cc5e5e}</UniqueIdentifier>
+      <Extensions>boxmap</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,6 +120,60 @@
   <ItemGroup>
     <None Include="Resources\objFiles\player\player.mtl">
       <Filter>リソース ファイル\モデル\プレイヤー</Filter>
+    </None>
+    <None Include="Resources\stage\stage1.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage2.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage3.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage4.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage5.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage6.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage7.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage8.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage9.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage10.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage11.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage12.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage13.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage14.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage15.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage16.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage17.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
+    </None>
+    <None Include="Resources\stage\stage18.boxmap">
+      <Filter>リソース ファイル\ステージ</Filter>
     </None>
   </ItemGroup>
 </Project>
