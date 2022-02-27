@@ -341,12 +341,16 @@ int LoadStage::Load(const char* filePath)
 		}
 	}
 
-	blockSortIsNumber(0, (int)blocks.size() - 1);
+	BlockSortIsNumber();
 
 	int num = INT_MIN;
 	static bool isHit = false;
 	for (size_t i = 0; i < blocks.size(); i++)
 	{
+		if (blocks[i].InitType == BlockType::START)
+		{
+			continue;
+		}
 		if (num == blocks[i].number)
 		{
 			isHit = false;
@@ -378,7 +382,21 @@ int LoadStage::Load(const char* filePath)
 			{
 				if (blocks[j].number == multipleBlockNumber[i])
 				{
-					moveBlockObj[moveBlockCount]->color = blockColors[BlockType::START];
+					static size_t temp = 0;
+					temp = i % 4;
+					if (temp == 0)
+					{
+						moveBlockObj[moveBlockCount]->color = blockColors[BlockType::START];
+					}
+					else
+					{
+						static XMFLOAT4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+						color = blockColors[BlockType::START];
+						color.x = color.x * temp / (temp + 1);
+						color.y = color.y * temp / (temp + 1);
+						color.z = color.z * temp / (temp + 1);
+						moveBlockObj[moveBlockCount]->color = color;
+					}
 				}
 				moveBlockCount++;
 			}
@@ -401,43 +419,49 @@ void LoadStage::Update()
 	for (size_t i = 0; i < blocks.size(); i++)
 	{
 		if (moveBlockCount < moveBlockObj.size() &&
-			i == moveBlockNumber[moveBlockCount])
+			blocks[i].type == BlockType::BLOCK)
 		{
 			moveBlockObj[moveBlockCount]->position = blocks[i].pos;
+			moveBlockNumber[moveBlockCount] = i;
 			moveBlockCount++;
 		}
-		if (stayBlockCount < stayBlockObj.size() &&
-			i == stayBlockNumber[stayBlockCount])
+		else if (stayBlockCount < stayBlockObj.size() &&
+			blocks[i].type == BlockType::DONT_MOVE_BLOCK)
 		{
 			stayBlockObj[stayBlockCount]->position = blocks[i].pos;
+			stayBlockNumber[stayBlockCount] = i;
 			stayBlockCount++;
 		}
-		if (goalBlockCount < goalBlockObj.size() &&
-			i == goalBlockNumber[goalBlockCount])
+		else if (goalBlockCount < goalBlockObj.size() &&
+			blocks[i].type == BlockType::GOAL)
 		{
 			goalBlockObj[goalBlockCount]->position = blocks[i].pos;
+			goalBlockNumber[goalBlockCount] = i;
 			goalBlockCount++;
 		}
-		if (switchBlockCount < switchBlockObj.size() &&
-			i == switchBlockNumber[switchBlockCount])
+		else if (switchBlockCount < switchBlockObj.size() &&
+			blocks[i].type == BlockType::SWITCH)
 		{
 			switchBlockObj[switchBlockCount]->position = blocks[i].pos;
+			switchBlockNumber[switchBlockCount] = i;
 			switchBlockCount++;
 		}
-		if (doorBlockCount < doorBlockObj.size() &&
-			i == doorBlockNumber[doorBlockCount])
+		else if (doorBlockCount < doorBlockObj.size() &&
+			blocks[i].type == BlockType::DOOR)
 		{
 			doorBlockObj[doorBlockCount]->position = blocks[i].pos;
+			doorBlockNumber[doorBlockCount] = i;
 			doorBlockCount++;
 		}
-		if (warpBlockCount < warpBlock.size() &&
-			i == warpBlock[warpBlockCount]->blockNumber)
+		else if (warpBlockCount < warpBlock.size() &&
+			blocks[i].type == BlockType::WARP_CLOSE_BLOCK ||
+			blocks[i].type == BlockType::WARP_OPEN_BLOCK)
 		{
 			warpBlock[warpBlockCount]->SetObjectPos(blocks[i].pos);
 			warpBlockCount++;
 		}
-		if (debugBlockCount < debugBoxNumber.size() &&
-			i == debugBoxNumber[debugBlockCount])
+		else if (debugBlockCount < debugBoxNumber.size() &&
+			blocks[i].type != BlockType::START)
 		{
 			debugBoxObj[debugBlockCount]->position = blocks[i].pos;
 			debugBlockCount++;
@@ -499,6 +523,7 @@ void LoadStage::Reset()
 	size_t moveBlockCount = 0;
 	size_t stayBlockCount = 0;
 	size_t goalBlockCount = 0;
+	size_t switchBlockCount = 0;
 	size_t doorBlockCount = 0;
 	size_t warpBlockCount = 0;
 	size_t debugBlockCount = 0;
@@ -509,7 +534,7 @@ void LoadStage::Reset()
 		blocks[i].type = blocks[i].InitType;
 
 		if (moveBlockCount < moveBlockNumber.size() &&
-			i == moveBlockNumber[moveBlockCount])
+			blocks[i].type == BlockType::BLOCK)
 		{
 			if (moveBlockObj[moveBlockCount] == nullptr)
 			{
@@ -519,8 +544,8 @@ void LoadStage::Reset()
 			moveBlockObj[moveBlockCount]->position = blocks[i].resetPos;
 			moveBlockCount++;
 		}
-		if (stayBlockCount < stayBlockNumber.size() &&
-			i == stayBlockNumber[stayBlockCount])
+		else if (stayBlockCount < stayBlockNumber.size() &&
+			blocks[i].type == BlockType::DONT_MOVE_BLOCK)
 		{
 			if (stayBlockObj[stayBlockCount] == nullptr)
 			{
@@ -530,8 +555,8 @@ void LoadStage::Reset()
 			stayBlockObj[stayBlockCount]->position = blocks[i].resetPos;
 			stayBlockCount++;
 		}
-		if (goalBlockCount < goalBlockNumber.size() &&
-			i == goalBlockNumber[goalBlockCount])
+		else if (goalBlockCount < goalBlockNumber.size() &&
+			blocks[i].type == BlockType::GOAL)
 		{
 			if (goalBlockObj[goalBlockCount] == nullptr)
 			{
@@ -541,8 +566,23 @@ void LoadStage::Reset()
 			goalBlockObj[goalBlockCount]->position = blocks[i].resetPos;
 			goalBlockCount++;
 		}
-		if (doorBlockCount < doorBlockNumber.size() &&
-			i == doorBlockNumber[doorBlockCount])
+		else if (blocks[i].type == BlockType::START)
+		{
+			startPosNumber = i;
+		}
+		else if (switchBlockCount < switchBlockNumber.size() &&
+			blocks[i].type == BlockType::SWITCH)
+		{
+			if (switchBlockObj[switchBlockCount] == nullptr)
+			{
+				continue;
+			}
+
+			switchBlockObj[switchBlockCount]->position = blocks[i].resetPos;
+			switchBlockCount++;
+		}
+		else if (doorBlockCount < doorBlockNumber.size() &&
+			blocks[i].type == BlockType::DOOR)
 		{
 			if (doorBlockObj[doorBlockCount] == nullptr)
 			{
@@ -552,15 +592,16 @@ void LoadStage::Reset()
 			doorBlockObj[doorBlockCount]->position = blocks[i].resetPos;
 			doorBlockCount++;
 		}
-		if (warpBlockCount < warpBlock.size() &&
-			i == warpBlock[warpBlockCount]->blockNumber)
+		else if (warpBlockCount < warpBlock.size() &&
+			blocks[i].type == BlockType::WARP_CLOSE_BLOCK &&
+			blocks[i].type == BlockType::WARP_OPEN_BLOCK)
 		{
 			warpBlock[warpBlockCount]->CreateObj(blocks[i].resetPos);
 			warpBlock[warpBlockCount]->gateNumber=(size_t)-1;
 			warpBlockCount++;
 		}
-		if (debugBlockCount < debugBoxNumber.size() &&
-			i == debugBoxNumber[debugBlockCount])
+		else if (debugBlockCount < debugBoxNumber.size() &&
+			blocks[i].type != BlockType::START)
 		{
 			if (debugBoxObj[debugBlockCount] == nullptr)
 			{
@@ -728,30 +769,60 @@ void LoadStage::GetBlocksTypeAll(BlockType blockType, int blocksArray[], size_t 
 	}
 }
 
-void LoadStage::blockSortIsNumber(int start, int end)
+void LoadStage::BlockSortIsNumber()
 {
-	int x = start;
+	int top_index = 0;
+	int bot_index = (int)blocks.size() - 1;
 
-	if (start < end)
+	while (true)
 	{
-		x = PartitionIsBlockNumber(start, end);
-		blockSortIsNumber(start, x - 1);
-		blockSortIsNumber(x + 1, end);
+		int last_swap_index;
+
+		/* 順方向のスキャン */
+		last_swap_index = top_index;
+
+		for (int i = top_index; i < bot_index; i++)
+		{
+			if (blocks[i].number > blocks[(size_t)i + 1].number)
+			{
+				BlockSwap(i, i + 1);
+				last_swap_index = i;
+			}
+		}
+		bot_index = last_swap_index; /* 後方のスキャン範囲を狭める */
+
+		if (top_index == bot_index)
+			break;
+
+		/* 逆方向のスキャン */
+		last_swap_index = bot_index;
+
+		for (int i = bot_index; i > top_index; i--)
+		{
+			if (blocks[i].number < blocks[(size_t)i - 1].number)
+			{
+				BlockSwap(i, i - 1);
+				last_swap_index = i;
+			}
+		}
+		top_index = last_swap_index; /* 前方のスキャン範囲を狭める */
+
+		if (top_index == bot_index)
+			break;
 	}
+	Reset();
 }
 
-int LoadStage::PartitionIsBlockNumber(int p, int r)
+void LoadStage::BlockSwap(int a, int b)
 {
-	for (size_t i = p; i < r; i++)
+	if (a < 0 || a >= (int)blocks.size() || b < 0 || b >= (int)blocks.size())
 	{
-		if (blocks[i].number <= blocks[r].number)
-		{
-			GameCommonData::Swap(blocks[p], blocks[i]);
-			p++;
-		}
+#if _DEBUG
+		static char debuglog[1024] = { 0 };
+		sprintf_s(debuglog, "一つ以上の値が無効です(%s(line:%d))\n", __FILE__, __LINE__);
+		OutputDebugStringA(debuglog);
+#endif //_DEBUG
+		return;
 	}
-
-	GameCommonData::Swap(blocks[r], blocks[p]);
-
-	return p;
+	GameCommonData::Swap(&blocks[a], &blocks[b]);
 }

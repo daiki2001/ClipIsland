@@ -296,7 +296,6 @@ int Stage::StepBack()
 
 void Stage::Reset()
 {
-	
 	stage.Reset();
 
 	while (clipBlock.empty() == false)
@@ -310,9 +309,9 @@ void Stage::Reset()
 	}
 
 	player->position = stage.GetStartPlayerPos();
-	player->startPos = stage.GetStartPlayerPos();
-	player->endPos = stage.GetStartPlayerPos();
-	player->Tposition = stage.GetStartPlayerPos();
+	player->startPos = player->position;
+	player->endPos = player->position;
+	player->Tposition = player->position;
 
 	Audio::PlayLoadedSound(resetSE);
 	

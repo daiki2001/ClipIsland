@@ -42,10 +42,10 @@ RVector3 ScreenToWorld(const XMFLOAT2& screen);
 inline RVector3 ScaleXYZ(const float& scale) { return RVector3(scale, scale, scale); }
 
 // “ñ‚Â‚Ì’l‚ð“ü‚ê‘Ö‚¦‚é
-template<class T> void Swap(T num1, T num2)
+template<class T> void Swap(T* num1, T* num2)
 {
-	T tmp = num1;
-	num1 = num2;
-	num2 = tmp;
+	T tmp = *num1;
+	*num1 = *num2;
+	*num2 = tmp;
 }
 } //GameCommonData
