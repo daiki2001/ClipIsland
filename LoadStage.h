@@ -44,10 +44,10 @@ public: // メンバ関数
 	void GetBlocksTypeAll(BlockType blockType, int blocksArray[], size_t arraySize);
 
 	// ブロックを塊ごとでソートする関数
-	void blockSortIsNumber(int start, int end);
+	void BlockSortIsNumber();
 private:
-	// パーテーションを行う関数
-	int PartitionIsBlockNumber(int p, int r);
+	// ブロックの情報を交換する関数(リセット必須)
+	void BlockSwap(int a, int b);
 
 public: // メンバ変数
 	vector<Data> blocks;             //ブロックの情報

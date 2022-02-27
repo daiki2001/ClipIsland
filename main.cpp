@@ -181,6 +181,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 		stageClearFlag[i] = false;
 	}
 	int clearSelect = 0;
+	bool isNextStage = false; //次のステージにそのまま進むかどうか
 
 	/*走査線*/
 	Sprite mpSprite;
@@ -328,7 +329,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 				isLoad = true;
 			}
 
-			if (isLoad)
+			if (isLoad || isNextStage)
 			{
 				if (isTutorial > 0)
 				{
@@ -344,63 +345,69 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 				switch (stageNumber)
 				{
 				case 0:
-					stageData.Select("stage1.boxmap", true);
+					stageData.Select("./Resources/stage/stage1.boxmap", true);
 					break;
 				case 1:
-					stageData.Select("stage2.boxmap", true);
+					stageData.Select("./Resources/stage/stage2.boxmap", true);
 					break;
 				case 2:
-					stageData.Select("stage3.boxmap", true);
+					stageData.Select("./Resources/stage/stage3.boxmap", true);
 					break;
 				case 3:
-					stageData.Select("stage4.boxmap", true);
+					stageData.Select("./Resources/stage/stage4.boxmap", true);
 					break;
 				case 4:
-					stageData.Select("stage5.boxmap", true);
+					stageData.Select("./Resources/stage/stage5.boxmap", true);
 					break;
 				case 5:
-					stageData.Select("stage6.boxmap", true);
+					stageData.Select("./Resources/stage/stage6.boxmap", true);
 					break;
 				case 6:
-					stageData.Select("stage7.boxmap", true);
+					stageData.Select("./Resources/stage/stage7.boxmap", true);
 					break;
 				case 7:
-					stageData.Select("stage8.boxmap", true);
+					stageData.Select("./Resources/stage/stage8.boxmap", true);
 					break;
 				case 8:
-					stageData.Select("stage9.boxmap", true);
+					stageData.Select("./Resources/stage/stage9.boxmap", true);
 					break;
 				case 9:
-					stageData.Select("stage10.boxmap", true);
+					stageData.Select("./Resources/stage/stage10.boxmap", true);
 					break;
 				case 10:
-					stageData.Select("stage11.boxmap", true);
+					stageData.Select("./Resources/stage/stage11.boxmap", true);
 					break;
 				case 11:
-					stageData.Select("stage12.boxmap", true);
+					stageData.Select("./Resources/stage/stage12.boxmap", true);
 					break;
 				case 12:
-					stageData.Select("stage13.boxmap", true);
+					stageData.Select("./Resources/stage/stage13.boxmap", true);
 					break;
 				case 13:
-					stageData.Select("stage14.boxmap", true);
+					stageData.Select("./Resources/stage/stage14.boxmap", true);
 					break;
 				case 14:
-					stageData.Select("stage15.boxmap", true);
+					stageData.Select("./Resources/stage/stage15.boxmap", true);
 					break;
 				case 15:
-					stageData.Select("stage16.boxmap", true);
+					stageData.Select("./Resources/stage/stage16.boxmap", true);
 					break;
 				case 16:
-					stageData.Select("stage17.boxmap", true);
+					stageData.Select("./Resources/stage/stage17.boxmap", true);
 					break;
 				case 17:
-					stageData.Select("stage18.boxmap", true);
+					stageData.Select("./Resources/stage/stage18.boxmap", true);
 					break;
 				default:
-					stageData.Select("stage18.boxmap", true);
+					stageData.Select("./Resources/stage/stage18.boxmap", true);
 					break;
 				}
+			}
+
+			if (isNextStage)
+			{
+				isNextStage = false;
+				break;
 			}
 
 			// 描画開始
@@ -512,10 +519,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 						stageNumber++;
 						scene = Scene::SELECT;
 
-
 						if (stageNumber < stageMax)
 						{
-							isLoad = true;
+							isNextStage = true;
 						}
 					}
 					if (Input::isKeyTrigger(DIK_S))
@@ -731,6 +737,10 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 			break;
 		}
 		default:
+#if _DEBUG
+			OutputDebugStringA("このシーンは存在しません\n");
+#endif //_DEBUG
+			scene = Scene::TITLE;
 			break;
 		}
 
